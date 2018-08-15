@@ -52,9 +52,9 @@ class Manage_indicator extends kpims_Controller {
         echo json_encode(true);
     } //End fn update_status_indicator
 
-    function get_data(){
+    function get_data(){ 
         $rs_ind_data = $this->ind->get_all();
-        $data = array();
+        $data = array(); 
         if($rs_ind_data->num_rows() > 0){
             $seq = 1;
 			foreach($rs_ind_data->result() as $ind){	

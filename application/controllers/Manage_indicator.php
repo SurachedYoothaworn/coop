@@ -11,15 +11,15 @@ class Manage_indicator extends kpims_Controller {
 
 	public function index()
 	{
-        $data['rs_ind'] = $this->ind->get_all();
-		$this->output('v_indicator', $data);
+        // $data['rs_ind'] = $this->ind->get_all();
+		$this->output('v_indicator');
     }
     
     public function save_indicator(){
         // print_r($this->input->post('ind_add'));
         $ind_name = $this->input->post('ind_name');
         $desc = $this->input->post('ind_desc');
-        if($ind_name != NULL){
+        if($ind_name != NULL || $ind_name != ""){
             $this->ind->ind_name = $ind_name;
             $this->ind->ind_description  = $desc;
             $this->ind->insert();
@@ -39,7 +39,7 @@ class Manage_indicator extends kpims_Controller {
         $ind_id = $this->input->post('hid_ind_id');
         $ind_name = $this->input->post('ind_edit');
         $desc = $this->input->post('desc_edit');
-        if($ind_name != NULL){
+        if($ind_name != NULL || $ind_name != ""){
             $this->ind->update($ind_id, $ind_name, $desc);
             // redirect('Manage_indicator', 'refash');
             echo json_encode(true);
@@ -49,30 +49,60 @@ class Manage_indicator extends kpims_Controller {
     public function update_status_indicator(){
         $ind_id = $this->input->post('ind_id');
         $this->ind->update_status($ind_id);
-        echo json_encode(true);
+        echo json_encode(true); 
     } //End fn update_status_indicator
 
     function get_data(){ 
         $rs_ind_data = $this->ind->get_all();
         $data = array(); 
+		$btn = "";
         if($rs_ind_data->num_rows() > 0){
             $seq = 1;
-			foreach($rs_ind_data->result() as $ind){	
-                $btn  = '<center><button id="btn_edit" name="btn_edit" class="'.$this->config->item('btn_warning').'"data-toggle="modal" data-tooltip="แก้ไขตัวชี้วัด" href="#modal_edit_indicator" onclick="edit_indicator('.$ind->ind_id.')">';
-                $btn .= '<i class="glyphicon glyphicon-pencil" style="color:white" ></i>';
-                $btn .= '</button>&nbsp';
-                $btn .= '<button id="btn_del" name="btn_del" class="'.$this->config->item('btn_danger').'" data-tooltip="ลบตัวชี้วัด" onclick="update_status_indicator('.$ind->ind_id.')">';
-                $btn .= '<i class="glyphicon glyphicon-trash" style="color:white"></i>';
-                $btn .= '</button></center>';
-                $ind_data = array(
-                    "ind_seq" => "<center>".$seq."</center>",
-                    "ind_id" => $ind->ind_id,
-					"ind_name" => $ind->ind_name,
-					"ind_description" => $ind->ind_description,
-					"btn_manage" => $btn,
-                );
-                array_push($data, $ind_data);
-				$seq++;
+			foreach($rs_ind_data->result() as $ind){
+				$chk_use_ind = $this->ind->get_ind_by_id($ind->ind_id);
+				if($chk_use_ind->num_rows() > 0){
+					$btn  = '<center><button id="btn_edit" name="btn_edit" class="'.$this->config->item('btn_warning').'"data-toggle="modal" data-tooltip="แก้ไขตัวชี้วัด" href="#modal_edit_indicator" onclick="edit_indicator('.$ind->ind_id.')">';
+					$btn .= '<i class="glyphicon glyphicon-pencil" style="color:white" ></i>';
+					$btn .= '</button>&nbsp';
+					$btn .= '<button id="btn_del" name="btn_del" class="'.$this->config->item('btn_danger').'" data-tooltip="ไม่สามารถลบได้"  disabled>';
+					$btn .= '<i class="glyphicon glyphicon-trash" style="color:white"></i>';
+					$btn .= '</button></center>';
+					$ind_data = array(
+						"ind_seq" => "<center>".$seq."</center>",
+						"ind_id" => $ind->ind_id,
+						"ind_name" => $ind->ind_name,
+						"ind_description" => $ind->ind_description,
+						"btn_manage" => $btn,
+					);
+					array_push($data, $ind_data);
+				}else{
+					$btn  = '<center><button id="btn_edit" name="btn_edit" class="'.$this->config->item('btn_warning').'"data-toggle="modal" data-tooltip="แก้ไขตัวชี้วัด" href="#modal_edit_indicator" onclick="edit_indicator('.$ind->ind_id.')">';
+					$btn .= '<i class="glyphicon glyphicon-pencil" style="color:white" ></i>';
+					$btn .= '</button>&nbsp';
+					$btn .= '<button id="btn_del" name="btn_del" class="'.$this->config->item('btn_danger').'" data-tooltip="ลบตัวชี้วัด" onclick="update_status_indicator('.$ind->ind_id.') ">';
+					$btn .= '<i class="glyphicon glyphicon-trash" style="color:white"></i>';
+					$btn .= '</button></center>';
+					if($ind->ind_description == "" || $ind->ind_description == null){
+						$ind_data = array(
+							"ind_seq" => "<center>".$seq."</center>",
+							"ind_id" => $ind->ind_id,
+							"ind_name" => $ind->ind_name,
+							"ind_description" => "-",
+							"btn_manage" => $btn,
+						);
+						array_push($data, $ind_data);
+					}else{
+						$ind_data = array(
+							"ind_seq" => "<center>".$seq."</center>",
+							"ind_id" => $ind->ind_id,
+							"ind_name" => $ind->ind_name,
+							"ind_description" => $ind->ind_description,
+							"btn_manage" => $btn,
+						);
+						array_push($data, $ind_data);
+					} //End if/else
+					$seq++;
+				} //End if/else
             } //End for
         } //End if
         echo json_encode($data);

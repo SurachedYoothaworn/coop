@@ -23,8 +23,8 @@
             <li><a href="<?php echo site_url('Manage_unit');?>"><i class="glyphicon glyphicon-cog"></i><span>จัดการหน่วยนับ</span></a></li>
           </ul>
         </li>
-		<li class=""><a href="#"><i class="glyphicon glyphicon-edit"></i> <span>กำหนดรายการตัวชี้วัด</span></a></li>
-		<li class=""><a href="#"><i class="glyphicon glyphicon-floppy-save"></i> <span>บันทึกผลตัวชี้วัด</span></a></li>
+		<li class=""><a href="<?php echo site_url('Define_indicator');?>"><i class="glyphicon glyphicon-edit"></i> <span>กำหนดรายการตัวชี้วัด</span></a></li>
+		<li class=""><a href="<?php echo site_url('Save_indicator_result');?>"><i class="glyphicon glyphicon-floppy-save"></i> <span>บันทึกผลตัวชี้วัด</span></a></li>
 		
       </ul>
       <!-- /.sidebar-menu -->

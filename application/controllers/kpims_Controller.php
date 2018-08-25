@@ -10,7 +10,7 @@ class kpims_Controller extends Main_Controller {
 		// $this->output('starter_view');
 	}
 	
-	function head(){
+	function head(){ 
 		$this->load->view('template/head');
 	}
 	
@@ -60,3 +60,4 @@ class kpims_Controller extends Main_Controller {
 	}
 	
 }
+  

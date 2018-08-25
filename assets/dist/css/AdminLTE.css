@@ -2242,14 +2242,15 @@ a:focus {
   display: block;
 }
 .btn-default {
-  background-color: #f4f4f4;
-  color: #444;
+  background-color: #999999;
+  color: #ffffff;
   border-color: #ddd;
 }
 .btn-default:hover,
 .btn-default:active,
 .btn-default.hover {
-  background-color: #e7e7e7;
+  background-color: #8c8c8c;
+  color: #ffffff;
 }
 .btn-primary {
   background-color: #3c8dbc;

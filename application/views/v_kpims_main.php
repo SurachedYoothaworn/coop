@@ -1,13 +1,13 @@
 <!------ Include the above in your HEAD tag ---------->
 
 <!-- DataTable -->
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script> 
+<script src="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/dataTables.bootstrap4.min.js"></script> 
+<link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/dataTables.bootstrap4.min.css">
+
+<!-- DataTable_old -->
 <!-- <link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/dataTables.bootstrap.css">
 <link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/jquery.dataTables_themeroller.css"> -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
-
-
 <!-- <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/dataTables.bootstrap.min.js"></script> -->
 <!-- <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/jquery.dataTables.min.js"></script> -->
 <!-- <link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/jquery.dataTables.min.css"> -->
@@ -25,27 +25,14 @@
 <!--tooltip-->
 <link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>plugins/tooltip/tooltip.css">
 
-<script>
-    // $(function () {
-    //     $('#example').dataTable( {
-    //         "oLanguage": {
-    //             "sLengthMenu": "แสดง  _MENU_  รายการ",
-    //             "sZeroRecords": "ไม่พบข้อมูล",
-    //             "sInfo": "แสดงรายการที่ _START_ ถึง _END_ ของ _TOTAL_ รายการ",
-    //             "sInfoEmpty": "แสดง 0 ถึง 0 ของ 0 รายการ",
-    //             "sInfoFiltered": "(จากรายการทั้งหมด _MAX_ รายการ)",
-    //             "sSearch": "ค้นหา :",
-    //             // "bFilter": false,
-    //             "oPaginate": {
-    //                 "sFirst":    "หน้าแรก",
-    //                 "sPrevious": "ก่อนหน้า",
-    //                 "sNext":     "ถัดไป",
-    //                 "sLast":     "หน้าสุดท้าย"
-    //             }
-    //         }
-    //     });
-    // });
+<!--validate-->
+<script src="<?php echo base_url().$this->config->item('template_path');?>plugins/validate/validate.js"></script>
 
+<!-- select2 -->
+<script src="<?php echo base_url().$this->config->item('template_path');?>plugins/select2/select2.min.js"></script>
+<link type="text/css" rel="stylesheet" href="<?php echo base_url();?>assets/plugins/select2/select2.css">
+
+<script>
     //แจ้งเตือนการบันทึก
     function notify_save(name){
         PNotify.desktop.permission();
@@ -95,14 +82,53 @@
     th{
         height: 40px;
         text-align: center;
-    }/*ความสูงหัวตาราง*/
+	}/*ความสูงหัวตาราง*/
 
     thead{
         background-color: #e4f6ff;
-    }/*สีหัวตาราง*/
+	}/*สีหัวตาราง*/
 
     tr{
         word-break: break-all;
-    }/*ตัดบรรทัดตัวอักษร data table*/
+	}/*ตัดบรรทัดตัวอักษร data table*/
+	
+	textarea { 
+		resize: vertical; 
+	}
+	
+	.select2_wb{
+		word-break: break-all;
+	}
+	
+	/*color header modal*/
+	.modal_header_info{
+		color: #ffffff;
+		background-color: #3c8dbc;
+	}
+	
+	.modal_header_success{
+		color: #ffffff;
+		background-color: #00a65a;
+	}
+	
+	.modal_header_warning{
+		color: #ffffff;
+		background-color: #f39c12;
+	}
+	
+	/*ปุ่มยกเลิก และ ปุ่มปิด*/
+	.btn-default {
+		background-color: #999999;
+		color: #ffffff;
+		border-color: #ddd;
+	}
+	.btn-default:hover,
+	.btn-default:active,
+	.btn-default.hover {
+		background-color: #8c8c8c;
+		color: #ffffff;
+	}
+	
+	
 
 </style>

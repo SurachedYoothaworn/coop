@@ -1,7 +1,6 @@
 <!--<body class="hold-transition skin-blue sidebar-mini">-->
 <body class="skin-blue sidebar-mini sidebar-collapse">
 <div class="wrapper">
-
   <!-- Main Header -->
   <header class="main-header">
 
@@ -9,6 +8,7 @@
     <a href="<?php echo site_url()."/Home";?>" class="logo">
 		<!-- mini logo for sidebar mini 50x50 pixels --> 
 		<span class="logo-mini"><b>K</b>PI</span>
+		<!--<img class="logo-mini"  src="<?php echo base_url()."/assets/img/med_logo.PNG";?>" height="55" width="55">--> 
 		<!-- logo for regular state and mobile devices -->
 		<span class="logo-lg"><b><?php echo $this->config->item('title_system');?></b> </span>
     </a>

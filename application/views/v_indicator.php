@@ -12,13 +12,13 @@
 </div> -->
 <?php include(dirname(__FILE__)."/v_kpims_main.php") ?>
 <style>
-
+	
 </style>
 <script>
     $(document).ready( function () {
         get_data();
     });
-
+	
     function get_data(){
         $("#example").DataTable({
             bDestroy: true,
@@ -53,21 +53,7 @@
             "order": [[ 0, "asc" ]], //เรียงลำดับการแสดงผล
             "fnRowCallback": function(nRow, aData, iDisplayIndex) {
                 nRow.setAttribute("id","tr_"+aData.ind_id);
-            },
-            "oLanguage": {
-                "sLengthMenu": "แสดง  _MENU_  รายการ",
-                "sZeroRecords": "ไม่พบข้อมูล",
-                "sInfo": "แสดงรายการที่ _START_ ถึง _END_ ของ _TOTAL_ รายการ",
-                "sInfoEmpty": "แสดงรายการที่ 0 ถึง 0 ของ 0 รายการ",
-                "sInfoFiltered": "(จากรายการทั้งหมด _MAX_ รายการ)",
-                "sSearch": "",
-                "oPaginate": {
-                    "sFirst":    "หน้าแรก",
-                    "sPrevious": "ก่อนหน้า",
-                    "sNext":     "ถัดไป",
-                    "sLast":     "หน้าสุดท้าย"
-                }
-            } //End oLanguage
+            }
         });//end DataTable
         $('.dataTables_filter input').attr('placeholder', 'ค้นหา');
         // var table = $("#example").dataTable();
@@ -75,6 +61,8 @@
     } //End fn get_data
 
     function open_modal(){
+		// validate("frm_modal_add");
+		// $("#ind_add").removeAttr('style');
         // notify("success","ตัวชี้วัด");
         $('#ind_add').val("");
         $('#desc_add').val("");
@@ -82,22 +70,24 @@
     } //End fn open_modal
 
     function save_indicator(){
-        // alert("test");
-        var ind_name = $('#ind_add').val();
-        var ind_desc = $('#desc_add').val();
-	 	$.ajax({
-	 		type: "POST",
-	 		url: "<?php echo site_url('/Manage_indicator/save_indicator');?>",
-	 		data: {'ind_name': ind_name, 'ind_desc': ind_desc},
-	 		dataType : "json",
-	 		success : function(data){
-                if(data == true){
-                    $('#modal_add_indicator').modal('toggle');
-                    notify_save("ตัวชี้วัด");
-                    get_data();
-                } 
-	 		}//End success
-	 	});
+		var frm = validate("frm_modal_add");
+		if(frm == true){
+			var ind_name = $('#ind_add').val();
+			var ind_desc = $('#desc_add').val();
+			$.ajax({
+				type: "POST",
+				url: "<?php echo site_url('/Manage_indicator/save_indicator');?>",
+				data: {'ind_name': ind_name, 'ind_desc': ind_desc},
+				dataType : "json",
+				success : function(data){
+					if(data == true){
+						$('#modal_add_indicator').modal('toggle');
+						notify_save("ตัวชี้วัด");
+						get_data();
+					} 
+				}//End success
+			});
+		}//if
     } //End fn save_indicator
 
     function edit_indicator(ind_id){
@@ -118,20 +108,23 @@
 	} //End fn edit_indicator
 
     function save_edit_indicator(){
-        var hid_ind_id = $("#hid_ind_id").val();
-        var ind_edit = $("#ind_edit").val();
-        var desc_edit = $("#desc_edit").val();
-        $.ajax({
-	 		type: "POST",
-	 		url: "<?php echo site_url('/Manage_indicator/update_indicator');?>",
-	 		data: {'hid_ind_id': hid_ind_id,'ind_edit': ind_edit,'desc_edit': desc_edit},
-	 		dataType : "json",
-	 		success : function(data){
-                $('#modal_edit_indicator').modal('toggle');
-                notify_edit("ตัวชี้วัด");
-                get_data();
-	 		}
-	 	});
+		var frm = validate("frm_modal_edit");
+		if(frm == true){
+			var hid_ind_id = $("#hid_ind_id").val();
+			var ind_edit = $("#ind_edit").val();
+			var desc_edit = $("#desc_edit").val();
+			$.ajax({
+				type: "POST",
+				url: "<?php echo site_url('/Manage_indicator/update_indicator');?>",
+				data: {'hid_ind_id': hid_ind_id,'ind_edit': ind_edit,'desc_edit': desc_edit},
+				dataType : "json",
+				success : function(data){
+					$('#modal_edit_indicator').modal('toggle');
+					notify_edit("ตัวชี้วัด");
+					get_data();
+				}
+			});
+		}
     } //End fn save_edit_indicator
 
     function update_status_indicator(ind_id){
@@ -202,50 +195,50 @@
 
 <!--Modal add-->
 <div class="modal fade" id="modal_add_indicator" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog"  style="width:50%">
+    <div class="modal-dialog"  style="">
         <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" aria-label="Close">
+            <div class="modal-header modal_header_success">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true" data-toggle="modal">&times;</span></button>
                 <h3 class="modal-title">เพิ่มตัวชี้วัด</h3>
             </div>
             <div class="modal-body">
-                <form id="frm_modal_add"> <!-- Start form -->
-                    <div class="form-group"> <!-- Start form-group -->
-                        <div class = "col-md-12">
-                            <label class="col-md-2 control-label" style="padding: 8px; text-align: right;">ชื่อตัวชี้วัด<span class="text-danger">*</span></label>
-                            <div class="col-md-10" id=""> <!-- Start col-md-9 -->
-                                <input type="text" class="form-control" value="" name="ind_add" id="ind_add" >
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                         <div class = "col-md-12">
-                            <label class="col-md-2 control-label" style="padding: 8px; text-align: right;">คำอธิบาย<span class="text-danger">*</span></label>
-                            <div class="col-md-10" id=""> <!-- Start col-md-9 -->
-                                <!-- <input type="text" class="form-control" value="" name="desc_add" id="desc_add"  required> -->
-                                <textarea name="desc_add" id="desc_add" class="form-control" rows="4" cols="50"></textarea>
-                                <!-- <input type="hidden" name="afm_ids" id="afm_ids"> -->
-                            </div>
-                        </div> <!-- End col-md-12 -->
-                    </div> <!-- End form-group -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">ยกเลิก</button>
-                    <!-- <input type="button" class="btn btn-success" onclick="save()" value="บันทึก"> -->
-                    <!-- <button type="submit" class="btn btn-success" onclick="save_indicator()" >บันทึก</button> -->
-                    <a id="btn-add-tab" name="btn-add-tab" class="<?php echo $this->config->item('btn_success');?> pull-right" data-toggle="modal" onclick="save_indicator()">บันทึก</a>
-                </div><!--modal-footer-->
-            </form>
+				<form id="frm_modal_add"> <!-- Start form -->
+					<div class="form-group"> <!-- Start form-group -->
+						<div class = "col-md-12">
+							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">ชื่อตัวชี้วัด<span class="text-danger">*</span></label>
+							<div class="col-md-10" id=""> <!-- Start col-md-9 -->
+								<!--<input type="text" class="form-control" value="" name="ind_add" id="ind_add" validate>-->
+								 <textarea name="ind_add" id="ind_add" class="form-control" rows="2" cols="50" validate></textarea>
+							</div>
+						</div>
+					</div><label></label>
+					<div class="form-group">
+						<div class = "col-md-12">
+							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">คำอธิบาย<span></span></label>
+							<div class="col-md-10" id=""> <!-- Start col-md-9 -->
+								<!-- <input type="text" class="form-control" value="" name="desc_add" id="desc_add"  validate> -->
+								<textarea name="desc_add" id="desc_add" class="form-control" rows="4" cols="50" ></textarea>
+							</div>
+						</div> <!-- End col-md-12 -->
+					</div> <!-- End form-group -->
+				</form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">ยกเลิก</button>
+                <!-- <input type="button" class="btn btn-success" onclick="save()" value="บันทึก"> -->
+                <!-- <button type="submit" class="btn btn-success" onclick="save_indicator()" >บันทึก</button> -->
+                <a id="btn-add-tab" name="btn-add-tab" class="<?php echo $this->config->item('btn_success');?> pull-right" data-toggle="modal" onclick="save_indicator()">บันทึก</a>
+            </div><!--modal-footer-->
         </div>
     </div> <!-- /.modal-content -->
 </div> <!-- /.modal-dialog -->
 
 <!--Modal edit-->
 <div class="modal fade" id="modal_edit_indicator" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog"  style="width:50%">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header modal_header_warning">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span></button>
                 <h3 class="modal-title">แก้ไขตัวชี้วัด</h3>
@@ -256,13 +249,14 @@
                         <div class = "col-md-12">
                             <label class="col-md-2 control-label" style="padding: 8px; text-align: right;">ชื่อตัวชี้วัด<span class="text-danger">*</span></label>
                             <div class="col-md-10" id=""> <!-- Start col-md-9 -->
-                                <input type="text" class="form-control" value="" name="ind_edit" id="ind_edit" rows="2" validate  >
+                                <!--<input type="text" class="form-control" value="" name="ind_edit" id="ind_edit" rows="2" validate >-->
+								<textarea name="ind_edit" id="ind_edit" class="form-control" rows="2" cols="50" validate></textarea>
                             </div>
                         </div>
-                    </div>
+                    </div><label></label>
                     <div class="form-group">
                         <div class = "col-md-12">
-                            <label class="col-md-2 control-label" style="padding: 8px; text-align: right;">คำอธิบาย<span class="text-danger">*</span></label>
+                            <label class="col-md-2 control-label" style="padding: 8px; text-align: right;">คำอธิบาย<span></span></label>
                             <div class="col-md-10" id=""> <!-- Start col-md-9 -->
                                 <!-- <input type="text" class="form-control" value="" name="desc_edit" id="desc_edit" rows="2" validate  > -->
                                 <textarea name="desc_edit" id="desc_edit" class="form-control" rows="4" cols="50" value=""></textarea>
@@ -270,13 +264,13 @@
                             </div>
                         </div> <!-- End col-md-12 -->
                     </div> <!-- End form-group -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-inverse pull-left" data-dismiss="modal">ยกเลิก</button>
-                    <!-- <button type="submit" class="btn btn-success"  onclick="save_edit_indicator()">บันทึก</button> -->
-                    <a id="btn-add-tab" name="btn-add-tab" class="<?php echo $this->config->item('btn_success');?> pull-right" onclick="save_edit_indicator()">บันทึก</a>
-                </div><!--modal-footer-->
-            </form>	
+				</form>	
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">ยกเลิก</button>
+                <!-- <button type="submit" class="btn btn-success"  onclick="save_edit_indicator()">บันทึก</button> -->
+                <a id="btn-edit-tab" name="btn-edit-tab" class="<?php echo $this->config->item('btn_success');?> pull-right" onclick="save_edit_indicator()">บันทึก</a>
+            </div><!--modal-footer-->
         </div>
     </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->

@@ -9,7 +9,7 @@ class Authen extends kpims_Controller {
         $this->load->model('User_Login/M_kpi_user','us');
         $this->load->model('User_Login/M_kpi_userlog','uslog');
        
-    }
+    }  
     
     public function index(){
 		// print_r($this->session->userdata('us_id'));die;

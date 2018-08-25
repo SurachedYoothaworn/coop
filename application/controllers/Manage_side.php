@@ -11,18 +11,18 @@ class Manage_side extends kpims_Controller {
 
 	public function index()
 	{
-        $data['rs_side'] = $this->side->get_all();
-		$this->output('v_side', $data);
+		$this->output('v_side');
     }
     
     public function save_side(){
-        // print_r($this->input->post('side_add'));
-        $side_name = $this->input->post('side_add');
-        $side_code = $this->input->post('side_code_add');
-        $this->side->side_name = $side_name;
-        $this->side->side_code  = $side_code;
-        $this->side->insert();
-        redirect('Manage_side', 'refash');
+        $side_name = $this->input->post('side_name');
+        $side_code = $this->input->post('side_code');
+		if($side_name != NULL || $side_name != ""){
+			$this->side->side_name = $side_name;
+			$this->side->side_code  = $side_code;
+			$this->side->insert();
+			echo json_encode(true);
+		}
     }
 
     public function edit_side(){
@@ -32,11 +32,13 @@ class Manage_side extends kpims_Controller {
     }
 
     public function update_side(){
-        $side_id = $this->input->post('hid_side_id');
-        $side_name = $this->input->post('side_edit');
-        $side_code = $this->input->post('side_code_edit');
-        $this->side->update($side_id, $side_name, $side_code);
-        redirect('Manage_side', 'refash');
+        $side_id = $this->input->post('side_id');
+        $side_name = $this->input->post('side_name');
+        $side_code = $this->input->post('side_code');
+		if($side_name != NULL || $side_name != ""){
+			$this->side->update($side_id, $side_name, $side_code);
+			echo json_encode(true);
+		}
     }
 
     public function update_status_side(){
@@ -44,4 +46,31 @@ class Manage_side extends kpims_Controller {
         $this->side->update_status($side_id);
         echo json_encode(true);
     }
+	
+	function get_data(){ 
+        $rs_side_data = $this->side->get_all();
+        $data = array(); 
+        if($rs_side_data->num_rows() > 0){
+            $seq = 1;
+			foreach($rs_side_data->result() as $side){
+                $btn  = '<center><button id="btn_edit" name="btn_edit" class="'.$this->config->item('btn_warning').'" data-tooltip="แก้ไขหน่วยงาน" data-toggle="modal" href="#modal_edit_side" onclick="edit_side('.$side->side_id.')">';
+                $btn .= '<i class="glyphicon glyphicon-pencil" style="color:white" ></i>';
+                $btn .= '</button>&nbsp';
+                $btn .= '<button id="btn_del" name="btn_del" class="'.$this->config->item('btn_danger').'" data-tooltip="ลบหน่วยงาน"  onclick="update_status_side('.$side->side_id.')">';
+                $btn .= '<i class="glyphicon glyphicon-trash" style="color:white"></i>';
+                $btn .= '</button></center>';
+				
+				$side_data = array(
+					"side_seq" => "<center>".$seq."</center>",
+					"side_id" => $side->side_id,
+					"side_name" => $side->side_name,
+					"side_code" => "<center>".$side->side_code."</center>",
+					"btn_manage" => $btn,
+				);
+				array_push($data, $side_data);
+				$seq++;
+            } //End for
+        } //End if
+        echo json_encode($data);
+    }//End fn get_data
 }

@@ -8,6 +8,7 @@ class Define_indicator extends kpims_Controller {
         parent::__construct();
         $this->load->model('M_kpi_define_indicator','dfine');
 		$this->load->model('M_Define_responsibility_main','dfine_res');
+		$this->load->model('M_Define_responsibility_sub','ress');
     }
 
 	public function index(){
@@ -51,7 +52,7 @@ class Define_indicator extends kpims_Controller {
                 $btn_opt .= '<i class="glyphicon glyphicon-pencil" style="color:white"></i>';
                 $btn_opt .= '</button>&nbsp';
 				$btn_opt .= '<button id="btn_del" name="btn_del" class="'.$this->config->item('btn_danger').'" data-tooltip="ลบข้อมูลรายการตัวชี้วัด" onclick="update_status_define_indicator('.$dfine->dfine_id.')">';
-                $btn_opt .= '<i class="glyphicon glyphicon-remove" style="color:white"></i>';
+                $btn_opt .= '<i class="glyphicon glyphicon-trash" style="color:white"></i>';
                 $btn_opt .= '</button></center>&nbsp';
 				
 				// if($ind->ind_description == "" || $ind->ind_description == null){
@@ -100,8 +101,8 @@ class Define_indicator extends kpims_Controller {
 	
 	public function get_data_info(){
 		$dfine_id = $this->input->post('dfine_id');
-		$rs_data = $this->dfine->get_by_id($dfine_id)->result();
-		
+		$rs_data = $this->dfine->get_by_id($dfine_id)->result(); //ข้อมูลตัวชี้วัด
+		$rs_resm = $this->dfine_res->get_by_id($dfine_id); //ผู้รับผิดชอบ
 		foreach($rs_data as $row){
 			$data  = '<tr>';
 			$data .=	'<th width="20%" style="background-color: #eeeeee; align: left;" >ตัวชี้วัด</th>';
@@ -127,15 +128,33 @@ class Define_indicator extends kpims_Controller {
 			$data .=	'<th width="20%" style="background-color: #eeeeee;">หน่วยงาน</th>';
 			$data .=	'<td>'.$row->side_name.'</td>';
 			$data .='</tr>';
-			$data .='<tr>';
-			$data .=	'<th width="20%" style="background-color: #eeeeee;">ผู้รับผิดชอบ</th>';
-			$data .=	'<td>-</td>';
-			$data .='</tr>';
-			$data .='<tr>';
-			$data .=	'<th width="20%" style="background-color: #eeeeee;">ผู้รับผิดชอบร่วม</th>';
-			$data .=	'<td>-</td>';
-			$data .='</tr>';
-		}//foreach
+			if($rs_resm->num_rows() > 0){
+				foreach($rs_resm->result() as $resm){
+					$rs_ress = $this->ress->get_by_id($resm->resm_id);
+					$data .='<tr>';
+					$data .=	'<th width="20%" style="background-color: #eeeeee;">ผู้รับผิดชอบ</th>';
+					$data .=	'<td>'.$resm->resm_name.' (<b>ตำแหน่ง : </b>'.$resm->resm_pt_name.')</td>';
+					$data .='</tr>';
+					$data .='<tr>';
+					$data .=	'<th width="20%" style="background-color: #eeeeee;">ผู้รับผิดชอบร่วม</th>';
+					$data .='<td>';
+					foreach($rs_ress->result() as $ress){
+						$data .=	''.$ress->ress_name.' (<b>ตำแหน่ง : </b>'.$ress->ress_pt_name.')<br>';
+					}//End foreach
+					$data .='</td>';
+					$data .='</tr>';
+				}//End foreach
+			}else{
+				$data .='<tr>';
+				$data .=	'<th width="20%" style="background-color: #eeeeee;">ผู้รับผิดชอบ</th>';
+				$data .=	'<td>-</td>';
+				$data .='</tr>';
+				$data .='<tr>';
+				$data .=	'<th width="20%" style="background-color: #eeeeee;">ผู้รับผิดชอบร่วม</th>';
+				$data .='<td>-</td>';
+				$data .='</tr>';
+			}
+		} //End foreach
 		echo json_encode($data);
 	} //End fn get_data_info
 	
@@ -207,25 +226,6 @@ class Define_indicator extends kpims_Controller {
 	function get_info_resm(){
 		$dfine_id = $this->input->post('dfine_id');
 		$rs_resm = $this->dfine_res->get_by_id($dfine_id);
-		// $json = file_get_contents('http://10.8.1.29/scan-med/scanningPersonnel/API/api_getPerson.php');
-		// $rs_person = json_decode($json, TRUE);
-		// $data = array(); 
-		
-		// foreach($rs_person as $rs_ps){
-			// foreach($rs_resm->result() as $rs_m){
-				// if($rs_ps['ps_id'] == $rs_m->resm_ps_id){
-					// if($rs_m->resm_dfine_id == $dfine_id){
-						// $data = $rs_ps['hr_name'];
-						// $resm_data = array(
-							// "hr_name" 			=>	$rs_ps['hr_name'],
-							// "hr_position" 			=>	$rs_ps['hr_position'],
-						// );
-						// array_push($data, $resm_data);
-					// }
-				// }	
-			// }
-		// }
-		
 		$seq=1;
 		$resm_dept = "";
 		$row="";
@@ -243,8 +243,6 @@ class Define_indicator extends kpims_Controller {
 			$row .= 		'<td>'.$rs_m->resm_dept.'</td>';
 			$row .= '</tr>';
 		}       
-		
-		
 		echo json_encode($row); 
 	}//End fn get_info_resm
 }

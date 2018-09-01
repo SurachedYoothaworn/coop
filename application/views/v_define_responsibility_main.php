@@ -28,7 +28,14 @@
             rows2.hide();
 		});
 		
-		// alert(<?php echo $dfine_id; ?>);
+		<?php if(count($rs_resm) > 0){?>
+			$('#btn_add_resm').attr('disabled','');
+			$('#note').html('&nbsp;&nbsp;&nbsp;<span id="note_descpt" class="text-danger">*ลบผู้รับผิดชอบเพื่อเพิ่มผู้รับผิดชอบใหม่</span>');
+			$('#btn_add_resm').removeAttr('onclick');
+		<?php }else{?>
+			$('#btn_add_resm').removeAttr('disabled');
+			$('#note').html('<br>');
+		<?php }?>
     });
 	
 	function get_data(){
@@ -52,11 +59,16 @@
 	function get_resm(chk_modal,resm_id){
 		var dfine_id = '<?php echo $dfine_id; ?>';
 		$('#modal_add_resm').modal({show:true});
-		// $("#modal_add_resm").animate({ scrollTop: 0 }, 'fast');
+		$("#modal_add_resm").animate({ scrollTop: 0 }, 'fast');
 		$('#search').val("");
 		
+		$('#div_search').hide();
+		$('#tb_data').hide();
+		$('#md_add_footer').hide();
+		$('#row_loading_out').show();
+		
 		if(chk_modal == 0){
-			// alert(0);
+			$("#head_madal_addres").text("เพิ่มผู้รับผิดชอบตัวชี้วัด");
 			$("#hid_btn_chk").val(0);
 			$.ajax({
 				type: "POST",
@@ -64,20 +76,27 @@
 				data: {'dfine_id': dfine_id},
 				dataType : "json",
 				success : function(data){
-					$('#tb_modal_add_resm').html(data);
+					$('#div_search').show();
+					$('#tb_data').show();
+					$('#md_add_footer').show();
+					$('#row_loading_out').hide();
+					$('#tb_modal_res').html(data);
 				}//End success
 			});
 		}else if(chk_modal == 1){
+			$("#head_madal_addres").text("เพิ่มผู้รับผิดชอบร่วม");
 			$("#hid_btn_chk").val(1);
-			// alert(resm_id);
 			$.ajax({
 				type: "POST",
 				url: "<?php echo site_url('/Define_responsibility_main/get_ress');?>",
 				data: {'dfine_id': dfine_id, 'resm_id': resm_id},
 				dataType : "json",
 				success : function(data){
-					// alert(1);
-					$('#tb_modal_add_resm').html(data);
+					$('#div_search').show();
+					$('#tb_data').show();
+					$('#md_add_footer').show();
+					$('#row_loading_out').hide();
+					$('#tb_modal_res').html(data);
 				}//End success
 			});
 		}
@@ -86,13 +105,13 @@
 	
 	function save_resm(){
 		var dfine_id = '<?php echo $dfine_id; ?>';
-		var ps_id = $('input:checkbox[name=chk_ps_add]:checked').val();
-		var ps_checked = [];
-		$("input:checkbox[name=chk_ps_add]:checked").each(function() {
-		    ps_checked.push($(this).attr('value'));
-		});
 		var btn_chk = $("#hid_btn_chk").val();
 		if(btn_chk == 0){
+			var ps_id = $('input:radio[name=chk_ps_add]:checked').val();
+			// var ps_checked = [];
+			// $("input:checkbox[name=chk_ps_add]:checked").each(function() {
+				// ps_checked.push($(this).attr('value'));
+			// });
 			$('#div_search').hide();
 			$('#tb_data').hide();
 			$('#md_add_footer').hide();
@@ -100,7 +119,7 @@
 			$.ajax({
 				type: "POST",
 				url: "<?php echo site_url('/Define_responsibility_main/save_resm');?>",
-				data: {'ps_checked' : ps_checked, 'dfine_id' : dfine_id},
+				data: {'ps_id' : ps_id, 'dfine_id' : dfine_id},
 				success : function(data){
 					$('#modal_add_resm').modal('toggle');
 					notify_save("");
@@ -111,11 +130,19 @@
 					$('#row_loading_out').hide();
 					// $('#btn_del_all').attr('disabled','');
 					$('#btn_del_all').removeAttr('disabled');
+					$('#btn_add_resm').attr('disabled','');
+					$('#btn_add_resm').removeAttr('onclick');
+					$('#note').html('&nbsp;&nbsp;&nbsp;<span id="note_descpt" class="text-danger">*ลบผู้รับผิดชอบเพื่อเพิ่มผู้รับผิดชอบใหม่</span>');
 					
 				}
 			});
 		}else if(btn_chk == 1){
 			var resm_id = $("#hid_resm_id").val();
+			var ps_id = $('input:checkbox[name=chk_ps_add]:checked').val();
+			var ps_checked = [];
+			$("input:checkbox[name=chk_ps_add]:checked").each(function() {
+				ps_checked.push($(this).attr('value'));
+			});
 			$('#div_search').hide();
 			$('#tb_data').hide();
 			$('#md_add_footer').hide();
@@ -162,36 +189,38 @@
 					}else{
 						$('#btn_del_all').removeAttr('disabled');
 					}
+					$('#btn_add_resm').removeAttr('disabled');
+					$('#btn_add_resm').attr('onclick','get_resm("0","0")');
+					$('#note').html('<br>');
 				}
 			});
             // swal('ดำเนินการลบสำเร็จ','ข้อมูลที่คุณเลือกได้ลบออกจากระบบแล้ว', "success");
 		});	//End swal
 	} //End fn del_resm
 	
-	function del_all_resm(dfine_id){
-		swal({ //start swal
-			title: "คุณต้องการลบใช่หรือไม่?",
-			text: "หากลบแล้วจะไม่สามารถกู้คืนได้อีก!",
-			type: "warning",
-			showCancelButton: true,
-			confirmButtonColor: "#dd4b39",
-			confirmButtonText: "ยืนยัน",
-			closeOnConfirm: true ,
-			cancelButtonText: 'ยกเลิก'
-		},function(){
-            $.ajax({
-				type: "POST",
-				url: "<?php echo site_url('/Define_responsibility_main/del_all_resm');?>",
-				data: {'dfine_id' : dfine_id},
-				success : function(data){
-					notify_del("");
-					get_data();
-					$('#btn_del_all').attr('disabled','');
-				}
-			});
-            // swal('ดำเนินการลบสำเร็จ','ข้อมูลที่คุณเลือกได้ลบออกจากระบบแล้ว', "success");
-		});	//End swal
-	}
+	// function del_all_resm(dfine_id){
+		// swal({ //start swal
+			// title: "คุณต้องการลบใช่หรือไม่?",
+			// text: "หากลบแล้วจะไม่สามารถกู้คืนได้อีก!",
+			// type: "warning",
+			// showCancelButton: true,
+			// confirmButtonColor: "#dd4b39",
+			// confirmButtonText: "ยืนยัน",
+			// closeOnConfirm: true ,
+			// cancelButtonText: 'ยกเลิก'
+		// },function(){
+            // $.ajax({
+				// type: "POST",
+				// url: "<?php echo site_url('/Define_responsibility_main/del_all_resm');?>",
+				// data: {'dfine_id' : dfine_id},
+				// success : function(data){
+					// notify_del("");
+					// get_data();
+					// $('#btn_del_all').attr('disabled','');
+				// }
+			// });
+		// });	//End swal
+	// }
 	
 	function del_ress(ress_id,ress_resm_id){
 		// alert(ress_resm_id);
@@ -225,6 +254,32 @@
 		});	//End swal
 	}
 	
+	function del_all_ress(){
+		var resm_id = $("#hid_modal_info_resm_id").val();
+		swal({ //start swal
+			title: "คุณต้องการลบใช่หรือไม่?",
+			text: "หากลบแล้วจะไม่สามารถกู้คืนได้อีก!",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#dd4b39",
+			confirmButtonText: "ยืนยัน",
+			closeOnConfirm: true ,
+			cancelButtonText: 'ยกเลิก'
+		},function(){
+            $.ajax({
+				type: "POST",
+				url: "<?php echo site_url('/Define_responsibility_main/del_all_ress');?>",
+				data: {'resm_id' : resm_id},
+				success : function(data){
+					notify_del("");
+					get_data();
+					$('#modal_info_ress').modal('toggle');
+				}
+			});
+            // swal('ดำเนินการลบสำเร็จ','ข้อมูลที่คุณเลือกได้ลบออกจากระบบแล้ว', "success");
+		});	//End swal
+	} //End fn del_all_ress
+	
 	function checkAll_person_add(){
 		var checkboxes = $(".chk_preson_add");
 		if($("#checkAll_add").is(':checked')){ //Start if
@@ -256,10 +311,8 @@
 				// $(data).each(function(seq, data) {
 					// seq++;			
 				// });
-				
-				$("#tb_modal_info_ress").html(data);	
-				
-				
+				$("#hid_modal_info_resm_id").val(resm_id);
+				$("#tb_modal_info").html(data);	
             }
         });
 		
@@ -314,21 +367,20 @@
 							</div> <!-- End form-group -->
 						</form>
 						<div class="form-group">
-							<a id="btn-add-tab" name="btn-add-tab" class="<?php echo $this->config->item('btn_primary');?> pull-left" href="#" onclick="get_resm('0','0')">
+							<a id="btn_add_resm" name="btn-add-tab" class="<?php echo $this->config->item('btn_primary');?> pull-left" href="#" onclick="get_resm('0','0')">
 							<i class="glyphicon glyphicon-plus" style="color:white"></i> เพิ่มผู้รับผิดชอบตัวชี้วัด</a>
+						</div>
+						<div class="form-group"  id="note">
 							
-							<?php if(count($arr_resm) > 0){?>
-								<a id="btn_del_all" name="btn_del_all" class="<?php echo $this->config->item('btn_danger')?> pull-right" onclick="del_all_resm(<?php echo $dfine_id; ?>)">
-								<i class="glyphicon glyphicon-remove" style="color:white"></i>&nbsp;ลบผู้รับผิดชอบทั้งหมด</a>
-							<?php }else{?>
-								<a id="btn_del_all" name="btn_del_all" class="<?php echo $this->config->item('btn_danger')?> pull-right" onclick="" disabled>
-								<i class="glyphicon glyphicon-remove" style="color:white"></i>&nbsp;ลบผู้รับผิดชอบทั้งหมด</a>
-							<?php }?>
-						
-						</div><br><br><br>
-					
-					
-					
+						</div>
+							<?php //if(count($arr_resm) > 0){?>
+								<!--<a id="btn_del_all" name="btn_del_all" class="<?php echo $this->config->item('btn_danger')?> pull-right" onclick="del_all_resm(<?php echo $dfine_id; ?>)">
+								<i class="glyphicon glyphicon-remove" style="color:white"></i>&nbsp;ลบผู้รับผิดชอบทั้งหมด</a>-->
+							<?php //}else{?>
+								<!--<a id="btn_del_all" name="btn_del_all" class="<?php //echo $this->config->item('btn_danger')?> pull-right"  disabled>
+								<i class="glyphicon glyphicon-remove" style="color:white"></i>&nbsp;ลบผู้รับผิดชอบทั้งหมด</a>-->
+							<?php //}?>
+						<br>
                         <table id="" class="table table-bordered table-hover" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
@@ -359,7 +411,7 @@
             <div class="modal-header modal_header_success">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true" data-toggle="modal">&times;</span></button>
-                <h3 class="modal-title">เพิ่มผู้รับผิดชอบร่วม</h3>
+                <h3 class="modal-title" id="head_madal_addres" ></h3>
             </div>
             <div class="modal-body">
 				<form id="frm_modal_add"> <!-- Start form -->
@@ -375,18 +427,8 @@
 					</div><br><br><br>
 				
 					<div class="form-group" id="tb_data" style="display:block;"> <!-- Start form-group -->
-						<table id="" class="table table-bordered">
-							 <thead>
-                                <tr>
-									<th style="width: 15%; text-align: center;"> <input type="checkbox" name="checkAll_add" id="checkAll_add" onclick="checkAll_person_add()">&nbsp;เลือกทั้งหมด</th>
-                                    <th style="width: 30%; text-align: center;">ชื่อ - สกุล</th>
-                                    <th style="width: 25%; text-align: center;">ตำแหน่ง</th>
-									<th style="width: 30%; text-align: center;">แผนก</th>
-                                </tr>
-                            </thead>
-							<tbody id="tb_modal_add_resm">
-								
-							</tbody>
+						<table id="tb_modal_res" class="table table-bordered">
+							 
 						</table>
 					</div> <!-- End form-group -->
 				</form>
@@ -410,9 +452,6 @@
     </div> <!-- /.modal-content -->
 </div> <!-- /.modal-dialog -->
 
-
-
-
 <!--Modal info ress-->
 <div class="modal fade" id="modal_info_ress" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" style="">
@@ -425,27 +464,21 @@
             <div class="modal-body">
 				<form id="frm_modal_add"> <!-- Start form -->
 					<div class="form-group"> <!-- Start form-group -->
-						<table id="" class="table table-bordered">
-							 <thead>
-                                <tr>
-                                    <th style="width: 5%; text-align: center;">ลำดับ</th>
-                                    <th style="width: 30%; text-align: center;">ชื่อ - สกุล</th>
-                                    <th style="width: 30%; text-align: center;">ตำแหน่ง</th>
-									<th style="width: 15%; text-align: center;">ดำเนินการ</th>
-                                </tr>
-                            </thead>
-							<tbody id="tb_modal_info_ress">
-								
-							</tbody>
+						<!--<a id="btn_del" name="btn_del" class="<?php //echo $this->config->item('btn_danger')?> pull-right" onclick="del_all_ress('.$resm_id.')">
+						<i class="glyphicon glyphicon-remove" style="color:white"></i>ลบทั้งหมด</a><br><br>-->
+						<table id="tb_modal_info" class="table table-bordered">
+						
 						</table>
+						<input type="hidden" id="hid_modal_info_resm_id" value="">
 					</div> <!-- End form-group -->
 				</form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">ปิด</button>
+				<a id="btn_del" name="btn_del" class="<?php echo $this->config->item('btn_danger')?>" onclick="del_all_ress()">ลบทั้งหมด</a>
                 <!-- <input type="button" class="btn btn-success" onclick="save()" value="บันทึก"> -->
                 <!-- <button type="submit" class="btn btn-success" onclick="save_indicator()" >บันทึก</button> -->
-                </div><!--modal-footer-->
+            </div><!--modal-footer-->
         </div>
     </div> <!-- /.modal-content -->
 </div> <!-- /.modal-dialog -->

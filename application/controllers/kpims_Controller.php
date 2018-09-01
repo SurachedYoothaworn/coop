@@ -3,7 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once(dirname(__FILE__)."\Main_Controller.php");
 
 class kpims_Controller extends Main_Controller {
-
+	public function __construct(){
+        parent::__construct();
+		$this->load->helper('function_helper');
+    }
+	
 	public function index()
 	{
 		echo "Access system is forbidden.";
@@ -55,7 +59,6 @@ class kpims_Controller extends Main_Controller {
 			$this->head();
 			$this->javascript();
 			$this->load->view('page_login');
-			
 		}
 	}
 	

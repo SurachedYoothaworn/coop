@@ -10,11 +10,11 @@
         <!-- Default to the left -->
         <!-- <div class="form-group"> -->
             <!-- <center> -->
-                <strong>Copyright &copy; 2018 <a href="http://med.buu.ac.th/">คณะแพทยศาสตร์ มหาวิทยาลัยบูรพา</a></strong> 
+                <strong>Copyright &copy; 2018 <a href="https://deanoffice.medbuu.info/">สำนักงานคณบดี คณะแพทยศาสตร์</a></strong> 
                 <!-- All rights reserved. -->
             <!-- <center>
             <center> -->
-                <strong class="pull-right">CREATE AND DESIGN BY...</strong>
+                <strong class="pull-right">CREATE & DESIGN BY <a>SURACHED YOOTHAWORN</a></strong>
             <!-- <center> -->
         <!-- </div> -->
 

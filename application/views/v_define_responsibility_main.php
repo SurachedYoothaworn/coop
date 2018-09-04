@@ -398,10 +398,11 @@
                     </div>
                 </div><!-- End  col-md-12 -->
 				<a type="button" class="btn btn-default pull-left" href="<?php echo site_url('/Define_indicator')?>">ย้อนกลับ</a>
-            </div>
+			</div>
         </div>
     </div>
 </div>
+
 
 <!--Modal add resm-->
 <div class="modal fade" id="modal_add_resm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

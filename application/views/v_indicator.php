@@ -11,9 +11,6 @@
 	</div>
 </div> -->
 <?php include(dirname(__FILE__)."/v_kpims_main.php") ?>
-<style>
-	
-</style>
 <script>
     $(document).ready( function () {
         get_data();

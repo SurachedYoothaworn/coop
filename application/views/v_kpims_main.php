@@ -31,6 +31,7 @@
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/select2/select2.min.js"></script>
 <link type="text/css" rel="stylesheet" href="<?php echo base_url();?>assets/plugins/select2/select2.css">
 
+<!--<link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>plugins/iCheck/all.css">-->
 <script>
     //แจ้งเตือนการบันทึก
     function notify_save(name){
@@ -62,6 +63,16 @@
             title: 'แก้ไข'+name+'สำเร็จ',
             text: '',
             type: "danger",
+            delay: 1500
+        }))
+    }
+	
+	 function notify_save_assessment(name){
+        PNotify.desktop.permission();
+        (new PNotify({
+            title: 'ประเมินผล'+name+'สำเร็จ',
+            text: '',
+            type: "info",
             delay: 1500
         }))
     }
@@ -128,6 +139,12 @@
 		color: #ffffff;
 	}
 	
-	
-
+	[type="checkbox"]{
+		 width: 1.5em; 
+		 height: 1.5em;
+	}
+	[type="radio"]{
+		 width: 1.5em; 
+		 height: 1.5em;
+	}
 </style>

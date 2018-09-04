@@ -30,13 +30,13 @@ class Result_indicator extends kpims_Controller {
 					if($rsind->dfine_status_assessment != 0){
 						//ปุ่มบันทึกผลตัวชี้วัด
 						$btn_save_result  = '<center>';
-						$btn_save_result .= '<a id="btn_save_result" name="btn_save_result" class="'.$this->config->item('btn_primary').'" data-toggle="modal" data-tooltip="ไม่สามารถบันทึกผลตัวชี้วัดได้"  disabled>';
+						$btn_save_result .= '<a id="btn_save_result" name="btn_save_result" class="'.$this->config->item('btn_success').'" data-toggle="modal" data-tooltip="ไม่สามารถบันทึกผลตัวชี้วัดได้"  disabled>';
 						$btn_save_result .= '<i class="glyphicon glyphicon-floppy-save" style="color:white"></i>';
 						$btn_save_result .= '</a></center>';
 					}else{
 						//ปุ่มบันทึกผลตัวชี้วัด
 						$btn_save_result  = '<center>';
-						$btn_save_result .= '<a id="btn_save_result" name="btn_save_result" class="'.$this->config->item('btn_primary').'" data-toggle="modal" data-tooltip="บันทึกผลตัวชี้วัด"  href="#modal_save_result" onclick="get_data_save_result('.$rsind->dfine_id.')" >';
+						$btn_save_result .= '<a id="btn_save_result" name="btn_save_result" class="'.$this->config->item('btn_success').'" data-toggle="modal" data-tooltip="บันทึกผลตัวชี้วัด"  href="#modal_save_result" onclick="get_data_save_result('.$rsind->dfine_id.')" >';
 						$btn_save_result .= '<i class="glyphicon glyphicon-floppy-save" style="color:white"></i>';
 						$btn_save_result .= '</a></center>';
 					}
@@ -44,13 +44,13 @@ class Result_indicator extends kpims_Controller {
 					if($rsind->dfine_status_action == 0){
 						//ปุ่มยืนยันผลตัวชี้วัด
 						$btn_confirm  = '<center>';
-						$btn_confirm .= '<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_success').'" data-tooltip="กรุณาบันทึกผลตัวชี้วัด"   disabled>';
+						$btn_confirm .= '<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_primary').'" data-tooltip="กรุณาบันทึกผลตัวชี้วัด"   disabled>';
 						$btn_confirm .= '<i class="glyphicon glyphicon-floppy-saved" style="color:white"></i>';
 						$btn_confirm .= '</a></center>';				
 					}else{
 						//ปุ่มยืนยันผลตัวชี้วัด
 						$btn_confirm  = '<center>';
-						$btn_confirm .= '<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_success').'" data-tooltip="ประเมินผล"  data-toggle="modal" href="#modal_assessment" onclick="get_data_assessment('.$rsind->dfine_id.')">';
+						$btn_confirm .= '<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_primary').'" data-tooltip="ประเมินผล"  data-toggle="modal" href="#modal_assessment" onclick="get_data_assessment('.$rsind->dfine_id.')">';
 						$btn_confirm .= '<i class="glyphicon glyphicon-floppy-saved" style="color:white"></i>';
 						$btn_confirm .= '</a></center>';		
 					}
@@ -114,22 +114,30 @@ class Result_indicator extends kpims_Controller {
 			if($rs_dfine_data->num_rows() > 0){
 				// $seq = 1;
 				foreach($rs_dfine_data->result() as $rsind){
-					//ปุ่มบันทึกผลตัวชี้วัด
-					$btn_save_result  = '<center>';
-					$btn_save_result .= '<a id="btn_save" name="btn_save" class="'.$this->config->item('btn_primary').'" data-toggle="modal" data-tooltip="บันทึกผลตัวชี้วัด"  href="#modal_save_result" onclick="get_data_save_result('.$rsind->dfine_id.')" >';
-					$btn_save_result .= '<i class="glyphicon glyphicon-floppy-save" style="color:white"></i>';
-					$btn_save_result .= '</a></center>';
+					if($rsind->dfine_status_assessment != 0){
+						//ปุ่มบันทึกผลตัวชี้วัด
+						$btn_save_result  = '<center>';
+						$btn_save_result .= '<a id="btn_save_result" name="btn_save_result" class="'.$this->config->item('btn_success').'" data-toggle="modal" data-tooltip="ไม่สามารถบันทึกผลตัวชี้วัดได้"  disabled>';
+						$btn_save_result .= '<i class="glyphicon glyphicon-floppy-save" style="color:white"></i>';
+						$btn_save_result .= '</a></center>';
+					}else{
+						//ปุ่มบันทึกผลตัวชี้วัด
+						$btn_save_result  = '<center>';
+						$btn_save_result .= '<a id="btn_save_result" name="btn_save_result" class="'.$this->config->item('btn_success').'" data-toggle="modal" data-tooltip="บันทึกผลตัวชี้วัด"  href="#modal_save_result" onclick="get_data_save_result('.$rsind->dfine_id.')" >';
+						$btn_save_result .= '<i class="glyphicon glyphicon-floppy-save" style="color:white"></i>';
+						$btn_save_result .= '</a></center>';
+					}
 					
 					if($rsind->dfine_status_action == 0){
 						//ปุ่มยืนยันผลตัวชี้วัด
 						$btn_confirm  = '<center>';
-						$btn_confirm .= '<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_success').'" data-tooltip="กรุณาบันทึกผลตัวชี้วัด"   disabled>';
+						$btn_confirm .= '<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_primary').'" data-tooltip="กรุณาบันทึกผลตัวชี้วัด"   disabled>';
 						$btn_confirm .= '<i class="glyphicon glyphicon-floppy-saved" style="color:white"></i>';
 						$btn_confirm .= '</a></center>';				
 					}else{
 						//ปุ่มยืนยันผลตัวชี้วัด
 						$btn_confirm  = '<center>';
-						$btn_confirm .= '<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_success').'" data-tooltip="ประเมินผล"  data-toggle="modal" href="#modal_assessment" onclick="get_data_assessment('.$rsind->dfine_id.')">';
+						$btn_confirm .= '<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_primary').'" data-tooltip="ประเมินผล"  data-toggle="modal" href="#modal_assessment" onclick="get_data_assessment('.$rsind->dfine_id.')">';
 						$btn_confirm .= '<i class="glyphicon glyphicon-floppy-saved" style="color:white"></i>';
 						$btn_confirm .= '</a></center>';		
 					}
@@ -225,7 +233,7 @@ class Result_indicator extends kpims_Controller {
 
 		$row .=	'			<label class="col-md-2 control-label" style="text-align: right;">การดำเนินการ</label>';
 		$row .=	'			<div class="col-md-3" id=""> ';
-		$row .=	'				<input type="radio" value="0" name="status_action" id="status_action_1" ';
+		$row .=	'				<input  type="radio" value="0" name="status_action" id="status_action_1" ';
 								if($rs_dfine['dfine_status_action']==0){
 									$row .= 'checked>';
 								}else{
@@ -234,7 +242,7 @@ class Result_indicator extends kpims_Controller {
 		$row .=	'				<span class="label label-danger">ยังไม่ดำเนินการ</span>';
 		$row .=	'			</div>';
 		$row .=	'			<div class="col-md-3"> ';
-		$row .=	'				<input type="radio" value="1" name="status_action" id="status_action_2" ';
+		$row .=	'				<input  type="radio" value="1" name="status_action" id="status_action_2" ';
 								if($rs_dfine['dfine_status_action']==1){
 									$row .= 'checked>';
 								}else{
@@ -243,7 +251,7 @@ class Result_indicator extends kpims_Controller {
 		$row .=	'				<span class="label label-warning">กำลังดำเนินการ</span>';
 		$row .=	'			</div>';
 		$row .=	'			<div class="col-md-3" id="">'; 
-		$row .=	'				<input type="radio" value="2" name="status_action" id="status_action_3" ';
+		$row .=	'				<input  type="radio" value="2" name="status_action" id="status_action_3" ';
 								if($rs_dfine['dfine_status_action']==2){
 									$row .= 'checked>';
 								}else{
@@ -342,40 +350,40 @@ class Result_indicator extends kpims_Controller {
 								if($rs_dfine['opt_id'] == 1){ //เช็ค >
 									if($sum_score > $rs_dfine['dfine_goal']){
 										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="2" name="status_assessment" id="status_assessment_1" checked>';
+										$row .=	'					<input  type="radio" value="2" name="status_assessment" id="status_assessment_1" checked>';
 										$row .=	'					<span class="label label-success">ผ่าน</span>';
 										$row .=	'				</div>';
-										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="1" name="status_assessment" id="status_assessment_0" >';
+										$row .=	'				<div class="col-md-3"> ';
+										$row .=	'					<input  type="radio" value="1" name="status_assessment" id="status_assessment_0" >';
 										$row .=	'					<span class="label label-danger">ไม่ผ่าน</span>';
 										$row .=	'				</div>';
 									}else{
 										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="2" name="status_assessment" id="status_assessment_1" >';
+										$row .=	'					<input  type="radio" value="2" name="status_assessment" id="status_assessment_1" >';
 										$row .=	'					<span class="label label-success">ผ่าน</span>';
 										$row .=	'				</div>';
-										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="1" name="status_assessment" id="status_assessment_0" checked>';
+										$row .=	'				<div class="col-md-3"> ';
+										$row .=	'					<input  type="radio" value="1" name="status_assessment" id="status_assessment_0" checked>';
 										$row .=	'					<span class="label label-danger">ไม่ผ่าน</span>';
 										$row .=	'				</div>';
 									}
 								}else if($rs_dfine['opt_id'] == 2){ //เช็ค  <
 									if($sum_score < $rs_dfine['dfine_goal']){
 										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="2" name="status_assessment" id="status_assessment_1" checked>';
+										$row .=	'					<input  type="radio" value="2" name="status_assessment" id="status_assessment_1" checked>';
 										$row .=	'					<span class="label label-success">ผ่าน</span>';
 										$row .=	'				</div>';
-										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="1" name="status_assessment" id="status_assessment_0" >';
+										$row .=	'				<div class="col-md-3"> ';
+										$row .=	'					<input  type="radio" value="1" name="status_assessment" id="status_assessment_0" >';
 										$row .=	'					<span class="label label-danger">ไม่ผ่าน</span>';
 										$row .=	'				</div>';
 									}else{
 										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="2" name="status_assessment" id="status_assessment_1" >';
+										$row .=	'					<input  type="radio" value="2" name="status_assessment" id="status_assessment_1" >';
 										$row .=	'					<span class="label label-success">ผ่าน</span>';
 										$row .=	'				</div>';
-										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="1" name="status_assessment" id="status_assessment_0" checked>';
+										$row .=	'				<div class="col-md-3"> ';
+										$row .=	'					<input  type="radio" value="1" name="status_assessment" id="status_assessment_0" checked>';
 										$row .=	'					<span class="label label-danger">ไม่ผ่าน</span>';
 										$row .=	'				</div>';
 									}
@@ -383,20 +391,20 @@ class Result_indicator extends kpims_Controller {
 								else if($rs_dfine['opt_id'] == 3){ //เช็ค  =
 									if($sum_score == $rs_dfine['dfine_goal']){
 										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="2" name="status_assessment" id="status_assessment_1" checked>';
+										$row .=	'					<input  type="radio" value="2" name="status_assessment" id="status_assessment_1" checked>';
 										$row .=	'					<span class="label label-success">ผ่าน</span>';
 										$row .=	'				</div>';
-										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="1" name="status_assessment" id="status_assessment_0" >';
+										$row .=	'				<div class="col-md-3"> ';
+										$row .=	'					<input  type="radio" value="1" name="status_assessment" id="status_assessment_0" >';
 										$row .=	'					<span class="label label-danger">ไม่ผ่าน</span>';
 										$row .=	'				</div>';
 									}else{
 										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="2" name="status_assessment" id="status_assessment_1" >';
+										$row .=	'					<input  type="radio" value="2" name="status_assessment" id="status_assessment_1" >';
 										$row .=	'					<span class="label label-success">ผ่าน</span>';
 										$row .=	'				</div>';
-										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="1" name="status_assessment" id="status_assessment_0" checked>';
+										$row .=	'				<div class="col-md-3"> ';
+										$row .=	'					<input  type="radio" value="1" name="status_assessment" id="status_assessment_0" checked>';
 										$row .=	'					<span class="label label-danger">ไม่ผ่าน</span>';
 										$row .=	'				</div>';
 									}
@@ -404,20 +412,20 @@ class Result_indicator extends kpims_Controller {
 								else if($rs_dfine['opt_id'] == 4){ //เช็ค >=
 									if($sum_score >= $rs_dfine['dfine_goal']){
 										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="2" name="status_assessment" id="status_assessment_1" checked>';
+										$row .=	'					<input  type="radio" value="2" name="status_assessment" id="status_assessment_1" checked>';
 										$row .=	'					<span class="label label-success">ผ่าน</span>';
 										$row .=	'				</div>';
-										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="1" name="status_assessment" id="status_assessment_0" >';
+										$row .=	'				<div class="col-md-3"> ';
+										$row .=	'					<input  type="radio" value="1" name="status_assessment" id="status_assessment_0" >';
 										$row .=	'					<span class="label label-danger">ไม่ผ่าน</span>';
 										$row .=	'				</div>';
 									}else{
 										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="2" name="status_assessment" id="status_assessment_1" >';
+										$row .=	'					<input  type="radio" value="2" name="status_assessment" id="status_assessment_1" >';
 										$row .=	'					<span class="label label-success">ผ่าน</span>';
 										$row .=	'				</div>';
-										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="1" name="status_assessment" id="status_assessment_0" checked>';
+										$row .=	'				<div class="col-md-3"> ';
+										$row .=	'					<input  type="radio" value="1" name="status_assessment" id="status_assessment_0" checked>';
 										$row .=	'					<span class="label label-danger">ไม่ผ่าน</span>';
 										$row .=	'				</div>';
 									}
@@ -425,20 +433,20 @@ class Result_indicator extends kpims_Controller {
 								else if($rs_dfine['opt_id'] == 5){ //เช็ค <=
 									if($sum_score <= $rs_dfine['dfine_goal']){
 										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="2" name="status_assessment" id="status_assessment_1" checked>';
+										$row .=	'					<input  type="radio" value="2" name="status_assessment" id="status_assessment_1" checked>';
 										$row .=	'					<span class="label label-success">ผ่าน</span>';
 										$row .=	'				</div>';
-										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="1" name="status_assessment" id="status_assessment_0" >';
+										$row .=	'				<div class="col-md-3"> ';
+										$row .=	'					<input  type="radio" value="1" name="status_assessment" id="status_assessment_0" >';
 										$row .=	'					<span class="label label-danger">ไม่ผ่าน</span>';
 										$row .=	'				</div>';
 									}else{
 										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="2" name="status_assessment" id="status_assessment_1" >';
+										$row .=	'					<input  type="radio" value="2" name="status_assessment" id="status_assessment_1" >';
 										$row .=	'					<span class="label label-success">ผ่าน</span>';
 										$row .=	'				</div>';
-										$row .=	'				<div class="col-md-2"> ';
-										$row .=	'					<input type="radio" value="1" name="status_assessment" id="status_assessment_0" checked>';
+										$row .=	'				<div class="col-md-3"> ';
+										$row .=	'					<input  type="radio" value="1" name="status_assessment" id="status_assessment_0" checked>';
 										$row .=	'					<span class="label label-danger">ไม่ผ่าน</span>';
 										$row .=	'				</div>';
 									}
@@ -447,21 +455,21 @@ class Result_indicator extends kpims_Controller {
 		//กรณีทำการประเมินผลแล้ว
 		if($rs_dfine['dfine_status_assessment'] == 1){ //ไม่ผ่าน
 			$row .=	'				<div class="col-md-2"> ';
-			$row .=	'					<input type="radio" value="2" name="status_assessment" id="status_assessment_1" >';
+			$row .=	'					<input  type="radio" value="2" name="status_assessment" id="status_assessment_1" >';
 			$row .=	'					<span class="label label-success">ผ่าน</span>';
 			$row .=	'				</div>';
-			$row .=	'				<div class="col-md-2"> ';
-			$row .=	'					<input type="radio" value="1" name="status_assessment" id="status_assessment_0" checked>';
+			$row .=	'				<div class="col-md-3"> ';
+			$row .=	'					<input  type="radio" value="1" name="status_assessment" id="status_assessment_0" checked>';
 			$row .=	'					<span class="label label-danger">ไม่ผ่าน</span>';
 			$row .=	'				</div>';
 		}
 		if($rs_dfine['dfine_status_assessment'] == 2){ //ผ่าน
 			$row .=	'				<div class="col-md-2"> ';
-			$row .=	'					<input type="radio" value="2" name="status_assessment" id="status_assessment_1" checked>';
+			$row .=	'					<input  type="radio" value="2" name="status_assessment" id="status_assessment_1" checked>';
 			$row .=	'					<span class="label label-success">ผ่าน</span>';
 			$row .=	'				</div>';
 			$row .=	'				<div class="col-md-3"> ';
-			$row .=	'					<input type="radio" value="1" name="status_assessment" id="status_assessment_0" >';
+			$row .=	'					<input  type="radio" value="1" name="status_assessment" id="status_assessment_0" >';
 			$row .=	'					<span class="label label-danger">ไม่ผ่าน</span>';
 			$row .=	'				</div>';
 			

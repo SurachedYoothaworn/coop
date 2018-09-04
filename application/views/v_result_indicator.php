@@ -19,6 +19,8 @@
 <script>
 	$(document).ready( function () {
         get_data();
+		// $('#test').iCheck('enable');
+		 // $('#test').iCheck();
     });
 	
 	function get_data(){
@@ -118,7 +120,8 @@
             dataType : "json",
             success : function(data){
 				get_data();
-				$('#modal_save_result').modal('toggle');	
+				$('#modal_save_result').modal('toggle');
+				notify_save("");				
             }
         });
 	}
@@ -135,6 +138,7 @@
             success : function(data){
 				get_data();
 				$('#modal_assessment').modal('toggle');	
+				notify_save_assessment("");
             }
         });
 	}
@@ -206,7 +210,7 @@
                             <thead>
                                 <tr>
                                     <th style="width: 5%; text-align: center;">ลำดับ</th>
-                                    <th style="width: 10%; text-align: center;">ปีงบประมาณ</th>
+                                    <th style="width: 8%; text-align: center;">ปีงบประมาณ</th>
                                     <th style="width: 25%; text-align: center;">ตัวชี้วัด</th>
                                     <th style="width: 12%; text-align: center;">สถานะการบันทึกผล</th>
 									<th style="width: 5%; text-align: center;">ผลประเมิน</th>

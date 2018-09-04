@@ -9,6 +9,7 @@ class Define_responsibility_main extends kpims_Controller {
         $this->load->model('M_Define_responsibility_main','dfine_res');
 		$this->load->model('M_Define_responsibility_sub','dfine_ress');
 		$this->load->model('M_kpi_define_indicator','dfine');
+		$this->load->model('M_kpi_result_indicator','rsind');
     }
 
 	public function detail($dfine_id){
@@ -205,7 +206,8 @@ class Define_responsibility_main extends kpims_Controller {
 				$this->dfine_res->resm_dept = $rs_ps["dm_title_th"];
 				$this->dfine_res->resm_ps_id = $rs_ps["ps_id"];
 				$this->dfine_res->resm_dfine_id = $dfine_id;
-				$this->dfine_res->insert_resm();
+				$last_id = $this->dfine_res->insert_resm();
+				$this->rsind->update_resm($last_id, $dfine_id);
 			}
 		}
 		// print_r($ps_checked);
@@ -242,10 +244,11 @@ class Define_responsibility_main extends kpims_Controller {
 		$dfine_id = $this->input->post('dfine_id');
 		$this->dfine_ress->delete_ress_by_resm_id($resm_id);//ลบผู้รับผิดชอบร่วม
 		$this->dfine_res->delete_resm($resm_id);//ลบผู้รับผิดชอบหลัก
+		$this->rsind->update_resm('', $dfine_id);
 		
 		//เช็คปุ่มลบทั้งหมด
-		$rs_resm = $this->dfine_res->get_by_id($dfine_id)->result();
-		echo json_encode($rs_resm);
+		// $rs_resm = $this->dfine_res->get_by_id($dfine_id)->result();
+		echo json_encode(true);
 	}
 	
 	function del_ress(){

@@ -315,7 +315,6 @@
 				$("#tb_modal_info").html(data);	
             }
         });
-		
 	}
 </script>
 

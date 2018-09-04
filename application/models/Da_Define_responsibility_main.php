@@ -16,7 +16,7 @@ class Da_Define_responsibility_main extends Kpims_model {
         $sql = "INSERT INTO ".$this->db_kpims.".".$this->config->item("kpims_prefix")."responsibility_main(resm_id,resm_name,resm_pt_name,resm_dept,resm_ps_id,resm_dfine_id) 
                 VALUES ('',?,?,?,?,?)";
 		$this->db_KPIMS->query($sql,array($this->resm_name ,$this->resm_pt_name ,$this->resm_dept,$this->resm_ps_id,$this->resm_dfine_id));
-		$this->last_insert_id = $this->db_KPIMS->insert_id();
+		return $this->db_KPIMS->insert_id();
 	}
 	
 	function delete_resm($resm_id){

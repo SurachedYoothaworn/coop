@@ -1,5 +1,5 @@
 <!--<body class="hold-transition skin-blue sidebar-mini">-->
-<body class="skin-blue fixed sidebar-mini sidebar-collapse">
+<body class="skin-blue sidebar-mini sidebar-collapse">
 <div class="wrapper">
   <!-- Main Header -->
   <header class="main-header">

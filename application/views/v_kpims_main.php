@@ -1,5 +1,4 @@
 <!------ Include the above in your HEAD tag ---------->
-
 <!-- DataTable -->
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/dataTables.bootstrap4.min.js"></script> 

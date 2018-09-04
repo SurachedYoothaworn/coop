@@ -9,6 +9,8 @@ class Define_indicator extends kpims_Controller {
         $this->load->model('M_kpi_define_indicator','dfine');
 		$this->load->model('M_Define_responsibility_main','dfine_res');
 		$this->load->model('M_Define_responsibility_sub','ress');
+		$this->load->model('M_kpi_result_indicator','rsind');
+		
     }
 
 	public function index(){
@@ -183,7 +185,14 @@ class Define_indicator extends kpims_Controller {
 			$this->dfine->dfine_opt_id = $opt_id;
 			$this->dfine->dfine_unt_id = $unt_id;
 			$this->dfine->dfine_side_id = $side_id;
-			$this->dfine->insert();
+			$last_id = $this->dfine->insert();
+			
+			for($i=1;$i<=4;$i++){
+				$this->rsind->indrs_quarter = $i;
+				$this->rsind->indrs_dfind_id = $last_id;
+				$this->rsind->insert();
+			}
+			
 			echo json_encode(0);
 		}
 	} //End fn save_data
@@ -199,7 +208,7 @@ class Define_indicator extends kpims_Controller {
 		echo json_encode($data);
 	}
 	
-	public function edit_value_indicator(){
+	function edit_value_indicator(){
 		$ind_id = $this->input->post('ind_id');
 		$bgy_id = $this->input->post('bgy_id');
 		$data = $this->dfine->get_indicator_edit($ind_id,$bgy_id)->result();
@@ -211,8 +220,9 @@ class Define_indicator extends kpims_Controller {
 		echo json_encode($data);
 	}
 	
-	public function update_status_define_indicator(){
+	function update_status_define_indicator(){
         $dfine_id = $this->input->post('dfine_id');
+		$this->rsind->delete($dfine_id); //ลบผลคะแนน
         $this->dfine->update_status($dfine_id);
         echo json_encode(true); 
     } //End fn update_status_indicator

@@ -16,7 +16,11 @@ class Authen extends kpims_Controller {
         // $this->session->unset_userdata('us_id');
         if($this->checkUser()){
             // $this->output('public_home');
-			redirect('Home');
+			if($this->session->userdata('us_permission') == 1){
+				redirect('Home');
+			}else{
+				redirect('Result_indicator');
+			}
 			// print_r($this->session->userdata('us_id'));die;
         }else{
             $this->login();
@@ -33,7 +37,6 @@ class Authen extends kpims_Controller {
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
         $user = $this->us->check_login($username, $password);
-		// print_r($user->result());die;
         if(!$user){
             $chk_user = $this->us->check_user($username);
             if(!$chk_user){ 
@@ -50,6 +53,7 @@ class Authen extends kpims_Controller {
             $usr = $user->row_array();
             $this->session->set_userdata('us_id',$usr['us_id']);
             $this->session->set_userdata('us_username',$usr['us_username']);
+			$this->session->set_userdata('us_permission',$usr['us_permission']);
             $this->session->set_userdata('logged_in',TRUE);
             $this->uslog->login();
         }

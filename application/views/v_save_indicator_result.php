@@ -1,1 +1,0 @@
-Save_indicator_result 

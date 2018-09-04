@@ -6,6 +6,7 @@ class kpims_Controller extends Main_Controller {
 	public function __construct(){
         parent::__construct();
 		$this->load->helper('function_helper');
+		$this->load->helper('date_helper');
     }
 	
 	public function index()

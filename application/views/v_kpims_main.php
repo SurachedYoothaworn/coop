@@ -81,6 +81,7 @@
     $(function () {
         $('[data-tooltip="tooltip"]').tooltip();
     })
+	
 </script>
 
 <style type="text/css">

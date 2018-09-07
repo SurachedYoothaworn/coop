@@ -26,6 +26,7 @@
 			</li>
 			<li class=""><a href="<?php echo site_url('Define_indicator');?>"><i class="glyphicon glyphicon-edit"></i> <span>กำหนดรายการตัวชี้วัด</span></a></li>
 			<li class=""><a href="<?php echo site_url('Result_indicator');?>"><i class="glyphicon glyphicon-floppy-save"></i> <span>บันทึกผลตัวชี้วัด</span></a></li>
+			<li class=""><a href="<?php echo site_url('Report_indicator');?>"><i class="glyphicon glyphicon-list-alt"></i> <span>ประมวลข้อมูลตัวชี้วัด</span></a></li>
 		</ul>
 	<?php }else{ ?>
 		<ul class="sidebar-menu">

@@ -32,6 +32,8 @@
 <link type="text/css" rel="stylesheet" href="<?php echo base_url();?>assets/plugins/select2/select2.css">
 
 <!--<link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>plugins/iCheck/all.css">-->
+
+<script src="<?php echo base_url().$this->config->item('template_path');?>plugins/chartjs/Chart.min.js"></script>
 <script>
     //แจ้งเตือนการบันทึก
     function notify_save(name){
@@ -96,7 +98,7 @@
 	}/*ความสูงหัวตาราง*/
 
     thead{
-        background-color: #e4f6ff;
+        background-color: #cceeff;
 	}/*สีหัวตาราง*/
 
     tr{
@@ -147,5 +149,15 @@
 	[type="radio"]{
 		 width: 1.5em; 
 		 height: 1.5em;
+	}
+	
+	/*สีแทบหัว*/
+	.box.box-solid.box-primary > .box-header {
+	  color: #ffffff;
+	  background: #2b6688;
+	  background-color: #2b6688;
+	}
+	.box.box-solid.box-primary {
+	  border: 1px solid #2b6688;
 	}
 </style>

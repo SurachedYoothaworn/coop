@@ -43,7 +43,7 @@ class Da_kpi_define_indicator extends Kpims_model {
 	
 	function update_status_assessment($status_assessment, $dfine_id){
 		$sql = "UPDATE ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator 
-				SET dfine_status_assessment = '$status_assessment' WHERE dfine_id='$dfine_id'";
+				SET dfine_status_assessment = '$status_assessment' ,dfine_status_action = 2 WHERE dfine_id='$dfine_id'";
 		$this->db_KPIMS->query($sql);
 	}
 	

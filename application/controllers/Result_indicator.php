@@ -108,7 +108,7 @@ class Result_indicator extends kpims_Controller {
 			} //End if
 			echo json_encode($data);
 		}else{ //ผู้ทั่วไป
-			$rs_dfine_data = $this->rsind->get_by_ps_id(681);
+			$rs_dfine_data = $this->rsind->get_by_ps_id($this->session->userdata('us_ps_id'));
 			// pre($rs_dfine_data->result());die;
 			$data = array(); 
 			if($rs_dfine_data->num_rows() > 0){

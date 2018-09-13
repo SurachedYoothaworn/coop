@@ -7,7 +7,6 @@
 <script>
 	$(document).ready( function () {
 		get_data();
-		
 		$('#search').keyup(function() {
 			var data = this.value.split(" ");
 			var rows = $('#tb_modal_add_resm').find('tr');
@@ -316,6 +315,7 @@
             }
         });
 	}
+	
 </script>
 
 

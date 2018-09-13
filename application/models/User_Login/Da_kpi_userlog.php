@@ -14,16 +14,16 @@ class Da_kpi_userlog extends Kpims_model {
 	}
 
 	function login(){
-		$sql = " INSERT INTO ".$this->db_kpims.".".$this->config->item("kpims_prefix")."userlog(uslog_id,uslog_time,uslog_usId,uslog_action) VALUES ('',CURRENT_TIMESTAMP,?,?)";
+		$sql = " INSERT INTO ".$this->db_kpims.".".$this->config->item("kpims_prefix")."userlog(uslog_id,uslog_time,uslog_us_ps_id,uslog_usId,uslog_action) VALUES ('',CURRENT_TIMESTAMP,?,?,?)";
 		$this->LogAction = "เข้าสู่ระบบ สำเร็จ";
-		$this->db_KPIMS->query($sql,array($this->session->userdata('us_id'), $this->LogAction));
+		$this->db_KPIMS->query($sql,array($this->session->userdata('us_ps_id'), $this->session->userdata('us_id'), $this->LogAction));
 		$this->last_insert_id = $this->db_KPIMS->insert_id();
 	}
 
 	function logout(){
-		$sql = " INSERT INTO ".$this->db_kpims.".".$this->config->item("kpims_prefix")."userlog (uslog_id,uslog_time,uslog_usId,uslog_action) VALUES ('',CURRENT_TIMESTAMP,?,?)";
+		$sql = " INSERT INTO ".$this->db_kpims.".".$this->config->item("kpims_prefix")."userlog (uslog_id,uslog_time,uslog_us_ps_id,uslog_usId,uslog_action) VALUES ('',CURRENT_TIMESTAMP,?,?,?)";
 		$this->LogAction = "ออกจากระบบ สำเร็จ";
-		$this->db_KPIMS->query($sql,array($this->session->userdata('us_id'), $this->LogAction));
+		$this->db_KPIMS->query($sql,array($this->session->userdata('us_ps_id'),$this->session->userdata('us_id'), $this->LogAction));
 		$this->last_insert_id = $this->db_KPIMS->insert_id();
 	}
 

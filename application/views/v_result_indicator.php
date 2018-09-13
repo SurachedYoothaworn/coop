@@ -254,7 +254,7 @@
 <div class="modal fade" id="modal_assessment" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" style="">
         <div class="modal-content">
-            <div class="modal-header modal_header_success">
+            <div class="modal-header modal_header_info">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true" data-toggle="modal">&times;</span></button>
                 <h3 class="modal-title">ประเมินผล</h3>

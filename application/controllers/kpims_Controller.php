@@ -39,7 +39,7 @@ class kpims_Controller extends Main_Controller {
 	{
 		if($this->session->userdata('us_id'))
 			return true;
-		else
+		else 
 			return false;
 	}
 	

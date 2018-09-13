@@ -69,13 +69,24 @@
         }))
     }
 	
-	 function notify_save_assessment(name){
+	//แจ้งเตือนประเมินผล
+	function notify_save_assessment(name){
         PNotify.desktop.permission();
         (new PNotify({
             title: 'ประเมินผล'+name+'สำเร็จ',
             text: '',
             type: "info",
             delay: 1500
+        }))
+    }
+	
+	function notify_check_login(){
+        PNotify.desktop.permission();
+        (new PNotify({
+            title: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
+            text: 'กรุณาตรวจสอบ',
+            type: "error",
+            delay: 3000
         }))
     }
 
@@ -160,4 +171,37 @@
 	.box.box-solid.box-primary {
 	  border: 1px solid #2b6688;
 	}
+	
+	
+	
+	// body {
+	  // font-family: "TH SarabunPSK";
+	  // font-size: 24px;
+	// }
+	// h1,
+	// h2,
+	// h3,
+	// h4,
+	// h5,
+	// h6,
+	// .h1,
+	// .h2,
+	// .h3,
+	// .h4,
+	// .h5,
+	// .h6 {
+		// font-family: TH SarabunPSK";
+		// font-size: 24px;
+	// }
+	
+	// .main-header .sidebar-toggle {
+	  // font-family: fontAwesome;
+	  // font-size: 24px;
+	// }
+	
+	// .main-header .logo {
+	  // font-family: "TH SarabunPSK";
+	  // font-size: 24px;
+	// }
+
 </style>

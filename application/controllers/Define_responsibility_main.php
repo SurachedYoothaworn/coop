@@ -124,7 +124,7 @@ class Define_responsibility_main extends kpims_Controller {
 					$row .='</tr>';
 				}
 				$row .='<tr>';
-				$row .= 	'<td style="text-align: center;" ><input class="iradio" type="radio" id="chk_ps_add" name="chk_ps_add" value="'.$rs_ps["ps_id"].'" class="chk_preson_add"></td>';
+				$row .= 	'<td style="text-align: center;" ><input class="flat-red" type="radio" id="chk_ps_add" name="chk_ps_add" value="'.$rs_ps["ps_id"].'" class="chk_preson_add"></td>';
 				$row .= 	'<td>'.$rs_ps["pf_title_th"].''.$rs_ps["ps_fname_th"].' '.$rs_ps["ps_lname_th"].'</td>';
 				$row .= 	'<td>'.$rs_ps["pt_title_th"].'</td>';
 				$row .= 	'<td>'.$rs_ps["dm_title_th"].'</td>';

@@ -16,7 +16,7 @@ class Da_kpi_result_indicator extends Kpims_model {
 	
 	function insert(){
 		$sql = "INSERT INTO ".$this->db_kpims.".".$this->config->item("kpims_prefix")."indicator_result(indrs_id, indrs_quarter,indrs_score,indrs_resm_id,indrs_dfind_id,indrs_date_edit)
-				VALUES ('',?,null,null,?,null)";
+				VALUES ('',?,0,null,?,null)";
 		$this->db_KPIMS->query($sql,array($this->indrs_quarter ,$this->indrs_dfind_id));
 		$this->last_insert_id = $this->db_KPIMS->insert_id();
 	}

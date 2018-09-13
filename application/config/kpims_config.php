@@ -6,6 +6,7 @@ $config['uploads_dir'] = 'uploads/';
 
 // set data for start system  zone
 $config['title_system'] = 'KPIMS';
+$config['title_system_full'] = 'Key Performance Indicator Management System';
 $config['title_sub_system'] = '';
 $config['title_system_th'] = 'ระบบบันทึกข้อมูลตัวชี้วัด';
 $config['title_web'] = 'KPIMS | ระบบบันทึกข้อมูลตัวชี้วัด';

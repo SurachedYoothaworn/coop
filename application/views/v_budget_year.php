@@ -2,6 +2,7 @@
 <script>
 	$(document).ready( function () {
         get_data();
+		// $('#bgy_add').mask('25__');	
     });
 	
 	function get_data(){

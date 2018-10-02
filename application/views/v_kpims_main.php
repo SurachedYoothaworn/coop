@@ -34,6 +34,8 @@
 <!--<link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>plugins/iCheck/all.css">-->
 
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/chartjs/Chart.min.js"></script>
+
+<script src="<?php echo base_url().$this->config->item('template_path');?>plugins/inputmask/jquery.mask.min.js"></script>
 <script>
     //แจ้งเตือนการบันทึก
     function notify_save(name){

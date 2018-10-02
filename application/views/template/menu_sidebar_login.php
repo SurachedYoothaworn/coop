@@ -1,13 +1,12 @@
-  <!-- Left side column. contains the logo and sidebar -->
+<!-- Left side column. contains the logo and sidebar -->
   <aside class="main-sidebar">
     <!-- sidebar -->
     <section class="sidebar">
-
       <!-- Sidebar Menu -->
 	<?php if($this->session->userdata('us_permission') == 1){ ?>
 		<ul class="sidebar-menu">
 			<li class="header">เมนู</li>
-			<li class="active" id="home" ><a href="<?php echo site_url('Home');?>"><i class="glyphicon glyphicon-home"></i><span>หน้าหลัก</span></a></li>
+			<li class="active"><a href="<?php echo site_url('Home');?>"><i class="glyphicon glyphicon-home"></i><span>หน้าหลัก</span></a></li>
 			<!-- Optionally, you can add icons to the links -->
 			<li class="treeview " id="menu_ind" >
 				<a href="#"><i class="glyphicon glyphicon-cog"></i> <span>จัดการข้อมูลพื้นฐาน</span>

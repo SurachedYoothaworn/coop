@@ -29,11 +29,11 @@
 			success : function(data){
 				if(data == false){
 					notify_check_login();
+					$('#username').val("");
+					$('#password').val("");
 				}else{
 					location.reload();
 				}
-				
-				// alert(data);
 			}//End success
 		});
 	}
@@ -50,8 +50,8 @@
 		</header>
 		<!-- Full Width Column -->
 		<div class="content-wrapper" style="min-height: 600px;">
-			<div class="container"><br><br>
-				<!--<div class="col-md-12 ">
+			<div class="container"><br><br><br><br><br>
+				<div class="col-md-12 ">
 					<div class="col-md-2"></div>
 					<div class="col-md-8 system-name" style="text-align: center;">
 						<b><?php echo $this->config->item('title_system_full');?></b>
@@ -76,35 +76,23 @@
 								</div>
 								<div class="row">
 									<div class="col-xs-4 pull-right">
-									<button type="submit" class="btn btn-primary btn-block btn-flat">เข้าสู่ระบบ</button>
+									<a id="btn_login" type="button" onclick="chk_login();" class="btn btn-primary btn-block btn-flat">เข้าสู่ระบบ</a>
 									</div>
 								</div>
 							</form>
 						</div>
 					</div>
-				</div>-->
+				</div>
 				
 				
 				
-				<div class="login-box">
+				<!--<div class="login-box">
 					<div class="box box-widget widget-user">
-					
-						<!--<div class="widget-user-header bg-black" style="background: url(<?php echo base_url()."/assets/img/buh.JPG";?>) center center;">
-							<h3 class="widget-user-username"><?php echo $this->config->item('title_system_full');?></h3>
-							<h5 class="widget-user-desc">เข้าสู่<?php echo $this->config->item('title_system_th');?></h5>
-						</div>-->
-					
-					
-					
 						<div class="widget-user-header bg-aqua-active">
 							<h3 class="widget-user-username"><b><?php echo $this->config->item('title_system_full');?></b></h3>
 							<h4 class="widget-user-desc">เข้าสู่<?php echo $this->config->item('title_system_th');?></h4>
 						</div>
-						<!--<div class="widget-user-image">
-							<img class="img-circle " src="<?php //echo base_url()."/assets/img/med_logo.PNG";?>" alt="User Avatar">
-						</div>-->
 						<div class="box-footer">
-							<!--<form action="<?php echo site_url()."/Login/checklogin";?>" method="post">-->
 								<div class="form-group has-feedback">
 									<input type="text" class="form-control" placeholder="ชื่อผู้ใช้" name="username" id="username" >
 									<span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -114,15 +102,12 @@
 									<span class="glyphicon glyphicon-lock form-control-feedback"></span>
 								</div>
 								<div class="row">
-									<div class="col-xs-4 pull-right">
-									<!--<button type="submit" class="btn btn-primary btn-block btn-flat">เข้าสู่ระบบ</button>-->
-										<a id="btn_login" type="button" onclick="chk_login();" class="btn btn-primary btn-block btn-flat">เข้าสู่ระบบ</a>
+									<div class="col-xs-4 pull-right"><a id="btn_login" type="button" onclick="chk_login();" class="btn btn-primary btn-block btn-flat">เข้าสู่ระบบ</a>
 									</div>
 								</div>
-							<!--</form>-->
 						</div>
 					</div>
-				</div>
+				</div>-->
 				
 				
 			</div> <!-- /.container -->

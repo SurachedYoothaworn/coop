@@ -99,14 +99,13 @@ class Report_indicator extends kpims_Controller {
 	
 	function get_graph(){
 		$bgy_id = $this->input->post('bgy_id');
-		// pre($bgy_id);
-		$ind_faile = $this->rpind->get_indicator_faile($bgy_id)->row_array();
-		$ind_pass = $this->rpind->get_indicator_pass($bgy_id)->row_array();
-		$ind_not = $this->rpind->get_indicator_notprocessed($bgy_id)->row_array();
-		$bgy_name = $this->bgy->get_name($bgy_id)->row_array();
-		// pre($ind_faile->row_array());
-		// pre($ind_faile);
+		$indgp_id = $this->input->post('indgp_id');
+		$resm_id = $this->input->post('resm_id');
 		
+		$ind_faile = $this->rpind->get_indicator_faile($bgy_id,$indgp_id,$resm_id)->row_array();
+		$ind_pass = $this->rpind->get_indicator_pass($bgy_id,$indgp_id,$resm_id)->row_array();
+		$ind_not = $this->rpind->get_indicator_notprocessed($bgy_id,$indgp_id,$resm_id)->row_array();
+		$bgy_name = $this->bgy->get_name($bgy_id)->row_array();
 		$data = array(); 
 		$dfine_data = array(
 			"ind_not" 		=>	$ind_not['dfine_status_assessment'],
@@ -116,19 +115,20 @@ class Report_indicator extends kpims_Controller {
 			"bgy_name" 		=>	$bgy_name['bgy_name'],
 		);
 		array_push($data, $dfine_data);
-		// pre($data);
 		echo json_encode($data);
 	} //End fn get_graph
 	
 	function get_all_graph(){
 		$bgy_id = $this->input->post('bgy_id');
+		$indgp_id = $this->input->post('indgp_id');
+		$resm_id = $this->input->post('resm_id');
 		$rs_bgy = $this->bgy->get_all();
 		
 		$data = array(); 
 		foreach($rs_bgy->result() as $bgy){
-			$ind_pass = $this->rpind->get_indicator_pass($bgy->bgy_id)->row_array();
-			$ind_faile = $this->rpind->get_indicator_faile($bgy->bgy_id)->row_array();
-			$ind_not = $this->rpind->get_indicator_notprocessed($bgy->bgy_id)->row_array();
+			$ind_faile = $this->rpind->get_indicator_faile($bgy->bgy_id,$indgp_id,$resm_id)->row_array();
+			$ind_pass = $this->rpind->get_indicator_pass($bgy->bgy_id,$indgp_id,$resm_id)->row_array();
+			$ind_not = $this->rpind->get_indicator_notprocessed($bgy->bgy_id,$indgp_id,$resm_id)->row_array();
 			$ra_data = array(
 				"ind_not" 		=>	$ind_not['dfine_status_assessment'],
 				"ind_pass" 		=>	$ind_pass['dfine_status_assessment'],

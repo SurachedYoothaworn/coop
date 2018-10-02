@@ -94,27 +94,75 @@ class M_kpi_report_indicator extends Da_kpi_report_indicator {
         return $query;
     }
 	
-	function get_indicator_faile($bgy_id){
+	function get_indicator_faile($bgy_id,$indgp_id,$resm_id){
+		$where_bgy = "";
+		$where_indgp = "";
+		$where_resm = "";
+		if($bgy_id > 0){
+			$where_bgy = "AND dfine_bgy_id = '$bgy_id'";
+		}
+		if($indgp_id > 0){
+			$where_indgp = "AND dfine_indgp_id = '$indgp_id'";
+		}
+		if($resm_id > 0){
+			$where_resm = "AND resm.resm_ps_id = '$resm_id'";
+		}
 		$sql = "SELECT COUNT(dfine_status_assessment) as dfine_status_assessment
-				FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator 
-				WHERE dfine_bgy_id = '$bgy_id' AND dfine_status_assessment = 1 AND dfine_status != 0";
+				FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator
+				LEFT JOIN ".$this->db_kpims.".".$this->config->item("kpims_prefix")."responsibility_main as resm ON dfine_id = resm.resm_dfine_id
+				WHERE dfine_status_assessment = 1 AND dfine_status != 0
+					".$where_bgy."
+					".$where_indgp."
+					".$where_resm." ";
         $query = $this->db_KPIMS->query($sql);
         return $query;
 	}
 	
-	function get_indicator_pass($bgy_id){
+	function get_indicator_pass($bgy_id,$indgp_id,$resm_id){
+		$where_bgy = "";
+		$where_indgp = "";
+		$where_resm = "";
+		if($bgy_id > 0){
+			$where_bgy = "AND dfine_bgy_id = '$bgy_id'";
+		}
+		if($indgp_id > 0){
+			$where_indgp = "AND dfine_indgp_id = '$indgp_id'";
+		}
+		if($resm_id > 0){
+			$where_resm = "AND resm.resm_ps_id = '$resm_id'";
+		}
 		$sql = "SELECT COUNT(dfine_status_assessment) as dfine_status_assessment
-				FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator 
-				WHERE dfine_bgy_id = '$bgy_id' AND dfine_status_assessment = 2 AND dfine_status != 0";
-        $query = $this->db_KPIMS->query($sql);
+				FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator
+				LEFT JOIN ".$this->db_kpims.".".$this->config->item("kpims_prefix")."responsibility_main as resm ON dfine_id = resm.resm_dfine_id
+				WHERE dfine_status_assessment = 2 AND dfine_status != 0
+					".$where_bgy."
+					".$where_indgp."
+					".$where_resm." ";
+		$query = $this->db_KPIMS->query($sql);
         return $query;
 	}
 	
-	function get_indicator_notprocessed($bgy_id){
+	function get_indicator_notprocessed($bgy_id,$indgp_id,$resm_id){
+		$where_bgy = "";
+		$where_indgp = "";
+		$where_resm = "";
+		if($bgy_id > 0){
+			$where_bgy = "AND dfine_bgy_id = '$bgy_id'";
+		}
+		if($indgp_id > 0){
+			$where_indgp = "AND dfine_indgp_id = '$indgp_id'";
+		}
+		if($resm_id > 0){
+			$where_resm = "AND resm.resm_ps_id = '$resm_id'";
+		}
 		$sql = "SELECT COUNT(dfine_status_assessment) as dfine_status_assessment
-				FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator 
-				WHERE dfine_bgy_id = '$bgy_id' AND dfine_status_assessment = 0 AND dfine_status != 0 ";
-        $query = $this->db_KPIMS->query($sql);
+				FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator
+				LEFT JOIN ".$this->db_kpims.".".$this->config->item("kpims_prefix")."responsibility_main as resm ON dfine_id = resm.resm_dfine_id
+				WHERE dfine_status_assessment = 0 AND dfine_status != 0
+					".$where_bgy."
+					".$where_indgp."
+					".$where_resm." ";
+		$query = $this->db_KPIMS->query($sql);
         return $query;
 	}
 	

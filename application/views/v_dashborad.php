@@ -13,7 +13,9 @@
 		})
 		get_summary_indicator();
 		
-		
+		var bgy_chk = '<?php echo $bgy_chk;?>';
+		$("#select2_bgy").val(bgy_chk).trigger('change');
+		$("#select2_table_by_bgy").val(bgy_chk).trigger('change');
     });
 	
 	function get_table_indicator(){
@@ -355,13 +357,13 @@
 			dataType : "json",
 			success : function(data){
 				console.log(data);
-				// var sum_ind = 0;
-				$(data).each(function(seq, value) {
+				$('#tb_ind_all').html(data);
+				// $(data).each(function(seq, value) {
 					// sum_ind =  Number(value.ind_faile) +  Number(value.ind_not) +  Number(value.ind_pass);
 					// ตัวชี้วัดทั้งหมด
 					// $('#head_sum_ind').html(sum_ind);
 					// $('#body_sum_ind').html("ตัวชี้วัดทั้งหมด ของปีงบประมาณ "+value.bgy_name);
-				});
+				// });
 			}//End success
 		});
 	}
@@ -395,7 +397,7 @@
 										<h3 id="head_sum_ind" ></h3>
 										<p id="body_sum_ind" ></p>
 									</div>
-									<div class="icon" style="color: #0099ff">
+									<div class="icon" style="color: #0099ff" >
 										<i class="fa fa-fw fa-archive"></i>
 									</div>
 									<a href="#" class="small-box-footer" id="footer_info" data-toggle="modal" data-target="#modal_info_indicator" onclick="get_ind_info(3)" >ดูรายละเอียด   &nbsp;<i class="fa fa-arrow-circle-right"></i></a>
@@ -556,29 +558,12 @@
             <div class="modal-header modal_header_info">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true" data-toggle="modal">&times;</span></button>
-                <h3 class="modal-title" style="color: #ffffff" >เพิ่มตัวชี้วัด</h3>
+                <h3 class="modal-title" id="modal_title" style="color: #ffffff">รายละเอียด</h3>
             </div>
-            <div class="modal-body">
-				<form id="frm_modal_add"> <!-- Start form -->
-					<div class="form-group"> <!-- Start form-group -->
-						<div class = "col-md-12">
-							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">ชื่อตัวชี้วัด<span class="text-danger">*</span></label>
-							<div class="col-md-10" id=""> <!-- Start col-md-9 -->
-								<!--<input type="text" class="form-control" value="" name="ind_add" id="ind_add" validate>-->
-								 <textarea name="ind_add" id="ind_add" class="form-control" rows="2" cols="50" validate></textarea>
-							</div>
-						</div>
-					</div><label></label>
-					<div class="form-group">
-						<div class = "col-md-12">
-							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">คำอธิบาย<span></span></label>
-							<div class="col-md-10" id=""> <!-- Start col-md-9 -->
-								<!-- <input type="text" class="form-control" value="" name="desc_add" id="desc_add"  validate> -->
-								<textarea name="desc_add" id="desc_add" class="form-control" rows="4" cols="50" ></textarea>
-							</div>
-						</div> <!-- End col-md-12 -->
-					</div> <!-- End form-group -->
-				</form>
+            <div class="modal-body" id="modal_body">
+				<table id="tb_ind_all" class="table table-bordered">
+							 
+				</table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-right" data-dismiss="modal">ปิด</button>

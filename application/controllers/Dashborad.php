@@ -27,6 +27,29 @@ class Dashborad extends kpims_Controller {
 		// $data['rs2'] = $arr2;
 		// pre($arr1);
 		// pre($arr2);
+		$day = date("d"); 
+		$month = date("d"); 
+		$year = date("Y")+543;
+		if($day >= "1" && $month >= "10"){
+			$sum = $year+1;
+		}else{
+			$sum = $year;
+		}
+		$count=0;
+		$bgy_chk=0;
+		$rs_bgy = $this->dfine->get_budget_year();
+		foreach($rs_bgy->result() as $bgy){
+			if($bgy->bgy_name == strval($sum)){
+				$count=1;
+				$bgy_chk = $bgy->bgy_id;
+			}
+		}
+		if($count == 1){
+			$data["bgy_chk"] = $bgy_chk;
+		}else {
+			$data["bgy_chk"] = 1;
+		}
+		
 		$data["rs_bgy"] = $this->dfine->get_budget_year();
 		$this->output('v_dashborad',$data);
 	}
@@ -146,16 +169,73 @@ class Dashborad extends kpims_Controller {
 	function get_ind_info(){
 		$status_ind = $this->input->post('status_ind');
 		$bgy_id = $this->input->post('bgy_id');
-		if($status_ind == 3){
-			$data = $this->rpind->get_search_by_id($bgy_id,0,0)->result();
-		}else if($status_ind == 2){
+		if($status_ind == 3){ //ตัวชี้วัดทั้งหมดของปีที่เลือก
+			$data = $this->rpind->get_name_indicator_by_status_assessment($bgy_id,$status_ind)->result();
+			$row  ='<thead>';
+			$row .=		'<tr>';
+			$row .=			'<th style="width: 5%; text-align: center;">ลำดับ</th>';
+			$row .=			'<th style="width: 30%; text-align: center;">ตัวชี้วัด</th>';
+			$row .=	        '<th style="width: 25%; text-align: center;">กลุ่มตัวชี้วัด</th>';
+			$row .=	    '</tr>';
+			$row .='</thead>';
+			$row .='<tbody id="tb_modal_add_resm">';
 			
-		}else if($status_ind == 1){
+			$chk_head=0;
+			$seq=1;
+			foreach($data as $index => $rs_ind_all){ 
+				if($rs_ind_all->str_id != $chk_head){
+					$chk_head =  $rs_ind_all->str_id;
+					$row .='<tr>';
+					$row .= 	'<td colspan="3" style="background: #eeeeee;"><b>ยุทธศาสตร์ :</b>'.$rs_ind_all->str_name.'</td>';
+					$row .='</tr>';
+				}
+					
+				$row .='<tr>';
+				$row .= 	'<td style="text-align: center;">'.$seq.'</td>';
+				$row .= 	'<td>'.$rs_ind_all->ind_name.'</td>';
+				$row .= 	'<td style="text-align: center;">'.$rs_ind_all->indgp_name.'</td>';
+				$row .='</tr>';
+				$seq++;
+			} //End foreach	
+			$row .='</tbody>';
+		}else{
+			$data = $this->rpind->get_name_indicator_by_status_assessment($bgy_id,$status_ind);
+			// pre($data->result());
+			$row  ='<thead>';
+			$row .=		'<tr>';
+			$row .=			'<th style="width: 5%; text-align: center;">ลำดับ</th>';
+			$row .=			'<th style="width: 30%; text-align: center;">ตัวชี้วัด</th>';
+			$row .=	        '<th style="width: 25%; text-align: center;">กลุ่มตัวชี้วัด</th>';
+			$row .=	    '</tr>';
+			$row .='</thead>';
+			$row .='<tbody id="tb_modal_add_resm">';
 			
-		}else if($status_ind == 0){
-			
+			$chk_head=0;
+			$seq=1;
+			if($data->num_rows() > 0){	
+				foreach($data->result() as $index => $rs_ind_all){
+								
+						if($rs_ind_all->str_id != $chk_head){
+							$chk_head =  $rs_ind_all->str_id;
+							$row .='<tr>';
+							$row .= 	'<td colspan="3" style="background: #eeeeee;"><b>ยุทธศาสตร์ :</b>'.$rs_ind_all->str_name.'</td>';
+							$row .='</tr>';
+						}
+						$row .='<tr>';
+						$row .= 	'<td style="text-align: center;">'.$seq.'</td>';
+						$row .= 	'<td>'.$rs_ind_all->ind_name.'</td>';
+						$row .= 	'<td style="text-align: center;">'.$rs_ind_all->indgp_name.'</td>';
+						$row .='</tr>';
+					$seq++;
+				} //End foreach	
+			}else{
+				$row .='<tr>';
+				$row .= 	'<td colspan="3" style="background: #eeeeee; color: red; text-align: center;">ไม่มีข้อมูล</td>';
+				$row .='</tr>';
+			}
+			$row .='</tbody>';
 		}
-		echo json_encode($data);
+		echo json_encode($row);
 	}//End fn get_ind_info
 }
 ?>

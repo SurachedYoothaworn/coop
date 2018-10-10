@@ -33,6 +33,14 @@ class M_Define_responsibility_main extends Da_Define_responsibility_main {
         $query = $this->db_KPIMS->query($sql);
         return $query;
 	}
+	
+	function get_name_by_id($resm_ps_id){
+		$sql = "SELECT * FROM kpi_responsibility_main
+				WHERE resm_ps_id = '$resm_ps_id'
+				ORDER BY resm_dept";
+        $query = $this->db_KPIMS->query($sql);
+        return $query;
+	}
    
 }
 ?>

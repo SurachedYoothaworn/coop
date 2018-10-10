@@ -6,7 +6,6 @@
 		$("#select2_ps").select2();
 		$("#select2_graph_bgy").select2();
 		search_data();
-		// get_data_select(0,0,0);
     });
 	
 	// function search_all_data(){
@@ -123,7 +122,6 @@
         $('.dataTables_filter input').remove();
         // var table = $("#example").dataTable();
 	    // new $.fn.dataTable.FixedHeader(table);
-	
 	}
 	
 	function clear_data(){
@@ -162,12 +160,13 @@
 	
 	function get_chart(data){
 		$('#chart').remove(); 
-		$('#graph_container').append('<canvas id="chart" width="" height="120"><canvas>');
+		$('#graph_container').append('<div id="chart" style="width:100%; height:400px;"></div>');
 		var ind_not = [];
 		var ind_pass = [];
 		var ind_faile= [];
 		var bgy_id= [];
 		var bgy_name= [];
+		var resm_name;
 		var count = $(data).length; //check result row
 		
 		// for(var i in data) {
@@ -178,11 +177,12 @@
 		// }
 		
         $(data).each(function(seq, value) {
-			ind_not.push(value.ind_not);
-			ind_pass.push(value.ind_pass);
-			ind_faile.push(value.ind_faile);
+			ind_not.push(Number(value.ind_not));
+			ind_pass.push(Number(value.ind_pass));
+			ind_faile.push(Number(value.ind_faile));
 			bgy_id.push(value.bgy_id);
 			bgy_name.push(value.bgy_name);
+			resm_name = value.resm_name;
         });
 		
 		var sum_ind_pass = 0;
@@ -207,7 +207,7 @@
 		$('#percent_sum').text(percent_sum+" %");
 		percent_pass = (sum_ind_pass / count_sum_ind) * percent_sum;
 		percent_faile = (sum_ind_faile / count_sum_ind) * percent_sum;
-		percent_not= (sum_ind_not / count_sum_ind) * percent_sum;
+		percent_not = (sum_ind_not / count_sum_ind) * percent_sum;
 		if(count_sum_ind == 0){
 			$('#percent_pass').text(0+" %");
 			$('#percent_faile').text(0+" %");
@@ -221,58 +221,140 @@
 		if(count_sum_ind != 0){
 			$('#graph_container').show();
 			$('#no_data').hide();
-			var ctx = document.getElementById('chart');
-			var myChart = new Chart(ctx, {
-				type: 'bar',
-				data: {
-					labels: bgy_name,
-					datasets: [
-						{
-							label: 'ไม่ผ่าน',
-							data: ind_faile,
-							backgroundColor: '#ff8080'
-						},
-						{
-							label: 'ผ่าน',
-							data: ind_pass,
-							backgroundColor: '#99ff99'
-						},
-						{
-							label: 'ไม่ได้ประเมินผล',
-							data: ind_not,
-							backgroundColor: '#ffc266'
-						},
-					]},
-				options: {
-					scales: {
-						yAxes: [{ 
-							stacked: true,
-							scaleLabel: {
-								display: true,
-								labelString: 'จำนวนตัวชี้วัด',
-								fontSize: 16
-							}
-						}],
-						xAxes: [{ 
-							stacked: true,
-							scaleLabel: {
-								display: true,
-								labelString: 'ปีงบประมาณ',
-								fontSize: 16
-							},
-							barPercentage: 0.2
-						}]
-					},
+			
+			Highcharts.chart('chart', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: 'รายงานสรุปผลการประเมินตัวชี้วัด'
+				},
+				subtitle: {
+					text: resm_name,
+					style: {
+						fontSize: '16px'
+					}
+				},
+				xAxis: {
+					categories: bgy_name,
 					title: {
-						display: true,
-						text: 'รายงานสรุปผลการประเมินตัวชี้วัด',
-						fontSize: 20
+						text: 'ปีงบประมาณ',
+						style: {
+							fontSize: '16px'
+						}
 					},
-					hover: {
-						mode: 'nearest',
+				},
+				yAxis: {
+					min: 0,
+					title: {
+						text: 'จำนวนตัวชี้วัด',
+						style: {
+							fontSize: '16px'
+						}
 					},
-				}//End option
+					stackLabels: {
+						enabled: true,
+						style: {
+							fontWeight: 'bold',
+							color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+						}
+					}
+				},
+				legend: {
+					align: 'right',
+					x: -30,
+					verticalAlign: 'top',
+					y: 25,
+					floating: true,
+					backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+					borderColor: '#CCC',
+					borderWidth: 1,
+					shadow: false
+				},
+				tooltip: {
+					headerFormat: '<b>{point.x}</b><br/>',
+					pointFormat: '{series.name}: {point.y}<br/>ตัวชี้วัดทั้งหมด: {point.stackTotal}'
+				},
+				plotOptions: {
+					column: {
+						stacking: 'normal',
+						dataLabels: {
+							enabled: true,
+							color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+						}
+					}
+				},
+				series: [{
+					name: 'ไม่ได้ประเมินผล',
+					data: ind_not,
+					color: '#ffc266',
+				}, 
+				{
+					name: 'ไม่ผ่าน',
+					data: ind_faile,
+					color: '#ED561B',
+				}, 
+				{
+					name: 'ผ่าน',
+					data: ind_pass,
+					color: '#50B432',
+				}]
 			});
+			
+			
+			
+			// var ctx = document.getElementById('chart');
+			// var myChart = new Chart(ctx, {
+				// type: 'bar',
+				// data: {
+					// labels: bgy_name,
+					// datasets: [
+						// {
+							// label: 'ไม่ผ่าน',
+							// data: ind_faile,
+							// backgroundColor: '#ff8080'
+						// },
+						// {
+							// label: 'ผ่าน',
+							// data: ind_pass,
+							// backgroundColor: '#99ff99'
+						// },
+						// {
+							// label: 'ไม่ได้ประเมินผล',
+							// data: ind_not,
+							// backgroundColor: '#ffc266'
+						// },
+					// ]},
+				// options: {
+					// scales: {
+						// yAxes: [{ 
+							// stacked: true,
+							// scaleLabel: {
+								// display: true,
+								// labelString: 'จำนวนตัวชี้วัด',
+								// fontSize: 16
+							// }
+						// }],
+						// xAxes: [{ 
+							// stacked: true,
+							// scaleLabel: {
+								// display: true,
+								// labelString: 'ปีงบประมาณ',
+								// fontSize: 16
+							// },
+							// barPercentage: 0.2
+						// }]
+					// },
+					// title: {
+						// display: true,
+						// text: 'รายงานสรุปผลการประเมินตัวชี้วัด',
+						// fontSize: 20
+					// },
+					// hover: {
+						// mode: 'nearest',
+					// },
+				// }//End option
+			// });
 		}else{
 			$('#graph_container').hide();
 			$('#no_data').show();
@@ -281,16 +363,20 @@
 	} //End fn get_chart
 	
 	function get_doughnut_chart(data){
+		
 		$('#chart').remove(); 
-		$('#graph_container').append('<canvas id="chart" width="" height="120"><canvas>');
+		$('#graph_container').append('<div id="chart" style="width:100%; height:400px;"></div>');
 		var ind_not = [];
 		var ind_pass = [];
 		var ind_faile= [];
 		var bgy_id= [];
 		var bgy_name= [];
+		var resm_name;
 		var count = $(data).length; //check result row
 		
-		var result = [];
+		var arr_pass = [];
+		var arr_faile = [];
+		var arr_not = [];
 		
         $(data).each(function(seq, value) {
 			ind_not.push(value.ind_not);
@@ -298,8 +384,12 @@
 			ind_faile.push(value.ind_faile);
 			bgy_id.push(value.bgy_id);
 			bgy_name.push(value.bgy_name);
-			result.push(value.ind_not, value.ind_pass, value.ind_faile);
-        });
+			// result.push('ไม่ได้ประเมินผล',Number(value.ind_not), 'ผ่าน',Number(value.ind_pass), 'ไม่ผ่าน',Number(value.ind_faile));
+			arr_pass.push('ผ่าน',Number(value.ind_pass));
+			arr_faile.push( 'ไม่ผ่าน',Number(value.ind_faile));
+			arr_not.push('ไม่ได้ดำเนินการ',Number(value.ind_not));
+			resm_name = value.resm_name;
+		});
 		
 		var count_sum_ind;
 		count_sum_ind = Number(ind_not)+Number(ind_pass)+Number(ind_faile);
@@ -329,26 +419,69 @@
 		if(count_sum_ind != 0){
 			$('#graph_container').show();
 			$('#no_data').hide();
-			var ctx = document.getElementById('chart');
-			var myChart = new Chart(ctx, {
-				type: 'doughnut',
-				data: {
-					labels: ['ไม่ได้ประเมินผล','ผ่าน','ไม่ผ่าน'],
-					datasets: [
-						{
-						  label: "",
-						  backgroundColor: ["#ffc266", "#99ff99","#ff8080"],
-						  data: result
-						}
-					]},
-				options: {
-				  title: {
-					display: true,
-					text: 'รายงานสรุปผลการประเมินตัวชี้วัดปีงบประมาณ '+bgy_name,
-					fontSize: 20
-				  }
-				}
+			
+			Highcharts.setOptions({
+				colors: ['#50B432', '#ED561B', '#ffc266']
 			});
+			
+			Highcharts.chart('chart', {
+				chart: {
+					type: 'pie',
+					options3d: {
+						enabled: true,
+						alpha: 45
+					}
+				},
+				title: {
+					text: 'รายงานสรุปผลการประเมินตัวชี้วัดปีงบประมาณ '+bgy_name,
+				},
+				subtitle: {
+					text: resm_name,
+					style: {
+						fontSize: '16px'
+					}
+				},
+				plotOptions: {
+					pie: {
+						innerSize: 100,
+						depth: 45,
+						dataLabels: {
+							enabled: true,
+							format: '<b>{point.name} </b>: {point.percentage:.2f} %'
+						}
+					}
+				},
+				series: [{
+					name: 'จำนวนตัวชี้วัด',
+					data: [
+						arr_pass,
+						arr_faile,
+						arr_not
+					]
+				}]
+			});
+			
+			
+			// var ctx = document.getElementById('chart');
+			// var myChart = new Chart(ctx, {
+				// type: 'doughnut',
+				// data: {
+					// labels: ['ไม่ได้ประเมินผล','ผ่าน','ไม่ผ่าน'],
+					// datasets: [
+						// {
+						  // label: "",
+						  // backgroundColor: ["#ffc266", "#99ff99","#ff8080"],
+						  // data: result
+						// }
+					// ]},
+				// options: {
+				  // title: {
+					// display: true,
+					// text: 'รายงานสรุปผลการประเมินตัวชี้วัดปีงบประมาณ '+bgy_name,
+					// fontSize: 20
+				  // }
+				// }
+			// });
 		}else{
 			$('#graph_container').hide();
 			$('#no_data').show();
@@ -404,7 +537,7 @@
 					<div class="col-md-6">
 						<div class="box box-primary">
 							<div class="box-header">
-								<i class="glyphicon glyphicon-stats"></i>
+								<i class="glyphicon glyphicon-search"></i>
 								<h2 class="box-title">ค้นหา</h2>
 								<!--<div class="box-tools pull-right">
 									<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
@@ -606,7 +739,7 @@
 }
 
 .box.box-primary.color{
-  border: 1px solid #2b6688;
+	border: 1px solid #2b6688;
 }
 // table, th, td{
 	// font-family: "TH SarabunPSK";

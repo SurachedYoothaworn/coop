@@ -13,6 +13,7 @@ class Report_indicator extends kpims_Controller {
 		$this->load->model('M_kpi_budget_year','bgy');
 		$this->load->model('M_kpi_indicator_group','indgp');
 		$this->load->model('M_kpi_report_indicator','rpind');
+		$this->load->model('M_Define_responsibility_main','resm');
     }
 
 	public function index(){
@@ -106,6 +107,9 @@ class Report_indicator extends kpims_Controller {
 		$ind_pass = $this->rpind->get_indicator_pass($bgy_id,$indgp_id,$resm_id)->row_array();
 		$ind_not = $this->rpind->get_indicator_notprocessed($bgy_id,$indgp_id,$resm_id)->row_array();
 		$bgy_name = $this->bgy->get_name($bgy_id)->row_array();
+		$resm_name = $this->resm->get_name_by_id($resm_id)->row_array();
+		
+		
 		$data = array(); 
 		$dfine_data = array(
 			"ind_not" 		=>	$ind_not['dfine_status_assessment'],
@@ -113,6 +117,7 @@ class Report_indicator extends kpims_Controller {
 			"ind_faile" 	=>	$ind_faile['dfine_status_assessment'],
 			"bgy_id" 		=>	$bgy_id,
 			"bgy_name" 		=>	$bgy_name['bgy_name'],
+			"resm_name"		=>	$resm_name['resm_name']
 		);
 		array_push($data, $dfine_data);
 		echo json_encode($data);
@@ -125,6 +130,7 @@ class Report_indicator extends kpims_Controller {
 		$rs_bgy = $this->bgy->get_all();
 		
 		$data = array(); 
+		$resm_name = $this->resm->get_name_by_id($resm_id)->row_array();
 		foreach($rs_bgy->result() as $bgy){
 			$ind_faile = $this->rpind->get_indicator_faile($bgy->bgy_id,$indgp_id,$resm_id)->row_array();
 			$ind_pass = $this->rpind->get_indicator_pass($bgy->bgy_id,$indgp_id,$resm_id)->row_array();
@@ -135,6 +141,7 @@ class Report_indicator extends kpims_Controller {
 				"ind_faile" 	=>	$ind_faile['dfine_status_assessment'],
 				"bgy_id" 		=>	$bgy->bgy_id,
 				"bgy_name" 		=>	$bgy->bgy_name,
+				"resm_name"		=>	$resm_name['resm_name']
 			);
 			array_push($data, $ra_data);
 		}

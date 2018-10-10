@@ -13,8 +13,8 @@ class Login extends kpims_Controller {
     public function index(){
         if($this->checkUser()){
             // $this->output('public_home');
-			if($this->session->userdata('us_permission') == 1){
-				redirect('Home');
+			if($this->session->userdata('us_permission') == 1){ //Admin
+				redirect('Dashborad');
 			}else{
 				redirect('Result_indicator');
 			}

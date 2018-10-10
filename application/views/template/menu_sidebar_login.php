@@ -6,7 +6,7 @@
 	<?php if($this->session->userdata('us_permission') == 1){ ?>
 		<ul class="sidebar-menu">
 			<li class="header">เมนู</li>
-			<li class="active"><a href="<?php echo site_url('Home');?>"><i class="glyphicon glyphicon-home"></i><span>หน้าหลัก</span></a></li>
+			<li class="active"><a href="<?php echo site_url('Dashborad');?>"><i class="fa fa-fw fa-dashboard"></i><span>หน้าหลัก</span></a></li>
 			<!-- Optionally, you can add icons to the links -->
 			<li class="treeview " id="menu_ind" >
 				<a href="#"><i class="glyphicon glyphicon-cog"></i> <span>จัดการข้อมูลพื้นฐาน</span>

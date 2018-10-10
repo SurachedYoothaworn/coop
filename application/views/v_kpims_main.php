@@ -35,6 +35,11 @@
 
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/chartjs/Chart.min.js"></script>
 
+<!-- highcharts -->
+<script src="<?php echo base_url().$this->config->item('template_path');?>plugins/highcharts/highcharts.js"></script>
+<script src="<?php echo base_url().$this->config->item('template_path');?>plugins/highcharts/exporting.js"></script>
+<script src="<?php echo base_url().$this->config->item('template_path');?>plugins/highcharts/highcharts-3d.js"></script>
+
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/inputmask/jquery.mask.min.js"></script>
 <script>
     //แจ้งเตือนการบันทึก

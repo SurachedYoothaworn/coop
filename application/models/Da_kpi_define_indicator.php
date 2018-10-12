@@ -47,5 +47,19 @@ class Da_kpi_define_indicator extends Kpims_model {
 		$this->db_KPIMS->query($sql);
 	}
 	
+	function update_follow_status($dfine_id){
+		$sql = "UPDATE ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator 
+				SET dfine_follow_status = 1 
+				WHERE dfine_id='$dfine_id'";
+		$this->db_KPIMS->query($sql);
+	}
+	
+	function update_all_unfollow_status($bgy_id){
+		$sql = "UPDATE ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator 
+				SET dfine_follow_status = 0
+				WHERE dfine_bgy_id = '$bgy_id'";
+		$this->db_KPIMS->query($sql);
+	}
+	
 }//End Class Da_test
 ?>

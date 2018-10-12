@@ -60,6 +60,7 @@ class Dashborad extends kpims_Controller {
 		// $resm_id = $this->input->post('resm_id');
 		
 		$rs_search = $this->rpind->get_search_by_id($bgy_id,0,0);
+		// pre($rs_search->result());
 		$arr_score = array();
 		$data = array(); 	
 		foreach($rs_search->result() as $search){
@@ -68,11 +69,18 @@ class Dashborad extends kpims_Controller {
 				array_push($arr_score,$score->indrs_score);
 			}
 			if($search->dfine_status_assessment == 1){
-				$chk_assessment = '<center><span class="label label-danger">ไม่ผ่าน</span></center>';
+				$chk_assessment = '<span class="label label-danger">ไม่ผ่าน</span>';
 			}else if($search->dfine_status_assessment == 2){
-				$chk_assessment = '<center><span class="label label-success">ผ่าน</span></center>';
+				$chk_assessment = '<span class="label label-success">ผ่าน</span>';
 			}else if($search->dfine_status_assessment == 0){
-				$chk_assessment = '<center><span class="label label-warning">ยังไม่ประเมินผล</span></center>';
+				$chk_assessment = '<span class="label label-warning">ยังไม่ประเมินผล</span>';
+			}
+			
+			
+			if($search->dfine_follow_status == 0){
+				$btn_chk_follow = '<center><input id="follow_ind" name="follow_ind" type="checkbox" value="'.$search->dfine_id.'" onchange="select_follow_indicator()" ></center>';
+			}else if($search->dfine_follow_status == 1){
+				$btn_chk_follow = '<center><input id="follow_ind" name="follow_ind" type="checkbox" value="'.$search->dfine_id.'" onchange="select_follow_indicator()" checked></center>';
 			}
 			
 			$dfine_data = array(
@@ -84,6 +92,7 @@ class Dashborad extends kpims_Controller {
 				"dfine_goal" 		=>	$search->dfine_goal,
 				"unt_name"			=>	$search->unt_name,
 				"dfine_status_assessment"	=> 	$chk_assessment,
+				"btn_chk_follow"		=>	$btn_chk_follow,
 				"rs_score"			=>	$arr_score,	
 			);
 			array_push($data, $dfine_data);
@@ -237,5 +246,89 @@ class Dashborad extends kpims_Controller {
 		}
 		echo json_encode($row);
 	}//End fn get_ind_info
+	
+	function get_chart_follow_indicator(){
+		$dfine_id = $this->input->post('dfine_id');
+		$rs_ind = $this->rpind->get_report_indicator_by_id($dfine_id);
+		$rs_ind_result = $this->rpind->get_ind_result_by_id($dfine_id);
+		
+		// pre($rs_ind->result());
+		// pre($rs_ind_result->result());
+		
+		$rs_score = array(); 
+		foreach($rs_ind_result->result() as $indrs){
+			$arr_score = array(
+				"indrs_quarter" 	=>	$indrs->indrs_quarter,
+				"indrs_score" 		=>	$indrs->indrs_score,
+			);
+			array_push($rs_score, $arr_score);
+		}
+		// pre($rs_score);
+		
+		foreach($rs_ind->result() as $ind){
+			if($ind->dfine_status_assessment == 1){
+				$chk_assessment = '<span class="label label-danger">ไม่ผ่าน</span>';
+			}else if($ind->dfine_status_assessment == 2){
+				$chk_assessment = '<span class="label label-success">ผ่าน</span>';
+			}else if($ind->dfine_status_assessment == 0){
+				$chk_assessment = '<span class="label label-warning">ยังไม่ประเมินผล</span>';
+			}
+			$data = array(); 
+			$rs_data = array(
+				"dfine_id" 		=>	$ind->dfine_id,
+				"ind_name" 		=>	$ind->ind_name,
+				"resm_name"		=>	$ind->resm_name,
+				"dfine_goal" 	=>	$ind->dfine_goal,
+				"rs_score" 		=>	$rs_score,
+				"dfine_status_assessment"	=>	$chk_assessment,
+				"indgp_name"	=>	$ind->indgp_name,
+				"str_name"		=>	$ind->str_name,
+			);
+			array_push($data, $rs_data);
+		}
+		// pre($data);
+		echo json_encode($data);
+	}//End fn get_chart_follow_indicator
+	
+	function get_follow_indicator(){
+		$dfine_id = $this->input->post('follow_ind_checked');
+		$bgy_id = $this->input->post('bgy_id');
+			$this->dfine->update_all_unfollow_status($bgy_id);
+			foreach ($dfine_id as $value) {
+				$this->dfine->update_follow_status($value);
+			}
+		echo json_encode(true);
+	} //End fn get_follow_indicator
+	
+	function get_chart_following_indicator(){
+		$bgy_id = $this->input->post('bgy_id');
+		$rs_ind = $this->rpind->get_report_indicator_by_follow_status($bgy_id);
+		$arr_score = array();
+		$data = array();
+		if($rs_ind->num_rows() > 0){
+			foreach($rs_ind->result() as $ind){
+				$rs_ind_result = $this->rpind->get_ind_result_by_id($ind->dfine_id);
+				$sum_score=0;
+				foreach($rs_ind_result->result() as $indrs){
+					if($ind->dfine_id == $indrs->indrs_dfind_id){
+						$sum_score += $indrs->indrs_score;
+					}
+				}
+				$rs_data = array(
+					"dfine_id" 		=>	$ind->dfine_id,
+					"ind_name" 		=>	$ind->ind_name,
+					"resm_name"		=>	$ind->resm_name,
+					"dfine_goal" 	=>	$ind->dfine_goal,
+					"indgp_name"	=>	$ind->indgp_name,
+					"str_name"		=>	$ind->str_name,
+					"sum_score"		=>	$sum_score,
+				);
+				array_push($data, $rs_data);
+			}
+			echo json_encode($data);
+		}else{
+			echo json_encode(0);
+		}
+	} //End fn get_chart_following_indicator
 }
 ?>

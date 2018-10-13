@@ -245,5 +245,7 @@ class M_kpi_report_indicator extends Da_kpi_report_indicator {
         return $query;
 	}
 	
+	
+	
 }
 ?>

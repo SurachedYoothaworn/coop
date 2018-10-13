@@ -96,6 +96,16 @@
             delay: 3000
         }))
     }
+	
+	function notify_follow(){
+        PNotify.desktop.permission();
+        (new PNotify({
+			title: '  คุณได้เปลี่ยนแปลงการติดตามตัวชี้วัด',
+            text: '',
+            type: "info",
+            delay: 2000
+        }))
+    }
 
     //tooltip
     $(function () {

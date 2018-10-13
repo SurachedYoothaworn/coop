@@ -150,6 +150,14 @@ class M_kpi_define_indicator extends Da_kpi_define_indicator {
         $query = $this->db_KPIMS->query($sql);
         return $query;
 	}
+	
+	function get_follow_status_by_dfine_id($dfine_id){
+		$sql = "SELECT dfine_follow_status
+				FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator 
+				WHERE dfine_id = '$dfine_id'";
+        $query = $this->db_KPIMS->query($sql);
+        return $query;
+	}
 
    
 }

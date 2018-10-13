@@ -20,7 +20,8 @@
 		$("#select2_table_by_bgy").val(bgy_chk).trigger('change');
 		
 		
-		get_chart_following_indicator();
+		get_chart_following_indicator(); //เรียก chart ที่ติดตามตัวชี้วัด
+		get_following_gauge(); //เรียก cockpit ที่ติดตาม
     });
 	
 	function get_table_indicator(){
@@ -380,9 +381,10 @@
 			data: {'dfine_id': dfine_id},
 			dataType : "json",
 			success : function(data){
-				get_chart_following_indicator();
+				get_chart_following_indicator(); //เรียก chart ที่ติดตามตัวชี้วัด
+				get_following_gauge(); //เรียก cockpit ที่ติดตาม
 				get_chart_with_indicator(data);
-				get_grage_with_indicator(data);
+				get_gauge_with_indicator(data);
 			}//End success
 		});
 	}
@@ -483,7 +485,7 @@
 		});
 	} //End fn get_chart_with_indicator
 	
-	function get_grage_with_indicator(data){
+	function get_gauge_with_indicator(data){
 		var dfine_id = [];
 		var ind_name = [];
 		var arr_dfine_goal = [];
@@ -619,27 +621,39 @@
 			}]
 
 		});
-	} //End fn get_grage_with_indicator
+	} //End fn get_gauge_with_indicator
 	
-	function select_follow_indicator(){
+	function select_following_indicator(dfine_id){
 		var bgy_id = $("#select2_table_by_bgy").val();
-		var follow_ind_checked = [];
-		$("input:checkbox[name=follow_ind]:checked").each(function() {
-			follow_ind_checked.push($(this).attr('value'));
-		});
-		// alert(follow_ind_all);
+		// var follow_ind_checked = [];
+		// $("input:checkbox[name=follow_ind]:checked").each(function() {
+			// follow_ind_checked.push($(this).attr('value'));
+		// });
+		// alert(follow_ind_checked);
 		
 		$.ajax({
 			type: "POST",
-			url: "<?php echo site_url('/Dashborad/get_follow_indicator');?>",
-			data: {'follow_ind_checked': follow_ind_checked,'bgy_id': bgy_id},
+			url: "<?php echo site_url('/Dashborad/get_following_indicator');?>",
+			data: {'dfine_id': dfine_id,'bgy_id': bgy_id},
 			dataType : "json",
 			success : function(data){
-				notify_save_assessment();
+				notify_follow();
 				get_chart_following_indicator();
 			}//End success
 		});
-	}
+		
+		$.ajax({
+			type: "POST",
+			url: "<?php echo site_url('/Dashborad/get_gauge_following');?>",
+			data: {'dfine_id': dfine_id,'bgy_id': bgy_id},
+			dataType : "json",
+			success : function(data){
+				get_following_gauge();
+			}//End success
+		});
+		
+		
+	} //End fn select_following_indicator
 	
 	function get_chart_following_indicator(){
 		var bgy_id = $("#select2_table_by_bgy").val();
@@ -653,12 +667,14 @@
 				var ind_name = [];
 				var dfine_goal = [];
 				var resm_name;
+				var bgy_name;
 				var score = [];
 				var quarter = [];
 				var dfine_status_assessment = [];
 				var indgp_name = [];
 				var str_name = [];
 				$(data).each(function(seq, value) {
+					bgy_name = value.bgy_name;
 					resm_name = value.resm_name;
 					dfine_id.push(value.dfine_id);
 					ind_name.push(value.ind_name);
@@ -675,7 +691,7 @@
 					$('#graph_container_following_ind').append('<div id="following_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>');
 					Highcharts.chart('following_chart', {
 						title: {
-							text: "ตัวชี้วัดที่ติดตาม"
+							text: "ตัวชี้วัดที่ติดตามปีงบประมาณ "+bgy_name
 						},
 						xAxis: {
 							categories: ind_name
@@ -740,6 +756,173 @@
 		});
 	}
 	
+	function get_following_gauge(){
+		$("#box_gauge").remove(); 
+		var bgy_id = $("#select2_table_by_bgy").val();
+		$.ajax({
+			type: "POST",
+			url: "<?php echo site_url('/Dashborad/get_chart_following_indicator');?>",
+			data: {"bgy_id": bgy_id},
+			dataType : "json",
+			success : function(data){
+				// console.log(data.length);
+				var dfine_id = [];
+				var ind_name = [];
+				var dfine_goal = [];
+				var resm_name;
+				var bgy_name;
+				var score = [];
+				var quarter = [];
+				var dfine_status_assessment = [];
+				var indgp_name = [];
+				var str_name = [];
+				
+				var arr_gauge = [];
+				$(data).each(function(seq, value) {
+					bgy_name = value.bgy_name;
+					resm_name = value.resm_name;
+					dfine_id.push(value.dfine_id);
+					ind_name.push(value.ind_name);
+					// dfine_status_assessment.push(value.dfine_status_assessment);
+					// indgp_name.push(value.indgp_name);
+					// str_name.push(value.str_name);
+					score.push(value.sum_score);
+					dfine_goal.push(Number(value.dfine_goal));
+					
+					arr_gauge.push(dfine_goal);
+				});
+				
+				// console.log(arr_gauge);
+				
+				if(data != 0){
+					var row="";
+					$(data).each(function(seq, value) {
+						// console.log(value.dfine_id);
+						row +='<div class="col-md-4" id="box_gauge">';
+						row += 	'<div class="box" style="border-color: #2b6688;">';
+						row += 		'<div class="box-header">';
+						row +=			'<h4 class="">'+value.ind_name+'</h4>';
+						row +=		'</div>';
+						row +=		'<div class="box-body" >';
+						row +=			'<div class="col-md-12" id="container_gauge_following_ind_'+value.dfine_id+'" >';
+						row +=				'<div id="following_gauge_'+value.dfine_id+'" style="color: red; text-align: center;">'
+									
+						row +=				'</div>';
+						row +=			'</div>';
+						row +=		'</div>';
+						row +=	'</div>';
+						row +='</div>';
+					});
+					$('#row_following_gauge').html(row);
+					
+					$(data).each(function(seq, value) {
+						//คำนวนคะแนนตัวชี้วัด ก่อนจัดลง gauge
+						var percent_score=0;
+						var percent_goal=0;
+						percent_score = (value.sum_score/value.dfine_goal)*100;
+						percent_goal = (value.dfine_goal/100)*100;
+						//Zone chart
+						Highcharts.chart("following_gauge_"+value.dfine_id, {
+							chart: {
+								type: 'gauge',
+								plotBackgroundColor: null,
+								plotBackgroundImage: null,
+								plotBorderWidth: 0,
+								plotShadow: false
+							},
+
+							title: {
+								text: ''
+							},
+
+							pane: {
+								startAngle: -150,
+								endAngle: 150,
+								background: [{
+									backgroundColor: {
+										linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+										stops: [
+											[0, '#FFF'],
+											[1, '#333']
+										]
+									},
+									borderWidth: 0,
+									outerRadius: '109%'
+								}, {
+									backgroundColor: {
+										linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+										stops: [
+											[0, '#333'],
+											[1, '#FFF']
+										]
+									},
+									borderWidth: 1,
+									outerRadius: '107%'
+								}, {
+									// default background
+								}, {
+									backgroundColor: '#DDD',
+									borderWidth: 0,
+									outerRadius: '105%',
+									innerRadius: '103%'
+								}]
+							},
+
+							// the value axis
+							yAxis: {
+								min: 0,
+								max: percent_score,
+
+								minorTickInterval: 'auto',
+								minorTickWidth: 1,
+								minorTickLength: 10,
+								minorTickPosition: 'inside',
+								minorTickColor: '#666',
+
+								tickPixelInterval: 30,
+								tickWidth: 2,
+								tickPosition: 'inside',
+								tickLength: 10,
+								tickColor: '#666',
+								labels: {
+									step: 2,
+									rotation: 'auto'
+								},
+								title: {
+									text: 'ร้อยละ'
+								},
+								plotBands: [{
+									from: 0,
+									to: percent_goal,
+									color: '#DF5353' // red 
+								}, {
+									from: value.dfine_goal,
+									to: percent_score,
+									color: '#55BF3B' // green
+								}]
+							},
+
+							series: [{
+								name: 'ร้อยละ',
+								data: [percent_score],
+								tooltip: {
+									valueSuffix: ' %'
+								}
+							}]
+
+						});
+					
+					});
+				}else {
+					$('#box_gauge').remove(); 
+					$('#row_following_gauge').append('<div id="box_gauge" style="color: red; text-align: center;">ไม่มีตัวชี้วัดที่ติดตาม</div>');
+				}
+				
+			}//End success
+		});
+			
+	} //End fn
+	
 	function sum_income(){
 		// var num1 = $(".income").val();
 		// var num2 = $(".income").val();
@@ -766,11 +949,11 @@
 	<div class="col-md-12">
 		<div class="row">
 			<div class="col-md-12">
-				<div class="box" id="">
+				<div class="box" id="border_main_head">
 					<div class="box-header with-border" id="head_table">
 						<div class="col-md-3">
-							<i class="fa fa-bar-chart-o fw" style="color: #ffffff"></i> 
-							<h2 class="box-title" style="margin-top:5px">ข้อมูลตัวชี้วัดจำแนกตามปีงบประมาณ</h2>
+							<i class="glyphicon glyphicon-calendar" style="color: #ffffff"></i> 
+							<h2 class="box-title" style="margin-top:5px">   ข้อมูลตัวชี้วัดจำแนกตามปีงบประมาณ</h2>
 						</div>	
 						<div class="col-md-2 select2-container-active">
 							<select class="select2" id="select2_bgy" name="select2_bgy" style="width: 100%;" tabindex="-1" onchange="get_summary_indicator()" >
@@ -841,9 +1024,10 @@
 						
 						<div class="row">
 							<div class="col-md-12">
-								<div class="box">
-									<div class="box-header with-border" id="head_table">
+								<div class="box" id="border_sub_head">
+									<div class="box-header with-border" id="sub_head_table">
 										<div class="col-md-3">
+											<i class="fa fa-bar-chart-o fw" style="color: #ffffff"></i>
 											<h2 class="box-title" style="margin-top:5px">รายงานสรุปจำแนกตามตัวชี้วัด</h2>
 										</div>	
 										<div class="col-md-2 select2-container-active pull-left">
@@ -877,18 +1061,19 @@
 
 <div class="row">
 	<div class="col-md-12">
-		<div class="box" id="">
-			<div class="box-header with-border" id="head_table">
+		<div class="box" id="border_main_head">
+			<div class="box-header with-border" id="head_table" style="color: #ffffff">
 				<div class="col-md-6">
-					<i class="glyphicon glyphicon-list-alt" style="color: #ffffff"></i>
-					<h3 class="box-title" style="margin-top:5px" > ข้อมูลตัวชี้วัดจำแนกตามตัวชี้วัด</h3>
+					<i class="glyphicon glyphicon-filter" style="color: #ffffff"></i>
+					<h3 class="box-title" style="margin-top:5px" >   ข้อมูลตัวชี้วัดจำแนกตามตัวชี้วัด</h3>
 				</div>	
 			</div>
 			<div class="box-body" id="body">
 				<div class="col-md-5">
-					<div class="box" id="box_table_indicator">
-						<div class="box-header with-border" id="head_table">
+					<div class="box" id="box_table_indicator" >
+						<div class="box-header with-border" id="sub_head_table">
 							<div class="col-md-6">
+								<i class="fa fa-fw fa-list-ul" style="color: #ffffff"></i>
 								<h3 class="box-title" style="margin-top:5px">ตัวชี้วัดของปีงบประมาณ</h3>
 							</div>	
 							<div class="col-md-6 select2-container-active">
@@ -922,7 +1107,7 @@
 				<div class="col-md-7">
 					<div class="row">
 						<div class="col-lg-12 col-xs-12">
-							<div class="box" id="" style="border-color: #536872;">
+							<div class="box" id="border_sub_head">
 								<div class="box-header with-border" id="">
 									<div class="col-md-2 pull-right" style="margin-top:10px">
 										<div class="label label-primary" id="follow_indgp_name" ></div>
@@ -939,9 +1124,10 @@
 					</div>
 					
 					<div class="row">
-						<div class="box">
-							<div class="box-header with-border" id="head_table">
+						<div class="box" id="border_sub_head">
+							<div class="box-header with-border" id="sub_head_table">
 								<div class="col-md-6">
+									<i class="fa fa-bar-chart-o fw" style="color: #ffffff"></i>
 									<h2 class="box-title" style="margin-top:5px">รายงานสรุปตัวชี้วัดจำแนกตาม</h2>
 								</div>
 							</div>
@@ -954,9 +1140,10 @@
 					</div>
 					
 					<div class="row">
-						<div class="box">
-							<div class="box-header with-border" id="head_table">
+						<div class="box" id="border_sub_head">
+							<div class="box-header with-border" id="sub_head_table">
 								<div class="col-md-4">
+									<i class="fa fa-fw fa-dashboard" style="color: #ffffff"></i>
 									<h2 class="box-title" style="margin-top:5px">Cockpit Report</h2>
 								</div>
 							</div>
@@ -970,18 +1157,25 @@
 				</div>
 				<div class="row">
 					<div class="col-md-12">
-						<div class="box" id="">
+						<div class="box" id="border_main_head">
 							<div class="box-header with-border" id="head_table">
 								<div class="col-md-6">
 									<i class="glyphicon glyphicon-list-alt" style="color: #ffffff"></i>
-									<h3 class="box-title" style="margin-top:5px" > ข้อมูลตัวชี้วัดที่ติดตาม</h3>
+									<h3 class="box-title" style="margin-top:5px" > ติดตามข้อมูลตัวชี้วัด</h3>
 								</div>	
 							</div>
 							<div class="box-body" id="">
 								<div class="row">
 									<div class="col-lg-12">
-										<div class="box" id="" style="border-color: #536872;">
-											<div class="box-header with-border" id="">
+										<div class="box" id="border_sub_head" >
+											<div class="box-header with-border" id="sub_head_table">
+												<i class="fa fa-bar-chart-o fw" style="color: #ffffff"></i>
+												<h2 class="box-title" style="margin-top:5px">กราฟติดตามตัวชี้วัด</h2>
+												<div class="box-tools pull-right">
+													<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus" style="color: #ffffff"></i></button>
+												</div>
+											</div>
+											<div class="box-body" id="">	
 												<div class="col-md-12" id="graph_container_following_ind" >
 									
 												</div>
@@ -990,9 +1184,38 @@
 									</div>
 								</div>
 							</div>
+							
+							
+							<div class="box-body" id="">
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="box" id="border_sub_head">
+											<div class="box-header with-border" id="sub_head_table">
+												<i class="fa fa-fw fa-dashboard" style="color: #ffffff"></i>
+												<h2 class="box-title" style="margin-top:5px">Cockpit Report</h2>
+												<div class="box-tools pull-right">
+													<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus" style="color: #ffffff"></i></button>
+												</div>
+											</div>
+											<div class="box-body" id="">		
+												<div class="row" id="row_following_gauge" >
+													
+													
+												</div>
+											</div>	
+										</div>
+									</div>
+								</div>
+							</div>	
+								
+							
 						</div>
 					</div>
-				</div>	
+				</div>
+
+
+				
+				
 			</div>
 		</div>
 	</div>
@@ -1033,9 +1256,9 @@
 
 
 	#box_table_indicator {
-   		max-height: calc(500vh - 100px);
+   		max-height: calc(160vh - 50px);
  		overflow-y: auto;
-		border-color: #536872;
+		border-color: #2b6688;
 	}
 	
 	
@@ -1057,8 +1280,20 @@
 	}
 	#head_table{
 		background-color: #536872;
-		// border-color: #e6f7ff;
+		// border-color: #ffffff;
 	}
+	#border_main_head{
+		border-color: #536872;
+	}
+	#sub_head_table{
+		background-color: #2b6688;
+	}
+	#border_sub_head{
+		border-color: #2b6688;
+	}
+	
+	
+	
 	.box-title{
 		color: #ffffff;
 	}

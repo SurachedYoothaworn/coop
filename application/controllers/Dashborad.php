@@ -78,9 +78,9 @@ class Dashborad extends kpims_Controller {
 			
 			
 			if($search->dfine_follow_status == 0){
-				$btn_chk_follow = '<center><input id="follow_ind" name="follow_ind" type="checkbox" value="'.$search->dfine_id.'" onchange="select_follow_indicator()" ></center>';
+				$btn_chk_follow = '<center><input id="follow_ind" name="follow_ind" type="checkbox" value="'.$search->dfine_id.'" onchange="select_following_indicator('.$search->dfine_id.')" ></center>';
 			}else if($search->dfine_follow_status == 1){
-				$btn_chk_follow = '<center><input id="follow_ind" name="follow_ind" type="checkbox" value="'.$search->dfine_id.'" onchange="select_follow_indicator()" checked></center>';
+				$btn_chk_follow = '<center><input id="follow_ind" name="follow_ind" type="checkbox" value="'.$search->dfine_id.'" onchange="select_following_indicator('.$search->dfine_id.')" checked></center>';
 			}
 			
 			$dfine_data = array(
@@ -290,13 +290,17 @@ class Dashborad extends kpims_Controller {
 		echo json_encode($data);
 	}//End fn get_chart_follow_indicator
 	
-	function get_follow_indicator(){
-		$dfine_id = $this->input->post('follow_ind_checked');
+	function get_following_indicator(){
+		// $dfine_id = $this->input->post('follow_ind_checked');
+		$dfine_id = $this->input->post('dfine_id');
 		$bgy_id = $this->input->post('bgy_id');
-			$this->dfine->update_all_unfollow_status($bgy_id);
-			foreach ($dfine_id as $value) {
-				$this->dfine->update_follow_status($value);
-			}
+		$rs_follow_status = $this->dfine->get_follow_status_by_dfine_id($dfine_id)->row_array();
+		
+		if($rs_follow_status['dfine_follow_status'] == 0){
+			$this->dfine->update_follow_status($dfine_id,1);
+		}else if($rs_follow_status['dfine_follow_status'] == 1){
+			$this->dfine->update_follow_status($dfine_id,0);
+		}
 		echo json_encode(true);
 	} //End fn get_follow_indicator
 	
@@ -321,6 +325,7 @@ class Dashborad extends kpims_Controller {
 					"dfine_goal" 	=>	$ind->dfine_goal,
 					"indgp_name"	=>	$ind->indgp_name,
 					"str_name"		=>	$ind->str_name,
+					"bgy_name"		=>	$ind->bgy_name,
 					"sum_score"		=>	$sum_score,
 				);
 				array_push($data, $rs_data);
@@ -330,5 +335,38 @@ class Dashborad extends kpims_Controller {
 			echo json_encode(0);
 		}
 	} //End fn get_chart_following_indicator
+	
+	function get_gauge_following(){
+		$bgy_id = $this->input->post('bgy_id');
+		$rs_ind = $this->rpind->get_report_indicator_by_follow_status($bgy_id);
+		$arr_score = array();
+		$data = array();
+		if($rs_ind->num_rows() > 0){
+			foreach($rs_ind->result() as $ind){
+				$rs_ind_result = $this->rpind->get_ind_result_by_id($ind->dfine_id);
+				$sum_score=0;
+				foreach($rs_ind_result->result() as $indrs){
+					if($ind->dfine_id == $indrs->indrs_dfind_id){
+						$sum_score += $indrs->indrs_score;
+					}
+				}
+				$rs_data = array(
+					"dfine_id" 		=>	$ind->dfine_id,
+					"ind_name" 		=>	$ind->ind_name,
+					"resm_name"		=>	$ind->resm_name,
+					"dfine_goal" 	=>	$ind->dfine_goal,
+					"indgp_name"	=>	$ind->indgp_name,
+					"str_name"		=>	$ind->str_name,
+					"bgy_name"		=>	$ind->bgy_name,
+					"sum_score"		=>	$sum_score,
+				);
+				array_push($data, $rs_data);
+			}
+			// pre($data);
+			echo json_encode($data);
+		}else{
+			echo json_encode(0);
+		}
+	}
 }
 ?>

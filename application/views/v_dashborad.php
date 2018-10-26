@@ -22,7 +22,34 @@
 		
 		get_chart_following_indicator(); //เรียก chart ที่ติดตามตัวชี้วัด
 		get_following_gauge(); //เรียก cockpit ที่ติดตาม
+		
+		
+		// $('#select_all_existent').change(function(){
+			// var cells = table.cells( ).nodes();
+			// $( cells ).find(':checkbox').prop('checked', $(this).is(':checked'));
     });
+	
+	// function checkAll(){
+		// var checkboxes = $(".follow_ind");
+		// if($("#chk_all_follow_ind").is(':checked')){ //Start if
+			// for(var i = 0; i < checkboxes.length; i++){ //Start for
+				// console.log(i)
+				// if (checkboxes[i].type == 'checkbox'){ //Start if
+					// checkboxes[i].checked = true;
+				// } //End if
+			// } //End for
+			
+		// }else{
+			// for(var i = 0; i < checkboxes.length; i++){ //Start for
+				// console.log(i)
+				// if(checkboxes[i].type == 'checkbox'){ //Start if
+					// checkboxes[i].checked = false;
+				// } //End if
+			// } //End for
+		// } //End if else
+			
+		
+	// } //End fn checkAll_person
 	
 	function get_table_indicator(){
 		var bgy_id = $("#select2_table_by_bgy").val();
@@ -74,6 +101,7 @@
         });//end DataTable
 		$('.dataTables_filter input').attr('placeholder', 'ค้นหา');
 		$("#toggle-event").attr("data-toggle","toggle");
+		
 	}
 	
 	function get_summary_indicator(){
@@ -107,7 +135,7 @@
 					$('#body_ind_faile').html("ตัวชี้วัดที่ไม่ผ่าน ของปีงบประมาณ "+value.bgy_name);
 					//ตัวชี้วัดที่ไม่ได้ดำเนินการ
 					$('#head_ind_not').html(value.ind_not);
-					$('#body_ind_not').html("ตัวชี้วัดไม่ได้ดำเนินการ ของปีงบประมาณ "+value.bgy_name);
+					$('#body_ind_not').html("ตัวชี้วัดที่ไม่ได้ประเมินผล ของปีงบประมาณ "+value.bgy_name);
 				});
 			}//End success
 		});
@@ -390,24 +418,35 @@
 	}
 	
 	function get_chart_with_indicator(data){
+		console.log(data);
 		var dfine_id = [];
 		var ind_name = [];
-		var dfine_goal = [];
+		var arr_dfine_goal = [];
+		var dfine_goal;
 		var resm_name;
+		var opt_symbol;
+		var unt_name;
 		var score = [];
+		var sum_score=0;
 		var quarter = [];
 		var dfine_status_assessment = [];
+		var status_assessment;
 		var indgp_name = [];
 		var str_name = [];
 		$(data).each(function(seq, value) {
 			resm_name = value.resm_name;
+			dfine_goal = Number(value.dfine_goal);
+			status_assessment = value.status_assessment;
+			opt_symbol = value.opt_symbol;
+			unt_name = value.unt_name;
 			dfine_id.push(value.dfine_id);
 			ind_name.push(value.ind_name);
 			dfine_status_assessment.push(value.dfine_status_assessment);
 			indgp_name.push(value.indgp_name);
 			str_name.push(value.str_name);
 			$(value.rs_score).each(function(seq, value2) {
-				dfine_goal.push(Number(value.dfine_goal));
+				sum_score += Number(value2.indrs_score);
+				arr_dfine_goal.push(Number(value.dfine_goal));
 				score.push(Number(value2.indrs_score));
 				quarter.push('ไตรมาส  '+Number(value2.indrs_quarter));
 			});
@@ -421,6 +460,30 @@
 		$('#result_ind').html('ผลการประเมิน :  '+dfine_status_assessment);
 		$('#follow_indgp_name').text(indgp_name);
 		$('#follow_str_name').text('ยุทธศาสตร์ :  '+str_name);
+		
+		//Zone summary
+		//Remove Class
+		$('#icon_result_assessment').removeClass("text-green");
+		$('#icon_result_assessment').removeClass("text-red");
+		$('#icon_result_assessment').removeClass("text-orange");
+		if(status_assessment == 1){
+			var icon_faile = '<i class="fa fa-fw fa-times-circle"></i>';
+			$('#icon_result_assessment').html(icon_faile);
+			$('#icon_result_assessment').addClass("text-red");
+			$('#result_assessment').text("ไม่ผ่าน");
+		}else if(status_assessment == 2){
+			var icon_pass = '<i class="fa fa-fw fa-check-circle"></i>';
+			$('#icon_result_assessment').html(icon_pass);
+			$('#icon_result_assessment').addClass("text-green");
+			$('#result_assessment').text("ผ่าน");
+		}else if(status_assessment == 0){
+			var icon_not = '<i class="fa fa-fw fa-ban"></i>';
+			$('#icon_result_assessment').html(icon_not);
+			$('#icon_result_assessment').addClass("text-orange");
+			$('#result_assessment').text("ไม่ได้ประเมินผล");
+		}
+		$('#goal_ind').text(opt_symbol+' '+dfine_goal+' '+unt_name);
+		$('#sum_score').text(sum_score);
 		
 		//Zone chart
 		$('#follow_chart').remove(); 
@@ -470,15 +533,16 @@
 			series: [{
 				type: 'column',
 				name: 'คะแนน',
-				data: score
+				data: score,
+				color: '#944dff',
 			},{
 				type: 'spline',
 				name: 'เป้าหมาย',
-				data: dfine_goal,
+				data: arr_dfine_goal,
 				marker: {
 					lineWidth: 2,
-					lineColor: Highcharts.getOptions().colors[3],
-					fillColor: 'white'
+					lineColor: Highcharts.getOptions().colors[5],
+					fillColor: 'red'
 				}
 			},	
 			]
@@ -527,7 +591,7 @@
 		//คิดร้อยละ
 		var percent_score=0;
 		var percent_goal=0;
-		percent_score = (sum_score/dfine_goal)*100;
+		percent_score = (sum_score/100)*100;
 		percent_goal = (dfine_goal/100)*100;
 		
 		$('#gauge_follow_chart').remove(); 
@@ -581,7 +645,7 @@
 			// the value axis
 			yAxis: {
 				min: 0,
-				max: percent_score,
+				max: 100,
 
 				minorTickInterval: 'auto',
 				minorTickWidth: 1,
@@ -607,7 +671,7 @@
 					color: '#DF5353' // red 
 				}, {
 					from: dfine_goal,
-					to: percent_score,
+					to: 100,
 					color: '#55BF3B' // green
 				}]
 			},
@@ -727,13 +791,14 @@
 								stacking: 'normal',
 								dataLabels: {
 									enabled: true,
-									color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+									color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black'
 								}
 							}
 						},
 						series: [{
 							type: 'column',
 							name: 'คะแนน',
+							color: '#A7D21F',
 							data: score
 						},{
 							type: 'spline',
@@ -741,8 +806,8 @@
 							data: dfine_goal,
 							marker: {
 								lineWidth: 2,
-								lineColor: Highcharts.getOptions().colors[3],
-								fillColor: 'white'
+								lineColor: Highcharts.getOptions().colors[8],
+								fillColor: 'red'
 							}
 						},	
 						]
@@ -792,26 +857,45 @@
 					arr_gauge.push(dfine_goal);
 				});
 				
-				// console.log(arr_gauge);
-				
 				if(data != 0){
 					var row="";
+					var count_row=0;
 					$(data).each(function(seq, value) {
-						// console.log(value.dfine_id);
-						row +='<div class="col-md-4" id="box_gauge">';
-						row += 	'<div class="box" style="border-color: #2b6688;">';
-						row += 		'<div class="box-header">';
-						row +=			'<h4 class="">'+value.ind_name+'</h4>';
-						row +=		'</div>';
-						row +=		'<div class="box-body" >';
-						row +=			'<div class="col-md-12" id="container_gauge_following_ind_'+value.dfine_id+'" >';
-						row +=				'<div id="following_gauge_'+value.dfine_id+'" style="color: red; text-align: center;">'
-									
-						row +=				'</div>';
-						row +=			'</div>';
-						row +=		'</div>';
-						row +=	'</div>';
-						row +='</div>';
+						count_row = seq+1;
+						if(count_row%5 == 0 || count_row == 1){
+								row +='<div class="row">';
+								row +='<div class="col-md-3" id="box_gauge">';
+								row += 	'<div class="box" style="border-color: #2b6688;">';
+								row += 		'<div class="box-header">';
+								row +=			'<h4 class="">'+value.ind_name+'</h4>';
+								row +=		'</div>';
+								row +=		'<div class="box-body" >';
+								row +=			'<div class="col-md-12" id="container_gauge_following_ind_'+value.dfine_id+'" >';
+								row +=				'<div id="following_gauge_'+value.dfine_id+'" style="color: red; text-align: center;">'
+											
+								row +=				'</div>';
+								row +=			'</div>';
+								row +=		'</div>';
+								row +=	'</div>';
+								row +='</div>';
+						}else{
+							row +='<div class="col-md-3" id="box_gauge">';
+							row += 	'<div class="box" style="border-color: #2b6688;">';
+							row += 		'<div class="box-header">';
+							row +=			'<h4 class="">'+value.ind_name+'</h4>';
+							row +=		'</div>';
+							row +=		'<div class="box-body" >';
+							row +=			'<div class="col-md-12" id="container_gauge_following_ind_'+value.dfine_id+'" >';
+							row +=				'<div id="following_gauge_'+value.dfine_id+'" style="color: red; text-align: center;">'		
+							row +=				'</div>';
+							row +=			'</div>';
+							row +=		'</div>';
+							row +=	'</div>';
+							row +='</div>';
+							if(count_row%4 == 0 ){
+								row +='</div>';
+							}
+						}
 					});
 					$('#row_following_gauge').html(row);
 					
@@ -819,7 +903,7 @@
 						//คำนวนคะแนนตัวชี้วัด ก่อนจัดลง gauge
 						var percent_score=0;
 						var percent_goal=0;
-						percent_score = (value.sum_score/value.dfine_goal)*100;
+						percent_score = (value.sum_score/100)*100;
 						percent_goal = (value.dfine_goal/100)*100;
 						//Zone chart
 						Highcharts.chart("following_gauge_"+value.dfine_id, {
@@ -871,7 +955,7 @@
 							// the value axis
 							yAxis: {
 								min: 0,
-								max: percent_score,
+								max: 100,
 
 								minorTickInterval: 'auto',
 								minorTickWidth: 1,
@@ -897,7 +981,7 @@
 									color: '#DF5353' // red 
 								}, {
 									from: value.dfine_goal,
-									to: percent_score,
+									to: 100,
 									color: '#55BF3B' // green
 								}]
 							},
@@ -1091,7 +1175,7 @@
 									<tr>
 										<th style=" vertical-align: middle">ลำดับ</th>
 										<th style="width: 60%; vertical-align: middle">ตัวชี้วัด</th>
-										<th style=" vertical-align: middle">ติดตาม</th>
+										<th style=" vertical-align: middle"><input id="chk_all_follow_ind" name="chk_all_follow_ind" type="checkbox" value="1" onclick="" >ติดตาม</th>
 									</tr>
 								</thead>
 								<tbody></tbody>
@@ -1128,12 +1212,34 @@
 							<div class="box-header with-border" id="sub_head_table">
 								<div class="col-md-6">
 									<i class="fa fa-bar-chart-o fw" style="color: #ffffff"></i>
-									<h2 class="box-title" style="margin-top:5px">รายงานสรุปตัวชี้วัดจำแนกตาม</h2>
+									<h2 class="box-title" style="margin-top:5px">รายงานสรุปตัวชี้วัดจำแนกตามไตรมาส</h2>
 								</div>
 							</div>
 							<div class="box-body" id="">
 								<div class="col-md-12" id="graph_container_follow_ind" >
 									
+								</div>
+								<div class="box-footer" id="footer_sum">
+									<div class="row">
+										<div class="col-sm-4" style="margin-top:35px;">
+											<div class="description-block border-right">
+												<h5 class="description-header" id="goal_ind" ></h5>
+												<span class="description-text">เป้าหมาย</span>
+											</div>
+										</div>
+										<div class="col-sm-4" style="margin-top:35px;">
+											<div class="description-block border-right">
+												<h5 class="description-header" id="sum_score" ></h5>
+												<span class="description-text" >คะแนนรวม</span>
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="description-block border-right" >
+												<span class="description-percentage" id="icon_result_assessment" style="font-size: 50px;"></span>
+												<h5 class="description-header" id="result_assessment"></h5>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -1184,8 +1290,6 @@
 									</div>
 								</div>
 							</div>
-							
-							
 							<div class="box-body" id="">
 								<div class="row">
 									<div class="col-lg-12">
@@ -1198,7 +1302,7 @@
 												</div>
 											</div>
 											<div class="box-body" id="">		
-												<div class="row" id="row_following_gauge" >
+												<div id="row_following_gauge" >
 													
 													
 												</div>
@@ -1207,15 +1311,9 @@
 									</div>
 								</div>
 							</div>	
-								
-							
 						</div>
 					</div>
 				</div>
-
-
-				
-				
 			</div>
 		</div>
 	</div>
@@ -1244,10 +1342,6 @@
         </div>
     </div> <!-- /.modal-content -->
 </div> <!-- /.modal-dialog -->
-
-
-
-
 
 
 <style>

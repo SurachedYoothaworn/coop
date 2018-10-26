@@ -103,7 +103,7 @@
 				$("#modal_body_modal_assessment").html(data);	
             }
         });
-	}
+	} //End fn get_data_assessment
 	
 	function save_result(){
 		var dfine_id = $("#hid_dfine_id").val();

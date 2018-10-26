@@ -14,6 +14,7 @@ class Login extends kpims_Controller {
         if($this->checkUser()){
             // $this->output('public_home');
 			if($this->session->userdata('us_permission') == 1){ //Admin
+				$this->session->set_userdata('menu_active',1);
 				redirect('Dashborad');
 			}else{
 				redirect('Result_indicator');

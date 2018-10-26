@@ -78,9 +78,9 @@ class Dashborad extends kpims_Controller {
 			
 			
 			if($search->dfine_follow_status == 0){
-				$btn_chk_follow = '<center><input id="follow_ind" name="follow_ind" type="checkbox" value="'.$search->dfine_id.'" onchange="select_following_indicator('.$search->dfine_id.')" ></center>';
+				$btn_chk_follow = '<center><input class="follow_ind" id="follow_ind" name="follow_ind" type="checkbox" value="'.$search->dfine_id.'" onclick="select_following_indicator('.$search->dfine_id.')" ></center>';
 			}else if($search->dfine_follow_status == 1){
-				$btn_chk_follow = '<center><input id="follow_ind" name="follow_ind" type="checkbox" value="'.$search->dfine_id.'" onchange="select_following_indicator('.$search->dfine_id.')" checked></center>';
+				$btn_chk_follow = '<center><input class="follow_ind" id="follow_ind" name="follow_ind" type="checkbox" value="'.$search->dfine_id.'" onclick="select_following_indicator('.$search->dfine_id.')" checked></center>';
 			}
 			
 			$dfine_data = array(
@@ -281,8 +281,11 @@ class Dashborad extends kpims_Controller {
 				"dfine_goal" 	=>	$ind->dfine_goal,
 				"rs_score" 		=>	$rs_score,
 				"dfine_status_assessment"	=>	$chk_assessment,
+				"status_assessment"			=>	$ind->dfine_status_assessment,
 				"indgp_name"	=>	$ind->indgp_name,
 				"str_name"		=>	$ind->str_name,
+				"opt_symbol"	=>	$ind->opt_symbol,
+				"unt_name"		=>	$ind->unt_name,
 			);
 			array_push($data, $rs_data);
 		}

@@ -4,7 +4,7 @@
   <!-- Main Header -->
   <header class="main-header">
     <!-- Logo -->
-    <a href="<?php echo site_url()."/Dashborad";?>" class="logo">
+    <a href="<?php echo site_url('Routes_menu/link_page');?>/1" class="logo">
 		<!-- mini logo for sidebar mini 50x50 pixels --> 
 		<span class="logo-mini"><b>KPI</b></span>
 		<span class="logo-lg">

@@ -27,19 +27,19 @@ class Result_indicator extends kpims_Controller {
 			if($rs_dfine_data->num_rows() > 0){
 				// $seq = 1;
 				foreach($rs_dfine_data->result() as $rsind){
-					if($rsind->dfine_status_assessment != 0){
-						//ปุ่มบันทึกผลตัวชี้วัด
-						$btn_save_result  = '<center>';
-						$btn_save_result .= '<a id="btn_save_result" name="btn_save_result" class="'.$this->config->item('btn_success').'" data-toggle="modal" data-tooltip="ไม่สามารถบันทึกผลตัวชี้วัดได้"  disabled>';
-						$btn_save_result .= '<i class="glyphicon glyphicon-floppy-save" style="color:white"></i>';
-						$btn_save_result .= '</a></center>';
-					}else{
+					// if($rsind->dfine_status_assessment != 0){
+						// ปุ่มบันทึกผลตัวชี้วัด
+						// $btn_save_result  = '<center>';
+						// $btn_save_result .= '<a id="btn_save_result" name="btn_save_result" class="'.$this->config->item('btn_success').'" data-toggle="modal" data-tooltip="ไม่สามารถบันทึกผลตัวชี้วัดได้"  disabled>';
+						// $btn_save_result .= '<i class="glyphicon glyphicon-floppy-save" style="color:white"></i>';
+						// $btn_save_result .= '</a></center>';
+					// }else{
 						//ปุ่มบันทึกผลตัวชี้วัด
 						$btn_save_result  = '<center>';
 						$btn_save_result .= '<a id="btn_save_result" name="btn_save_result" class="'.$this->config->item('btn_success').'" data-toggle="modal" data-tooltip="บันทึกผลตัวชี้วัด"  href="#modal_save_result" onclick="get_data_save_result('.$rsind->dfine_id.')" >';
 						$btn_save_result .= '<i class="glyphicon glyphicon-floppy-save" style="color:white"></i>';
 						$btn_save_result .= '</a></center>';
-					}
+					// }
 					
 					if($rsind->dfine_status_action == 0){
 						//ปุ่มยืนยันผลตัวชี้วัด

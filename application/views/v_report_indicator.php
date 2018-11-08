@@ -497,9 +497,9 @@
 										<input type="hidden" name="resm_id_excel" id="resm_id_excel" value="">
 									</form>
 								</div>
-								<div class="pull-right">
+								<!--<div class="pull-right">
 									<a onclick="print();" type="button" class="margin <?php echo $this->config->item('btn_success');?>"><i class="fa fa-fw fa-print" style="color:white"></i>&nbsp;Print</a>
-								</div>
+								</div>-->
 							</div>
 						   
 							<div class="box-body">

@@ -17,20 +17,18 @@ class Da_Define_responsibility_sub extends Kpims_model {
                 VALUES ('',?,?,?,?,?)";
 		$this->db_KPIMS->query($sql,array($this->ress_name ,$this->ress_pt_name ,$this->ress_dept,$this->ress_ps_id,$this->ress_resm_id));
 		$this->last_insert_id = $this->db_KPIMS->insert_id();
-	}
+	} //End fn insert_ress
 	
 	function delete_ress($ress_id){
 		$sql = "DELETE FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."responsibility_sub 
 				WHERE ress_id  = '$ress_id'";
 		$this->db_KPIMS->query($sql);
-	}
+	} //End fn insert_ress
 	
 	function delete_ress_by_resm_id($resm_id){
 		$sql = "DELETE FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."responsibility_sub 
 				WHERE ress_resm_id  = '$resm_id'";
 		$this->db_KPIMS->query($sql);
-	}
-
-
-}
+	} //End fn insert_ress
+} //End class
 ?>

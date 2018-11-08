@@ -8,7 +8,6 @@
 		background: #cccccc;
 	}
 	
-	
 </style>
 <script>
     $(document).ready( function () {
@@ -20,11 +19,6 @@
 		$("#select2_indicator_group").select2();
 		$("#select2_operator").select2();
 		$("#select2_unit").select2();
-		
-		// $( "#select2_budget_year").change(function() {
-			// $("#select2_indicator").select2();
-			// $('#select2_indicator').val(null).trigger('change');
-		// });
     });
 	
 	function get_data(){
@@ -77,8 +71,6 @@
             }
         });//end DataTable
         $('.dataTables_filter input').attr('placeholder', 'ค้นหา');
-        // var table = $("#example").dataTable();
-	    // new $.fn.dataTable.FixedHeader(table);
     } //End fn get_data
 	
 	function get_data_info(dfine_id){
@@ -88,10 +80,7 @@
 			data: {'dfine_id': dfine_id},
 			dataType : "json",
 			success : function(data){
-				// $('#modal_define_indicator').modal('toggle');
 				$('#tb_info').html(data);
-				// notify_edit("");
-				// get_data();
 			}//End success
 		});
 	} //End fn get_data_info
@@ -115,7 +104,6 @@
 			$("#header").addClass("modal_header_success");
 			$("#modal_add_title").html("เพิ่มข้อมูลรายการตัวชี้วัด");
 		}else{
-			// alert(dfine_id);
 			$.ajax({
 	 		type: "POST",
 	 		url: "<?php echo site_url().'/Define_indicator/edit_define_indicator'; ?>",
@@ -123,9 +111,6 @@
 	 		dataType : "json",
 				success : function(data){
 					var ind_id = data.ind_id;
-					// $('#select2_indicator').val(null).trigger('change');
-					
-					// $("#select2_indicator").removeAttr('disabled',"");
 					clear_validate("frm_modal_add");
 					$('#modal_define_indicator').modal({show:true});
 					$("#select2_budget_year").val(data.bgy_id).trigger('change');
@@ -150,12 +135,10 @@
 							var row  = "";
 								row += '<option class="select2_wb" value="" disabled="" selected="">---กรุณาเลือกตัวชี้วัด---</option>';
 							$.each( data, function( key, value) {
-							  // console.log( value.ind_id + ": " + value.ind_name );
 								row += '<option class="select2_wb" value="'+value.ind_id+'">'+value.ind_name+'</option>';
 								$("#select2_indicator").html(row);				
 							});
 							$("#select2_indicator").val(ind_id).trigger('change');
-							// $("#select2_budget_year").val(data.bgy_id).trigger('change');
 						}//End success
 					});
 				}//End success
@@ -202,7 +185,6 @@
 		var ind_id = $("#select2_indicator").val();
 		
 		var chk_btn = $("#hid_btn_save").val();
-		// alert('bgy=>'+bgy_id);
 		$.ajax({
 			type: "POST",
 			url: "<?php echo site_url('/Define_indicator/get_indicator_by_bgy');?>",
@@ -220,12 +202,8 @@
 				var row = "";
 					row += '<option class="select2_wb" value="" disabled="" selected="">---กรุณาเลือกตัวชี้วัด---</option>';
 				$.each( data, function( key, value) {
-				  // console.log( value.ind_id + ": " + value.ind_name );
 					row += '<option class="select2_wb" value="'+value.ind_id+'">'+value.ind_name+'</option>';
-					$("#select2_indicator").html(row);	
-					// if(chk_btn == 0){
-						// $('#select2_indicator').val(null).trigger('change');	
-					// }
+					$("#select2_indicator").html(row);
 				});//End each
 			}//End success
 		});
@@ -264,10 +242,6 @@
             dataType : "json",
             success : function(data){
 				$('#modal_info_resm').modal('toggle');
-				// var row = "";
-				// $(data).each(function(seq, data) {
-					// seq++;			
-				// });
 				$("#tb_modal_info_resm").html(data);	
             }
         });
@@ -281,14 +255,7 @@
             <div class="box-header with-border">
                 <i class="fa fa-edit"></i>
                 <h2 class="box-title">จัดการข้อมูลรายการตัวชี้วัด</h2>
-                <!-- <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="" data-original-title="Collapse">
-                    <i class="fa fa-minus"></i></button>
-                    <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="" data-original-title="Remove">
-                    <i class="fa fa-times"></i></button>
-                </div> -->
             </div>
-            
             <div class="box-body">
                 <div class="col-md-3">	
                     <a id="btn-add-tab" name="btn-add-tab" class="<?php echo $this->config->item('btn_primary');?> pull-left" href="#" onclick="open_modal('0')">
@@ -328,7 +295,6 @@
             </div>
             <div class="modal-body">
 				<form id="frm_modal_add"> <!-- Start form -->
-				
 					<div class="form-group"> <!-- Start form-group -->
 						<div class = "col-md-12">
 							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">ปีงบประมาณ<span class="text-danger">*</span></label>
@@ -342,7 +308,6 @@
 							</div>
 						</div>
 					</div>
-					
 					<div class="form-group"> <!-- Start form-group -->
 						<div class = "col-md-12" id="div_ind">
 							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">ตัวชี้วัด<span class="text-danger">*</span></label>
@@ -353,7 +318,6 @@
 							</div>
 						</div>
 					</div>
-					
 					<div class="form-group"> <!-- Start form-group -->
 						<div class = "col-md-12">
 							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">หน่วยงาน<span class="text-danger">*</span></label>
@@ -367,7 +331,6 @@
 							</div>
 						</div>
 					</div>
-					
 					<div class="form-group"> <!-- Start form-group -->
 						<div class = "col-md-12">
 							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">ยุทธศาสตร์<span class="text-danger">*</span></label>
@@ -381,7 +344,6 @@
 							</div>
 						</div>
 					</div>
-					
 					<div class="form-group"> <!-- Start form-group -->
 						<div class = "col-md-12">
 							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">กลุุ่มตัวชี้วัด<span class="text-danger">*</span></label>
@@ -395,7 +357,6 @@
 							</div>
 						</div>
 					</div>
-					
 					<div class="form-group"> <!-- Start form-group -->
 						<div class = "col-md-12">
 							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">คำนวนผล<span class="text-danger">*</span></label>
@@ -409,7 +370,6 @@
 							</div>
 						</div>
 					</div>
-					
 					<div class="form-group"> <!-- Start form-group -->
                         <div class = "col-md-12">
                             <label class="col-md-2 control-label" style="padding: 8px; text-align: right;">เป้าหมาย<span class="text-danger">*</span></label>
@@ -418,7 +378,6 @@
                             </div>
                         </div>
                     </div>
-					
 					<div class="form-group"> <!-- Start form-group -->
 						<div class = "col-md-12">
 							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">หน่วยนับ<span class="text-danger">*</span></label>
@@ -438,8 +397,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">ยกเลิก</button>
-                <!-- <input type="button" class="btn btn-success" onclick="save()" value="บันทึก"> -->
-                <!-- <button type="submit" class="btn btn-success" onclick="save_indicator()" >บันทึก</button> -->
                 <a id="btn-add-tab" name="btn-add-tab" class="<?php echo $this->config->item('btn_success');?> pull-right" data-toggle="modal" onclick="save_data()">บันทึก</a>
 			</div><!--modal-footer-->
         </div>
@@ -470,9 +427,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">ปิด</button>
-                <!-- <input type="button" class="btn btn-success" onclick="save()" value="บันทึก"> -->
-                <!-- <button type="submit" class="btn btn-success" onclick="save_indicator()" >บันทึก</button> -->
-                </div><!--modal-footer-->
+            </div><!--modal-footer-->
         </div>
     </div> <!-- /.modal-content -->
 </div> <!-- /.modal-dialog -->
@@ -506,11 +461,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">ปิด</button>
-                <!-- <input type="button" class="btn btn-success" onclick="save()" value="บันทึก"> -->
-                <!-- <button type="submit" class="btn btn-success" onclick="save_indicator()" >บันทึก</button> -->
-                </div><!--modal-footer-->
+            </div><!--modal-footer-->
         </div>
     </div> <!-- /.modal-content -->
 </div> <!-- /.modal-dialog -->
-
-

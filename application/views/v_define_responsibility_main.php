@@ -45,12 +45,7 @@
 			data: {'dfine_id': dfine_id},
 			dataType : "json",
 			success : function(data){
-				// console.log(data);
-				// $('#modal_define_indicator').modal('toggle');
 				$('#tb_res').html(data);
-				// btn_del_all
-				// notify_edit("");
-				// get_data();
 			}//End success
 		});
 	}
@@ -107,10 +102,6 @@
 		var btn_chk = $("#hid_btn_chk").val();
 		if(btn_chk == 0){
 			var ps_id = $('input:radio[name=chk_ps_add]:checked').val();
-			// var ps_checked = [];
-			// $("input:checkbox[name=chk_ps_add]:checked").each(function() {
-				// ps_checked.push($(this).attr('value'));
-			// });
 			$('#div_search').hide();
 			$('#tb_data').hide();
 			$('#md_add_footer').hide();
@@ -127,7 +118,6 @@
 					$('#tb_data').show();
 					$('#md_add_footer').show();
 					$('#row_loading_out').hide();
-					// $('#btn_del_all').attr('disabled','');
 					$('#btn_del_all').removeAttr('disabled');
 					$('#btn_add_resm').attr('disabled','');
 					$('#btn_add_resm').removeAttr('onclick');
@@ -197,32 +187,7 @@
 		});	//End swal
 	} //End fn del_resm
 	
-	// function del_all_resm(dfine_id){
-		// swal({ //start swal
-			// title: "คุณต้องการลบใช่หรือไม่?",
-			// text: "หากลบแล้วจะไม่สามารถกู้คืนได้อีก!",
-			// type: "warning",
-			// showCancelButton: true,
-			// confirmButtonColor: "#dd4b39",
-			// confirmButtonText: "ยืนยัน",
-			// closeOnConfirm: true ,
-			// cancelButtonText: 'ยกเลิก'
-		// },function(){
-            // $.ajax({
-				// type: "POST",
-				// url: "<?php echo site_url('/Define_responsibility_main/del_all_resm');?>",
-				// data: {'dfine_id' : dfine_id},
-				// success : function(data){
-					// notify_del("");
-					// get_data();
-					// $('#btn_del_all').attr('disabled','');
-				// }
-			// });
-		// });	//End swal
-	// }
-	
 	function del_ress(ress_id,ress_resm_id){
-		// alert(ress_resm_id);
 		swal({ //start swal
 			title: "คุณต้องการลบใช่หรือไม่?",
 			text: "หากลบแล้วจะไม่สามารถกู้คืนได้อีก!",
@@ -283,14 +248,12 @@
 		var checkboxes = $(".chk_preson_add");
 		if($("#checkAll_add").is(':checked')){ //Start if
 			for(var i = 0; i < checkboxes.length; i++){ //Start for
-				// console.log(i)
 				if (checkboxes[i].type == 'checkbox'){ //Start if
 					checkboxes[i].checked = true;
 				} //End if
 			} //End for
 		}else{
 			for(var i = 0; i < checkboxes.length; i++){ //Start for
-				// console.log(i)
 				if(checkboxes[i].type == 'checkbox'){ //Start if
 					checkboxes[i].checked = false;
 				} //End if
@@ -305,11 +268,6 @@
             data: {'resm_id': resm_id},
             dataType : "json",
             success : function(data){
-				// $('#modal_info_ress').modal('toggle');
-				// var row = "";
-				// $(data).each(function(seq, data) {
-					// seq++;			
-				// });
 				$("#hid_modal_info_resm_id").val(resm_id);
 				$("#tb_modal_info").html(data);	
             }
@@ -325,17 +283,10 @@
             <div class="box-header with-border">
                 <i class="fa fa-edit"></i>
                 <h2 class="box-title">กำหนดผู้รับผิดชอบตัวชี้วัด</h2>
-                <!-- <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="" data-original-title="Collapse">
-                    <i class="fa fa-minus"></i></button>
-                    <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="" data-original-title="Remove">
-                    <i class="fa fa-times"></i></button>
-                </div> -->
             </div>
-            
             <div class="box-body">
                 <div class="col-md-3">	
-                   
+				
                 </div>
                 <div class="col-md-12"><!-- Start  col-md-12 -->
                     <div class="box box-solid">
@@ -372,13 +323,6 @@
 						<div class="form-group"  id="note">
 							
 						</div>
-							<?php //if(count($arr_resm) > 0){?>
-								<!--<a id="btn_del_all" name="btn_del_all" class="<?php echo $this->config->item('btn_danger')?> pull-right" onclick="del_all_resm(<?php echo $dfine_id; ?>)">
-								<i class="glyphicon glyphicon-remove" style="color:white"></i>&nbsp;ลบผู้รับผิดชอบทั้งหมด</a>-->
-							<?php //}else{?>
-								<!--<a id="btn_del_all" name="btn_del_all" class="<?php //echo $this->config->item('btn_danger')?> pull-right"  disabled>
-								<i class="glyphicon glyphicon-remove" style="color:white"></i>&nbsp;ลบผู้รับผิดชอบทั้งหมด</a>-->
-							<?php //}?>
 						<br>
                         <table id="" class="table table-bordered table-hover" cellspacing="0" width="100%">
                             <thead>
@@ -402,7 +346,6 @@
         </div>
     </div>
 </div>
-
 
 <!--Modal add resm-->
 <div class="modal fade" id="modal_add_resm" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -444,7 +387,6 @@
             </div>
             <div class="modal-footer" id="md_add_footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">ยกเลิก</button>
-                <!-- <input type="button" class="btn btn-success" onclick="save()" value="บันทึก"> -->
                 <a type="button" class="btn btn-success" onclick="save_resm()" >บันทึก</a> 
 				<input type="hidden" id="hid_btn_chk" value="0">
             </div><!--modal-footer-->
@@ -464,8 +406,6 @@
             <div class="modal-body">
 				<form id="frm_modal_add"> <!-- Start form -->
 					<div class="form-group"> <!-- Start form-group -->
-						<!--<a id="btn_del" name="btn_del" class="<?php //echo $this->config->item('btn_danger')?> pull-right" onclick="del_all_ress('.$resm_id.')">
-						<i class="glyphicon glyphicon-remove" style="color:white"></i>ลบทั้งหมด</a><br><br>-->
 						<table id="tb_modal_info" class="table table-bordered">
 						
 						</table>
@@ -476,10 +416,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">ปิด</button>
 				<a id="btn_del" name="btn_del" class="<?php echo $this->config->item('btn_danger')?>" onclick="del_all_ress()">ลบทั้งหมด</a>
-                <!-- <input type="button" class="btn btn-success" onclick="save()" value="บันทึก"> -->
-                <!-- <button type="submit" class="btn btn-success" onclick="save_indicator()" >บันทึก</button> -->
             </div><!--modal-footer-->
         </div>
     </div> <!-- /.modal-content -->
 </div> <!-- /.modal-dialog -->
-

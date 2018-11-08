@@ -12,19 +12,13 @@ class M_Define_responsibility_sub extends Da_Define_responsibility_sub {
 		
 	}
 	
-	// function get_all(){
-		// $sql = "SELECT * FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."responsibility_sub";
-        // $query = $this->db_KPIMS->query($sql);
-        // return $query;
-	// }
-	
 	function get_by_id($resm_id){ 
 		$sql = "SELECT * FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."responsibility_sub
 				WHERE ress_resm_id = '$resm_id'
 				ORDER BY ress_dept";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_by_id
    
-}
+} //End class
 ?>

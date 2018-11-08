@@ -17,13 +17,13 @@ class M_kpi_strategy extends Da_kpi_strategy {
 				WHERE str_status = 1";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
+    } //End fn get_all
 
     function get_by_id($str_id){
         $sql = "SELECT * FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."strategy 
 				WHERE str_id = '$str_id' AND str_status = 1";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
-}
+    } //End fn get_by_id
+} //End class
 ?>

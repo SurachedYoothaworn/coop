@@ -41,8 +41,6 @@
             }
         });//end DataTable
         $('.dataTables_filter input').attr('placeholder', 'ค้นหา');
-        // var table = $("#example").dataTable();
-	    // new $.fn.dataTable.FixedHeader(table);
     } //End fn get_data
 
 	function open_modal(){
@@ -63,7 +61,6 @@
 				data: {'str_name': str_name, 'str_code': str_code},
 				dataType : "json",
 				success : function(data){
-					// alert(data);
 					if(data == true){
 						$('#modal_add_strategy').modal('toggle');
 						notify_save("ยุทธศาสตร์ตัวชี้วัด");
@@ -75,7 +72,6 @@
     } //End fn save_strategy
 
     function edit_strategy(str_id){
-        // alert(str_id);
         var str_id = str_id;
 	 	$.ajax({
 	 		type: "POST",
@@ -83,11 +79,9 @@
 	 		data: {'str_id': str_id},
 	 		dataType : "json",
 	 		success : function(data){
-                // alert(data.str_name);
 	 			$("#str_edit").val(data.str_name);
                 $("#str_code_edit").val(data.str_code);
                 $("#hid_str_id").val(str_id);
-                
 	 		}
 	 	});
 	} //End fn edit_strategy
@@ -224,7 +218,6 @@
                             <label class="col-md-3 control-label" style="padding: 8px; text-align: right;">ยุทธศาสตร์<span class="text-danger">*</span></label>
                             <div class="col-md-9" id=""> <!-- Start col-md-9 -->
                                 <input type="text" class="form-control" value="" name="str_edit" id="str_edit" rows="2" validate  >
-                                <!-- <input type="hidden" name="afm_ids" id="afm_ids"> -->
                             </div>
                         </div>
                     </div>

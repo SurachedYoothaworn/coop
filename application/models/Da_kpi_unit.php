@@ -1,6 +1,6 @@
 <?php
 /*	
-* Class Da_test	
+* Class Da_kpi_unit	
 * @author Surached Yoothaworn 58160156 
 * @Create Date 2561-8-08
 */
@@ -17,21 +17,20 @@ class Da_kpi_unit extends Kpims_model {
         $sql = "INSERT INTO ".$this->db_kpims.".".$this->config->item("kpims_prefix")."unit(unt_id,unt_name,unt_status) 
                 VALUES ('',?,?)";
 		$this->db_KPIMS->query($sql,array($this->unt_name,1));
-		// $this->last_insert_id = $this->db_KPIMS->insert_id();
-	}
+	} //End fn insert
 
 	function update($unt_id, $unt_name){
 		$sql = "UPDATE ".$this->db_kpims.".".$this->config->item("kpims_prefix")."unit 
 				SET unt_name='$unt_name'
 				WHERE unt_id='$unt_id'";
 		$this->db_KPIMS->query($sql);
-	}
+	} //End fn update
 
 	function update_status($unt_id){
 		$sql = "UPDATE ".$this->db_kpims.".".$this->config->item("kpims_prefix")."unit 
 				SET unt_status=0 WHERE unt_id='$unt_id'";
 		$this->db_KPIMS->query($sql);
-	}
+	} //End fn update_status
 	
-}//End Class Da_test
+}//End class  
 ?>

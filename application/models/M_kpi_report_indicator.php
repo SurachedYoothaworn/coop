@@ -26,7 +26,7 @@ class M_kpi_report_indicator extends Da_kpi_report_indicator {
 				WHERE dfine.dfine_status != 0 AND dfine.dfine_status_assessment !=0 ORDER BY bgy.bgy_id  , dfine.dfine_ind_id DESC";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
+    } //End fn get_all
 	
 	function get_search_by_id($bgy_id,$indgp_id,$resm_ps_id){
 		$where_bgy = "";
@@ -41,7 +41,6 @@ class M_kpi_report_indicator extends Da_kpi_report_indicator {
 		if($resm_ps_id > 0){
 			$where_resm = "AND resm.resm_ps_id='$resm_ps_id'";
 		}
-// AND dfine.dfine_status_assessment != 0
 		$sql = "SELECT dfine.dfine_id,ind.ind_name,ind.ind_description,bgy.bgy_name,str.str_name,indgp.indgp_name,opt.opt_name,opt.opt_symbol,dfine.dfine_goal,unt.unt_name,side.side_name ,ind.ind_id,bgy.bgy_id,str.str_id,indgp.indgp_id,opt.opt_id,unt.unt_id,side.side_id,dfine.dfine_status_action,dfine.dfine_status_assessment,dfine.dfine_follow_status, resm.resm_id, resm.resm_ps_id,resm.resm_name
 				FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator as dfine
 				LEFT JOIN ".$this->db_kpims.".".$this->config->item("kpims_prefix")."indicator as ind ON dfine.dfine_ind_id = ind.ind_id
@@ -59,7 +58,7 @@ class M_kpi_report_indicator extends Da_kpi_report_indicator {
 				ORDER BY bgy.bgy_id,dfine.dfine_id DESC";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
+    } //End fn get_search_by_id
 	
 	function get_search_export($bgy_id,$indgp_id,$resm_ps_id){
 		$where_bgy = "";
@@ -74,7 +73,6 @@ class M_kpi_report_indicator extends Da_kpi_report_indicator {
 		if($resm_ps_id > 0){
 			$where_resm = "AND resm.resm_ps_id='$resm_ps_id'";
 		}
-		//AND dfine.dfine_status_assessment != 0
 		$sql = "SELECT dfine.dfine_id,ind.ind_name,ind.ind_description,bgy.bgy_name,str.str_name,indgp.indgp_name,opt.opt_name,opt.opt_symbol,dfine.dfine_goal,unt.unt_name,side.side_name ,ind.ind_id,bgy.bgy_id,str.str_id,indgp.indgp_id,opt.opt_id,unt.unt_id,side.side_id,dfine.dfine_status_action,dfine.dfine_status_assessment, resm.resm_id, resm.resm_ps_id,resm.resm_name
 				FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator as dfine
 				LEFT JOIN ".$this->db_kpims.".".$this->config->item("kpims_prefix")."indicator as ind ON dfine.dfine_ind_id = ind.ind_id
@@ -92,7 +90,7 @@ class M_kpi_report_indicator extends Da_kpi_report_indicator {
 				ORDER BY bgy.bgy_id,dfine.dfine_id ASC";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
+    } //End fn get_search_export
 	
 	function get_indicator_faile($bgy_id,$indgp_id,$resm_id){
 		$where_bgy = "";
@@ -116,7 +114,7 @@ class M_kpi_report_indicator extends Da_kpi_report_indicator {
 					".$where_resm." ";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_indicator_faile
 	
 	function get_indicator_pass($bgy_id,$indgp_id,$resm_id){
 		$where_bgy = "";
@@ -140,7 +138,7 @@ class M_kpi_report_indicator extends Da_kpi_report_indicator {
 					".$where_resm." ";
 		$query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_indicator_pass
 	
 	function get_indicator_notprocessed($bgy_id,$indgp_id,$resm_id){
 		$where_bgy = "";
@@ -164,7 +162,7 @@ class M_kpi_report_indicator extends Da_kpi_report_indicator {
 					".$where_resm." ";
 		$query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_indicator_notprocessed
 	
 	function get_name_indicator_by_status_assessment($bgy_id,$status_assessment){
 		$where_bgy = "";
@@ -196,7 +194,7 @@ class M_kpi_report_indicator extends Da_kpi_report_indicator {
 				ORDER BY str.str_name ASC";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
+    } //End fn get_name_indicator_by_status_assessment
 	
 	function get_report_indicator_by_id($dfine_id){
 		$where_dfine_id = "";
@@ -218,7 +216,7 @@ class M_kpi_report_indicator extends Da_kpi_report_indicator {
 				ORDER BY bgy.bgy_id,dfine.dfine_id DESC";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_report_indicator_by_id
 	
 	function get_report_indicator_by_follow_status($bgy_id){
 		$sql = "SELECT dfine.dfine_id,ind.ind_name,ind.ind_description,bgy.bgy_name,str.str_name,indgp.indgp_name,opt.opt_name,opt.opt_symbol,dfine.dfine_goal,unt.unt_name,side.side_name ,ind.ind_id,bgy.bgy_id,str.str_id,indgp.indgp_id,opt.opt_id,unt.unt_id,side.side_id,dfine.dfine_status_action,dfine.dfine_status_assessment, resm.resm_id, resm.resm_ps_id,resm.resm_name
@@ -235,7 +233,7 @@ class M_kpi_report_indicator extends Da_kpi_report_indicator {
 				";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_report_indicator_by_follow_status
 	
 	function get_ind_result_by_id($dfine_id){
 		$sql = "SELECT *
@@ -243,9 +241,6 @@ class M_kpi_report_indicator extends Da_kpi_report_indicator {
 				WHERE indrs_dfind_id = '$dfine_id'";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
-	
-	
-	
-}
+	} //End fn get_ind_result_by_id
+} //End fn 
 ?>

@@ -25,7 +25,7 @@ class M_kpi_define_indicator extends Da_kpi_define_indicator {
 				WHERE dfine.dfine_status != 0 ORDER BY bgy.bgy_id  , dfine.dfine_ind_id DESC";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
+    }  //End fn get_all
 	
 	function get_by_id($dfine_id){
 		$sql = "SELECT dfine.dfine_id,ind.ind_name,ind.ind_description,bgy.bgy_name,str.str_name,indgp.indgp_name,opt.opt_name,opt.opt_symbol,dfine.dfine_goal,unt.unt_name,side.side_name ,ind.ind_id,bgy.bgy_id,str.str_id,indgp.indgp_id,opt.opt_id,unt.unt_id,side.side_id,dfine.dfine_status_action,dfine.dfine_status_assessment
@@ -40,15 +40,7 @@ class M_kpi_define_indicator extends Da_kpi_define_indicator {
 				WHERE dfine_id = '$dfine_id' AND dfine.dfine_status != 0";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
-	
-	// function get_indicator(){
-		// $sql = "SELECT *
-				// FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."indicator
-				// WHERE ind_status != 0";
-        // $query = $this->db_KPIMS->query($sql);
-        // return $query;
-	// }
+    } //End fn get_by_id
 	
 	function get_indicator($bgy_id){
 		$sql = "SELECT ind_id, ind_name
@@ -60,7 +52,7 @@ class M_kpi_define_indicator extends Da_kpi_define_indicator {
 					WHERE dfine_bgy_id = '$bgy_id' AND dfine_status = 1)";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_indicator
 	
 	function get_indicator_edit($ind_id, $bgy_id){
 		$sql = "SELECT ind_id, ind_name
@@ -73,20 +65,8 @@ class M_kpi_define_indicator extends Da_kpi_define_indicator {
 				OR ind_id = '$ind_id'";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
-	
-	// function get_indicator_by_ind_id($bgy_id, $ind_id){
-		// $sql = "SELECT ind_id, ind_name
-				// FROM kpi_indicator 
-				// WHERE ind_id NOT IN
-					// (SELECT dfine_ind_id 
-					// FROM kpi_indicator 
-					// LEFT JOIN kpi_define_indicator ON ind_id = dfine_ind_id
-					// WHERE dfine_bgy_id = '$bgy_id' AND ind_id = '$ind_id' )";
-        // $query = $this->db_KPIMS->query($sql);
-        // return $query;
-	// }
-	
+	} //End fn get_indicator_edit
+	 
 	function get_indicator_use_by_bgy(){
 		$sql = "SELECT ind_id, ind_name, dfine_id,dfine_ind_id ,dfine_bgy_id , dfine_status
 				FROM kpi_indicator 
@@ -94,7 +74,7 @@ class M_kpi_define_indicator extends Da_kpi_define_indicator {
 				WHERE dfine_bgy_id = 2";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_indicator_use_by_bgy
 	
 	function get_budget_year(){
 		$sql = "SELECT bgy_id, bgy_name
@@ -102,7 +82,7 @@ class M_kpi_define_indicator extends Da_kpi_define_indicator {
 				WHERE bgy_status != 0 ORDER BY bgy_id DESC ";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_budget_year
 	
 	function get_side(){
 		$sql = "SELECT side_id, side_name
@@ -110,7 +90,7 @@ class M_kpi_define_indicator extends Da_kpi_define_indicator {
 				WHERE side_status != 0";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_side
 	
 	function get_strategy(){
 		$sql = "SELECT str_id, str_name
@@ -118,7 +98,7 @@ class M_kpi_define_indicator extends Da_kpi_define_indicator {
 				WHERE str_status != 0";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_strategy
 	
 	function get_indicator_group(){
 		$sql = "SELECT indgp_id, indgp_name
@@ -126,7 +106,7 @@ class M_kpi_define_indicator extends Da_kpi_define_indicator {
 				WHERE indgp_status != 0";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_indicator_group
 	
 	function get_unit(){
 		$sql = "SELECT unt_id, unt_name
@@ -134,14 +114,14 @@ class M_kpi_define_indicator extends Da_kpi_define_indicator {
 				WHERE unt_status != 0";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_unit
 	
 	function get_operator(){
 		$sql = "SELECT opt_id, opt_name, opt_symbol
 				FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."operator";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_operator
 	
 	function get_ind_id(){
 		$sql = "SELECT dfine_ind_id
@@ -149,7 +129,7 @@ class M_kpi_define_indicator extends Da_kpi_define_indicator {
 				WHERE dfine_status != 0";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_ind_id
 	
 	function get_follow_status_by_dfine_id($dfine_id){
 		$sql = "SELECT dfine_follow_status
@@ -157,8 +137,14 @@ class M_kpi_define_indicator extends Da_kpi_define_indicator {
 				WHERE dfine_id = '$dfine_id'";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
-
-   
-}
+	} //End fn get_follow_status_by_dfine_id
+	
+	function get_chk_follow($bgy_id){
+		$sql = "SELECT SUM(CASE WHEN dfine_follow_status=0 THEN 1 ELSE 0 END) AS sum
+				FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator
+				WHERE dfine_bgy_id = '$bgy_id'";
+        $query = $this->db_KPIMS->query($sql);
+        return $query;
+	} //End fn get_chk_follow
+} //End class
 ?>

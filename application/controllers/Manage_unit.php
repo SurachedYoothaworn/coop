@@ -11,7 +11,7 @@ class Manage_unit extends kpims_Controller {
 
 	public function index(){
 		$this->output('v_unit');
-    }
+    } //End fn index
     
     public function save_unit(){
         $unt_name = $this->input->post('unt_name');
@@ -20,13 +20,13 @@ class Manage_unit extends kpims_Controller {
 			$this->unt->insert();
 		echo json_encode(true);
 		}
-    }
+    } //End fn save_unit
 
     public function edit_unit(){
         $unt_id = $this->input->post('unt_id');
         $data = $this->unt->get_by_id($unt_id)->row_array();
         echo json_encode($data);
-    }
+    } //End fn edit_unit
 
     public function update_unit(){
         $unt_id = $this->input->post('unt_id');
@@ -35,13 +35,13 @@ class Manage_unit extends kpims_Controller {
 			$this->unt->update($unt_id, $unt_name);
 			echo json_encode(true);
 		}
-    }
+    } //End fn update_unit
 
     public function update_status_unit(){
         $unt_id = $this->input->post('unt_id');
         $this->unt->update_status($unt_id);
         echo json_encode(true);
-    }
+    } //End fn update_status_unit
 	
 	function get_data(){ 
         $rs_unt_data = $this->unt->get_all();
@@ -68,4 +68,4 @@ class Manage_unit extends kpims_Controller {
         } //End if
         echo json_encode($data);
     }//End fn get_data
-}
+} //End class

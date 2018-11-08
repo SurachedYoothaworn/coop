@@ -2,7 +2,6 @@
 <script>
 	$(document).ready( function () {
         get_data();
-		// $('#bgy_add').mask('25__');	
     });
 	
 	function get_data(){
@@ -40,8 +39,6 @@
             }
         });//end DataTable
         $('.dataTables_filter input').attr('placeholder', 'ค้นหา');
-        // var table = $("#example").dataTable();
-	    // new $.fn.dataTable.FixedHeader(table);
     } //End fn get_data
 	
 	function open_modal(){
@@ -70,9 +67,7 @@
 		}//if
     } //End fn save_indicator
 
-
     function edit_budget_year(bgy_id){
-        // alert(bgy_id);
         var bgy_id = bgy_id;
 	 	$.ajax({
 	 		type: "POST",
@@ -80,7 +75,6 @@
 	 		data: {'bgy_id': bgy_id},
 	 		dataType : "json",
 	 		success : function(data){
-                // alert(data.bgy_name);
 	 			$("#bgy_edit").val(data.bgy_name);
                 $("#hid_bgy_id").val(bgy_id);
                 

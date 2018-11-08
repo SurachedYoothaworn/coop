@@ -17,13 +17,13 @@ class M_kpi_unit extends Da_kpi_unit {
 				WHERE unt_status = 1";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
+    } //End fn get_all
 
     function get_by_id($unt_id){
         $sql = "SELECT * FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."unit 
 				WHERE unt_id = '$unt_id' AND unt_status = 1";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
-}
+    } //End fn get_by_id
+} //End class
 ?>

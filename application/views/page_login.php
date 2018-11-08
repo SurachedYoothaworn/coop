@@ -83,9 +83,6 @@
 						</div>
 					</div>
 				</div>
-				
-				
-				
 				<!--<div class="login-box">
 					<div class="box box-widget widget-user">
 						<div class="widget-user-header bg-aqua-active">
@@ -108,8 +105,6 @@
 						</div>
 					</div>
 				</div>-->
-				
-				
 			</div> <!-- /.container -->
 			
 		</div>

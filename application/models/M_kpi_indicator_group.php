@@ -17,13 +17,13 @@ class M_kpi_indicator_group extends Da_kpi_indicator_group {
 				WHERE indgp_status = 1";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
+    } //End fn get_all
 
     function get_by_id($indgp_id){
         $sql = "SELECT * FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."indicator_group 
 				WHERE indgp_id = '$indgp_id' AND indgp_status = 1";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
-}
+    } //End fn get_by_id
+} //End class
 ?>

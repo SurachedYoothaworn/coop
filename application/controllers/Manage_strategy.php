@@ -11,7 +11,7 @@ class Manage_strategy extends kpims_Controller {
 
     public function index(){
 		$this->output('v_strategy');
-    }
+    } //End fn index
 
     public function save_strategy(){
         $str_name = $this->input->post('str_name');
@@ -22,15 +22,13 @@ class Manage_strategy extends kpims_Controller {
 			$this->str->insert();
 			echo json_encode(true);
 		}
-        // redirect('Manage_strategy', 'refash');
-    }
+    } //End fn save_strategy
 
     public function edit_strategy(){
         $str_id = $this->input->post('str_id');
         $data = $this->str->get_by_id($str_id)->row_array();
-        // print_r($data);die;
         echo json_encode($data);
-    }
+    } //End fn edit_strategy
 
     public function update_strategy(){
         $str_id = $this->input->post('str_id');
@@ -40,13 +38,13 @@ class Manage_strategy extends kpims_Controller {
 			$this->str->update($str_id, $str_name, $str_code);
 			echo json_encode(true);
 		}
-    }
+    } //End fn update_strategy
 
     public function update_status_strategy(){
         $str_id = $this->input->post('str_id');
         $this->str->update_status($str_id);
         echo json_encode(true);
-    }
+    } //End fn update_status_strategy
 	
 	function get_data(){ 
         $rs_str_data = $this->str->get_all();
@@ -74,5 +72,5 @@ class Manage_strategy extends kpims_Controller {
         } //End if
         echo json_encode($data);
     }//End fn get_data
-}
+} //End class
 ?>

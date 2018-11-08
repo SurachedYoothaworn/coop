@@ -18,7 +18,6 @@
 							<div class="form-group"> <!-- Start form-group -->
 							<?php $date=""; 
 							foreach($result_ind->result() as $rs_ind){ 
-								// $sum_score += $rs_ind->indrs_score;
 								if($rs_ind->indrs_date_edit == ""){
 									$date = "ไม่มีการบันทึกผล";
 								}else{

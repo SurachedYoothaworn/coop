@@ -1,15 +1,3 @@
-<!-- <div class="col-xs-12">
-    <div class="panel panel-primary" >
-        <div class="panel-heading bg-light-blue-active">
-                <h3><i class="fa fa-edit"></i> จัดการตัวชี้วัด</h3>
-        </div>
-        <div class="panel-body">
-            <div class="col-md-12">
-						
-		    </div>
-		</div>
-	</div>
-</div> -->
 <?php include(dirname(__FILE__)."/v_kpims_main.php") ?>
 <script>
     $(document).ready( function () {
@@ -29,7 +17,6 @@
                     var return_data = new Array();
                     $(data).each(function(seq, data ) {
                         return_data.push({
-                            // "ind_seq": data.ind_seq,
                             "seq_queue_show": '<center>'+i+'</center>',
                             "ind_id": data.ind_id ,
                             "ind_name": data.ind_name,
@@ -53,14 +40,9 @@
             }
         });//end DataTable
         $('.dataTables_filter input').attr('placeholder', 'ค้นหา');
-        // var table = $("#example").dataTable();
-	    // new $.fn.dataTable.FixedHeader(table);
     } //End fn get_data
 
     function open_modal(){
-		// validate("frm_modal_add");
-		// $("#ind_add").removeAttr('style');
-        // notify("success","ตัวชี้วัด");
         $('#ind_add').val("");
         $('#desc_add').val("");
         $('#modal_add_indicator').modal({show:true});
@@ -88,7 +70,6 @@
     } //End fn save_indicator
 
     function edit_indicator(ind_id){
-        // alert(ind_id);
         var ind_id = ind_id;
 	 	$.ajax({
 	 		type: "POST",
@@ -96,7 +77,6 @@
 	 		data: {'ind_id': ind_id},
 	 		dataType : "json",
 	 		success : function(data){
-                // alert(data.ind_name);
 	 			$("#ind_edit").val(data.ind_name);
                 $("#desc_edit").val(data.ind_description);
                 $("#hid_ind_id").val(ind_id);
@@ -156,14 +136,7 @@
             <div class="box-header with-border">
                 <i class="fa fa-edit"></i>
                 <h2 class="box-title">จัดการตัวชี้วัด</h2>
-                <!-- <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="" data-original-title="Collapse">
-                    <i class="fa fa-minus"></i></button>
-                    <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="" data-original-title="Remove">
-                    <i class="fa fa-times"></i></button>
-                </div> -->
             </div>
-            
             <div class="box-body">
                 <div class="col-md-3">	
                     <a id="btn-add-tab" name="btn-add-tab" class="<?php echo $this->config->item('btn_primary');?> pull-left" href="#" onclick="open_modal()">
@@ -205,8 +178,7 @@
 						<div class = "col-md-12">
 							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">ชื่อตัวชี้วัด<span class="text-danger">*</span></label>
 							<div class="col-md-10" id=""> <!-- Start col-md-9 -->
-								<!--<input type="text" class="form-control" value="" name="ind_add" id="ind_add" validate>-->
-								 <textarea name="ind_add" id="ind_add" class="form-control" rows="2" cols="50" validate></textarea>
+								<textarea name="ind_add" id="ind_add" class="form-control" rows="2" cols="50" validate></textarea>
 							</div>
 						</div>
 					</div><label></label>
@@ -214,7 +186,6 @@
 						<div class = "col-md-12">
 							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">คำอธิบาย<span></span></label>
 							<div class="col-md-10" id=""> <!-- Start col-md-9 -->
-								<!-- <input type="text" class="form-control" value="" name="desc_add" id="desc_add"  validate> -->
 								<textarea name="desc_add" id="desc_add" class="form-control" rows="4" cols="50" ></textarea>
 							</div>
 						</div> <!-- End col-md-12 -->
@@ -223,8 +194,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">ยกเลิก</button>
-                <!-- <input type="button" class="btn btn-success" onclick="save()" value="บันทึก"> -->
-                <!-- <button type="submit" class="btn btn-success" onclick="save_indicator()" >บันทึก</button> -->
                 <a id="btn-add-tab" name="btn-add-tab" class="<?php echo $this->config->item('btn_success');?> pull-right" data-toggle="modal" onclick="save_indicator()">บันทึก</a>
             </div><!--modal-footer-->
         </div>
@@ -246,8 +215,7 @@
                         <div class = "col-md-12">
                             <label class="col-md-2 control-label" style="padding: 8px; text-align: right;">ชื่อตัวชี้วัด<span class="text-danger">*</span></label>
                             <div class="col-md-10" id=""> <!-- Start col-md-9 -->
-                                <!--<input type="text" class="form-control" value="" name="ind_edit" id="ind_edit" rows="2" validate >-->
-								<textarea name="ind_edit" id="ind_edit" class="form-control" rows="2" cols="50" validate></textarea>
+                                <textarea name="ind_edit" id="ind_edit" class="form-control" rows="2" cols="50" validate></textarea>
                             </div>
                         </div>
                     </div><label></label>
@@ -255,7 +223,6 @@
                         <div class = "col-md-12">
                             <label class="col-md-2 control-label" style="padding: 8px; text-align: right;">คำอธิบาย<span></span></label>
                             <div class="col-md-10" id=""> <!-- Start col-md-9 -->
-                                <!-- <input type="text" class="form-control" value="" name="desc_edit" id="desc_edit" rows="2" validate  > -->
                                 <textarea name="desc_edit" id="desc_edit" class="form-control" rows="4" cols="50" value=""></textarea>
                                 <input type="hidden" name="hid_ind_id" id="hid_ind_id">
                             </div>
@@ -265,7 +232,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">ยกเลิก</button>
-                <!-- <button type="submit" class="btn btn-success"  onclick="save_edit_indicator()">บันทึก</button> -->
                 <a id="btn-edit-tab" name="btn-edit-tab" class="<?php echo $this->config->item('btn_success');?> pull-right" onclick="save_edit_indicator()">บันทึก</a>
             </div><!--modal-footer-->
         </div>

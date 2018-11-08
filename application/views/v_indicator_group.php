@@ -17,7 +17,6 @@
                     var return_data = new Array();
                     $(data).each(function(seq, data ) {
                         return_data.push({
-                            // "ind_seq": data.ind_seq,
                             "seq_queue_show": '<center>'+i+'</center>',
                             "indgp_id": data.indgp_id ,
                             "indgp_name": data.indgp_name,
@@ -41,8 +40,6 @@
             }
         });//end DataTable
         $('.dataTables_filter input').attr('placeholder', 'ค้นหา');
-        // var table = $("#example").dataTable();
-	    // new $.fn.dataTable.FixedHeader(table);
     } //End fn get_data
 	
 	function open_modal(){
@@ -82,7 +79,6 @@
 	 		data: {'indgp_id': indgp_id},
 	 		dataType : "json",
 	 		success : function(data){
-                // alert(data.ind_name);
 	 			$("#indgp_edit").val(data.indgp_name);
                 $("#indgp_code_edit").val(data.indgp_code);
                 $("#hid_indgp_id").val(indgp_id);

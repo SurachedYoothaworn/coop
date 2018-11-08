@@ -57,45 +57,34 @@ class Define_indicator extends kpims_Controller {
                 $btn_opt .= '<i class="glyphicon glyphicon-trash" style="color:white"></i>';
                 $btn_opt .= '</button></center>&nbsp';
 				
-				// if($ind->ind_description == "" || $ind->ind_description == null){
-					// $dfine_data = array(
-						// "ind_seq" => "<center>".$seq."</center>",
-						// "ind_id" => $ind->ind_id,
-						// "ind_name" => $ind->ind_name,
-						// "ind_description" => "-",
-						// "btn_manage" => $btn,
-					// );
-					// array_push($data, $dfine_data);
-				// }else{
-					$dfine_data = array(
-						// "ind_seq" => "<center>".$seq."</center>",
-						"dfine_id" 			=>	$dfine->dfine_id,
-						"ind_name" 			=>	$dfine->ind_name,
-						"ind_description" 	=>	$dfine->ind_description,
-						"bgy_name" 			=>	$dfine->bgy_name,
-						"str_name" 			=>	$dfine->str_name,
-						"indgp_name" 		=>	$dfine->indgp_name,
-						"opt_name"			=>	$dfine->opt_name,
-						"opt_symbol"		=>	$dfine->opt_symbol,
-						"dfine_goal" 		=>	$dfine->dfine_goal,
-						"unt_name"			=>	$dfine->unt_name,
-						"side_name" 		=>	$dfine->side_name,
-					//สว่นของ id
-						"ind_id" 			=> 	$dfine->ind_id,
-						"bgy_id" 			=> 	$dfine->bgy_id,
-						"str_id" 			=> 	$dfine->str_id,
-						"indgp_id" 			=> 	$dfine->indgp_id,
-						"opt_id" 			=> 	$dfine->opt_id,
-						"unt_id" 			=> 	$dfine->unt_id,
-						"side_id" 			=> 	$dfine->side_id,
-						"dfine_status_action" 		=> 	$dfine->dfine_status_action,
-						"dfine_status_assessment"	=> 	$dfine->dfine_status_assessment,
-						"btn_rm"			=>	$btn_rm,
-						"btn_opt"			=>	$btn_opt,
-					);
-					array_push($data, $dfine_data);
-				// }
-				// $seq++;
+			
+				$dfine_data = array(
+					// "ind_seq" => "<center>".$seq."</center>",
+					"dfine_id" 			=>	$dfine->dfine_id,
+					"ind_name" 			=>	$dfine->ind_name,
+					"ind_description" 	=>	$dfine->ind_description,
+					"bgy_name" 			=>	$dfine->bgy_name,
+					"str_name" 			=>	$dfine->str_name,
+					"indgp_name" 		=>	$dfine->indgp_name,
+					"opt_name"			=>	$dfine->opt_name,
+					"opt_symbol"		=>	$dfine->opt_symbol,
+					"dfine_goal" 		=>	$dfine->dfine_goal,
+					"unt_name"			=>	$dfine->unt_name,
+					"side_name" 		=>	$dfine->side_name,
+				//สว่นของ id
+					"ind_id" 			=> 	$dfine->ind_id,
+					"bgy_id" 			=> 	$dfine->bgy_id,
+					"str_id" 			=> 	$dfine->str_id,
+					"indgp_id" 			=> 	$dfine->indgp_id,
+					"opt_id" 			=> 	$dfine->opt_id,
+					"unt_id" 			=> 	$dfine->unt_id,
+					"side_id" 			=> 	$dfine->side_id,
+					"dfine_status_action" 		=> 	$dfine->dfine_status_action,
+					"dfine_status_assessment"	=> 	$dfine->dfine_status_assessment,
+					"btn_rm"			=>	$btn_rm,
+					"btn_opt"			=>	$btn_opt,
+				);
+				array_push($data, $dfine_data);
             } //End for
         } //End if
         echo json_encode($data);
@@ -192,7 +181,6 @@ class Define_indicator extends kpims_Controller {
 				$this->rsind->indrs_dfind_id = $last_id;
 				$this->rsind->insert();
 			}
-			
 			echo json_encode(0);
 		}
 	} //End fn save_data
@@ -200,32 +188,22 @@ class Define_indicator extends kpims_Controller {
 	public function edit_define_indicator(){
 		$dfine_id = $this->input->post('dfine_id');
 		$data = $this->dfine->get_by_id($dfine_id)->row_array();
-		
-		// echo "<pre>";
-		// print_r($this->dfine->get_by_id($dfine_id)->result());die;
-		// echo "</pre>";
-		
 		echo json_encode($data);
-	}
+	} //End fn edit_define_indicator
 	
 	function edit_value_indicator(){
 		$ind_id = $this->input->post('ind_id');
 		$bgy_id = $this->input->post('bgy_id');
 		$data = $this->dfine->get_indicator_edit($ind_id,$bgy_id)->result();
-		
-		// echo "<pre>";
-		// print_r($data);die;
-		// echo "</pre>";
-		
 		echo json_encode($data);
-	}
+	} //End fn edit_value_indicator
 	
 	function update_status_define_indicator(){
         $dfine_id = $this->input->post('dfine_id');
 		$this->rsind->delete($dfine_id); //ลบผลคะแนน
         $this->dfine->update_status($dfine_id);
         echo json_encode(true); 
-    } //End fn update_status_indicator
+    } //End fn update_status_define_indicator
 	
 	function get_indicator_by_bgy(){
 		$bgy_id = $this->input->post('bgy_id');

@@ -23,12 +23,12 @@ class Login extends kpims_Controller {
             $this->login();
         }
 		
-    }
+    } //End fn index
 
     public function login(){
 		$data['chk_login_failed'] = 0;
         $this->output('page_login',$data);
-    }
+    } //End fn login
 
     public function checklogin(){
 		 // $this->session->sess_destroy();
@@ -52,8 +52,13 @@ class Login extends kpims_Controller {
 
 		if($rs_services->data_unit == 1){
             $this->session->set_userdata('us_id',$rs_services->data_result->us_id);
-			$this->session->set_userdata('us_ps_id',$rs_services->data_result->us_ref_ps_id);
+			if($rs_services->data_result->us_ref_ps_id == null || $rs_services->data_result->us_ref_ps_id == ""){
+				$this->session->set_userdata('us_ps_id',0);
+			}else{
+				$this->session->set_userdata('us_ps_id',$rs_services->data_result->us_ref_ps_id);
+			}
             $this->session->set_userdata('us_username',$rs_services->data_result->us_name);
+			$this->session->set_userdata('us_ref_ug_id',$rs_services->data_result->us_ref_ug_id);
 			$this->session->set_userdata('us_permission',$rs_services->data_result->us_ref_ug_id);
 			foreach($rs_person['data_result'] as $row){
 				if($rs_services->data_result->us_ref_ps_id == $row['ps_id']){
@@ -71,29 +76,14 @@ class Login extends kpims_Controller {
 			echo json_encode(false);
 			// redirect('Login', 'refresh');  
 			// return false;
-		}
-		
-        // $user = $this->us->check_login($username, $password);
-        // if(!$user){
-            // $chk_user = $this->us->check_user($username);
-            // $this->uslog->login_failed();
-        // }else{ 
-            // $usr = $user->row_array();
-			// $this->session->set_userdata('us_id',$usr['us_id']);
-			// $this->session->set_userdata('us_ps_id','1');
-            // $this->session->set_userdata('us_username',$usr['us_username']);
-			// $this->session->set_userdata('us_ps_name',$usr['us_username']);
-			// $this->session->set_userdata('us_permission',$usr['us_permission']);
-			// $this->uslog->login();
-        // }
-             
-    }
+		}   
+    } //End fn checklogin
 
     public function logout(){
         $this->uslog->logout();
         // $this->session->unset_userdata('us_id');
         $this->session->sess_destroy();
         redirect('Login', 'refresh'); 
-    }
+    } //End fn logout
 	
 }

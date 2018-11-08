@@ -9,14 +9,11 @@ class Manage_indicator extends kpims_Controller {
         $this->load->model('M_kpi_indicator','ind');
     }
 
-	public function index()
-	{
-        // $data['rs_ind'] = $this->ind->get_all();
+	public function index(){
 		$this->output('v_indicator');
-    }
+    } //End fn index
     
     public function save_indicator(){
-        // print_r($this->input->post('ind_add'));
         $ind_name = $this->input->post('ind_name');
         $desc = $this->input->post('ind_desc');
         if($ind_name != NULL || $ind_name != ""){
@@ -25,7 +22,6 @@ class Manage_indicator extends kpims_Controller {
             $this->ind->insert();
             echo json_encode(true);
         }
-        // redirect('Manage_indicator', 'refash');
     } //End fn save_indicator
 
     public function edit_indicator(){

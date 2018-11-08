@@ -17,20 +17,20 @@ class M_kpi_budget_year extends Da_kpi_budget_year {
 				WHERE bgy_status = 1 ORDER BY bgy_id ASC";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
+    } //End fn get_all
 
     function get_by_id($bgy_id){
         $sql = "SELECT * FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."budget_year 
 				WHERE bgy_id = '$bgy_id' AND bgy_status = 1";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
+    } //End fn get_by_id
 	
 	function get_name($bgy_id){
         $sql = "SELECT bgy_name FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."budget_year 
 				WHERE bgy_id = '$bgy_id' AND bgy_status = 1";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
-}
+    } //End fn get_name
+} //End class
 ?>

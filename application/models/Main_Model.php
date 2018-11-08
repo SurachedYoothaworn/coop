@@ -9,6 +9,4 @@ class Main_Model extends CI_Model {
         parent::__construct();
 		
     }
-	
-	
-}
+} //End class

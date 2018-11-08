@@ -1,6 +1,6 @@
 <?php
 /*	
-* Class Da_kpi_indicator_gruop	
+* Class Da_kpi_indicator_group	
 * @author Surached Yoothaworn 58160156 
 * @Create Date 2561-8-08
 */
@@ -17,22 +17,21 @@ class Da_kpi_indicator_group extends Kpims_model {
 	function insert(){
         $sql = "INSERT INTO ".$this->db_kpims.".".$this->config->item("kpims_prefix")."indicator_group(indgp_id,indgp_name,indgp_code,indgp_status) 
                 VALUES ('',?,?,?)";
-		$this->db_KPIMS->query($sql,array($this->indgp_name, $this->indgp_code, 1));
-		// $this->last_insert_id = $this->db_KPIMS->insert_id();
-	}
+		$this->db_KPIMS->query($sql,array($this->indgp_name, $this->indgp_code, 1)); 
+	} //End fn insert
 
 	function update($indgp_id, $indgp_name, $indgp_code){
 		$sql = "UPDATE ".$this->db_kpims.".".$this->config->item("kpims_prefix")."indicator_group 
 				SET indgp_name='$indgp_name', indgp_code='$indgp_code'
 				WHERE indgp_id='$indgp_id'";
 		$this->db_KPIMS->query($sql);
-	}
+	} //End fn update
 
 	function update_status($indgp_id){
 		$sql = "UPDATE ".$this->db_kpims.".".$this->config->item("kpims_prefix")."indicator_group 
 				SET indgp_status=0 WHERE indgp_id='$indgp_id'";
 		$this->db_KPIMS->query($sql);
-	}
+	} //End fn update_status
 	
-}//End Class Da_test
+}//End class  
 ?>

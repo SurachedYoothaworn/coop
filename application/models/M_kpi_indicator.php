@@ -17,23 +17,14 @@ class M_kpi_indicator extends Da_kpi_indicator {
 				WHERE ind_status = 1";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
+    } //End fn get_all
 
     function get_by_id($ind_id){
         $sql = "SELECT * FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."indicator 
 				WHERE ind_id = '$ind_id' AND ind_status = 1";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
-	
-	// function get_ind_id(){
-        // $sql = "SELECT dfine_ind_id  FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."indicator
-				// INNER JOIN ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator 
-				// ON ind_id = dfine_ind_id
-				// GROUP BY dfine_ind_id";
-        // $query = $this->db_KPIMS->query($sql);
-        // return $query;
-    // }
+    } //End fn get_by_id
 	
 	function get_ind_by_id($ind_id){
         $sql = "SELECT dfine_ind_id  FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."indicator
@@ -42,6 +33,6 @@ class M_kpi_indicator extends Da_kpi_indicator {
 				WHERE ind_id = '$ind_id' AND dfine_status = 1 ";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
-}
+    } //End fn get_ind_by_id
+} //End class
 ?>

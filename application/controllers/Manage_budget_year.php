@@ -11,7 +11,7 @@ class Manage_budget_year extends kpims_Controller {
 
 	public function index(){
 		$this->output('v_budget_year');
-    }
+    } //End fn index
     
     public function save_budget_year(){
         $bgy_name = $this->input->post('bgy_name');
@@ -20,13 +20,13 @@ class Manage_budget_year extends kpims_Controller {
 			$this->bgy->insert();
 			echo json_encode(true);
 		}
-    }
+    } //End fn save_budget_year
 
     public function edit_budget_year(){
         $bgy_id = $this->input->post('bgy_id');
         $data = $this->bgy->get_by_id($bgy_id)->row_array();
         echo json_encode($data);
-    }
+    } //End fn edit_budget_year
 
     public function update_budget_year(){
         $bgy_id = $this->input->post('bgy_id');
@@ -35,13 +35,13 @@ class Manage_budget_year extends kpims_Controller {
 			$this->bgy->update($bgy_id, $bgy_name);
 			echo json_encode(true);
 		}
-    }
+    } //End fn update_budget_year
 
     public function update_status_budget_year(){
         $bgy_id = $this->input->post('bgy_id');
         $this->bgy->update_status($bgy_id);
         echo json_encode(true);
-    }
+    } //End fn update_status_budget_year
 	
 	function get_data(){ 
         $rs_bgy_data = $this->bgy->get_all();
@@ -68,4 +68,4 @@ class Manage_budget_year extends kpims_Controller {
         } //End if
         echo json_encode($data);
     }//End fn get_data
-}
+} //End class

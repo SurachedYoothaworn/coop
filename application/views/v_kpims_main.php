@@ -4,16 +4,7 @@
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/dataTables.bootstrap4.min.js"></script> 
 <link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/dataTables.bootstrap4.min.css">
 
-<!-- DataTable_old -->
-<!-- <link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/dataTables.bootstrap.css">
-<link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/jquery.dataTables_themeroller.css"> -->
-<!-- <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/dataTables.bootstrap.min.js"></script> -->
-<!-- <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/jquery.dataTables.min.js"></script> -->
-<!-- <link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>plugins/datatables/jquery.dataTables.min.css"> -->
-
-
 <!-- Sweetalert -->
-<!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/sweetalert/sweetalert.min.js"></script>
 <link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>plugins/sweetalert/sweetalert.css">
 
@@ -39,6 +30,7 @@
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/highcharts/highcharts.js"></script>
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/highcharts/exporting.js"></script>
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/highcharts/highcharts-3d.js"></script>
+<script src="<?php echo base_url().$this->config->item('template_path');?>plugins/highcharts/highcharts-more.js"></script>
 
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/inputmask/jquery.mask.min.js"></script>
 <script>
@@ -97,13 +89,14 @@
         }))
     }
 	
+	//แจ้งเตือนติดตามตัวชี้วัด
 	function notify_follow(){
         PNotify.desktop.permission();
         (new PNotify({
 			title: '  คุณได้เปลี่ยนแปลงการติดตามตัวชี้วัด',
             text: '',
             type: "info",
-            delay: 2000
+            delay: 2500
         }))
     }
 
@@ -188,37 +181,4 @@
 	.box.box-solid.box-primary {
 	  border: 1px solid #2b6688;
 	}
-	
-	
-	
-	// body {
-	  // font-family: "TH SarabunPSK";
-	  // font-size: 24px;
-	// }
-	// h1,
-	// h2,
-	// h3,
-	// h4,
-	// h5,
-	// h6,
-	// .h1,
-	// .h2,
-	// .h3,
-	// .h4,
-	// .h5,
-	// .h6 {
-		// font-family: TH SarabunPSK";
-		// font-size: 24px;
-	// }
-	
-	// .main-header .sidebar-toggle {
-	  // font-family: fontAwesome;
-	  // font-size: 24px;
-	// }
-	
-	// .main-header .logo {
-	  // font-family: "TH SarabunPSK";
-	  // font-size: 24px;
-	// }
-
 </style>

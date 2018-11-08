@@ -9,10 +9,9 @@ class Manage_side extends kpims_Controller {
         $this->load->model('M_kpi_side','side');
     }
 
-	public function index()
-	{
+	public function index(){
 		$this->output('v_side');
-    }
+    } //End fn index
     
     public function save_side(){
         $side_name = $this->input->post('side_name');
@@ -23,13 +22,13 @@ class Manage_side extends kpims_Controller {
 			$this->side->insert();
 			echo json_encode(true);
 		}
-    }
+    } //End fn save_side
 
     public function edit_side(){
         $side_id = $this->input->post('side_id');
         $data = $this->side->get_by_id($side_id)->row_array();
         echo json_encode($data);
-    }
+    } //End fn edit_side
 
     public function update_side(){
         $side_id = $this->input->post('side_id');
@@ -39,13 +38,13 @@ class Manage_side extends kpims_Controller {
 			$this->side->update($side_id, $side_name, $side_code);
 			echo json_encode(true);
 		}
-    }
+    } //End fn update_side
 
     public function update_status_side(){
         $side_id = $this->input->post('side_id');
         $this->side->update_status($side_id);
         echo json_encode(true);
-    }
+    } //End fn update_status_side
 	
 	function get_data(){ 
         $rs_side_data = $this->side->get_all();
@@ -73,4 +72,4 @@ class Manage_side extends kpims_Controller {
         } //End if
         echo json_encode($data);
     }//End fn get_data
-}
+} //End class

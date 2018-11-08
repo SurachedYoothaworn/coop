@@ -38,8 +38,6 @@
             }
         });//end DataTable
         $('.dataTables_filter input').attr('placeholder', 'ค้นหา');
-        // var table = $("#example").dataTable();
-	    // new $.fn.dataTable.FixedHeader(table);
     } //End fn get_data
 	
 	function open_modal(){
@@ -76,7 +74,6 @@
 	 		data: {'unt_id': unt_id},
 	 		dataType : "json",
 	 		success : function(data){
-                // alert(data.unt_name);
 	 			$("#unt_edit").val(data.unt_name);
                 $("#desc_edit").val(data.unt_description);
                 $("#hid_unt_id").val(unt_id);

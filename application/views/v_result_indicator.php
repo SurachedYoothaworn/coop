@@ -19,8 +19,6 @@
 <script>
 	$(document).ready( function () {
         get_data();
-		// $('#test').iCheck('enable');
-		 // $('#test').iCheck();
     });
 	
 	function get_data(){
@@ -36,7 +34,6 @@
                     var return_data = new Array();
                     $(data).each(function(seq, data ) {
                         return_data.push({
-							// "ind_seq"			:	data.ind_seq,
 							"seq_queue_show"	:	'<center>'+i+'</center>',
 							"dfine_id" 			:	data.dfine_id,
 							"ind_name" 			:	data.ind_name,	
@@ -77,8 +74,6 @@
             }
         });//end DataTable
         $('.dataTables_filter input').attr('placeholder', 'ค้นหา');
-        // var table = $("#example").dataTable();
-	    // new $.fn.dataTable.FixedHeader(table);
     } //End fn get_data
 	
 	function get_data_save_result(dfine_id){
@@ -112,7 +107,6 @@
 			arr_score.push($('#score_'+i).val());
 		}
 		var status_action = $('input:radio[name=status_action]:checked').val();
-		// alert(status_action);
 		$.ajax({
             type: "POST",
             url: "<?php echo site_url().'/Result_indicator/save_result'; ?>",
@@ -124,12 +118,11 @@
 				notify_save("");				
             }
         });
-	}
+	} //End fn save_result
 	
 	function save_assessment(){
 		var dfine_id = $("#hid_assessment_dfine_id").val();
 		var status_assessment = $('input:radio[name=status_assessment]:checked').val();
-		// alert(status_assessment);
 		$.ajax({
             type: "POST",
             url: "<?php echo site_url().'/Result_indicator/save_assessment'; ?>",
@@ -141,66 +134,44 @@
 				notify_save_assessment("");
             }
         });
-	}
-	
+	} //End fn save_assessment
+	 
 	function change_action(){
 		var val_action = $('input:radio[name=status_action]:checked').val();
-		// console.log("val_action=>"+val_action);
 		var arr_score = [];
 		for(i=1;i<=4;i++){	
 			arr_score.push($('#score_'+i).val());
 		}
-		// console.log(arr_score);
 		var count_not=0; //เช็คยังไม่ดำเนินการ
 		var count_wait=1; //เช็คกำลังดำเนินการ
 		var count_success=0; //เช็คเสร็จสิ้น
 		for(i=0;i<arr_score.length;i++){
-			// if(val_action == 2){ //กรณีเสร็จสิ้น
-				// $('#status_action_3').prop('checked', true);
-				// if(arr_score[i] == ""){
-					// count_not++;
-				// }
-				// if(count_not==4){
-					// count_wait = 0;
-					// $('#status_action_1').prop('checked', true);
-				// }
-				// if(count_wait == 1){ //เช็คกำลังดำเนินการ
-					// $('#status_action_2').prop('checked', true);
-					// $('#status_action_1').attr('disabled','');
-				// }
-				// if(count_success==4){ //เช็คเสร็จสิ้น
-					// $('#status_action_3').prop('checked', true);
-				// }
-			// }else{ //กรณียังไม่ดำเนินการ และ กำลังดำเนินการ
-				if(arr_score[i] == ""){
-					count_not++;
-				}else{
-					count_success++;
-				}
-				
-				if(count_not==4){//เช็คยังไม่ดำเนินการ
-					 count_wait = 0;
-					$('#status_action_1').prop('checked', true);
-					$('#status_action_1').removeAttr('disabled');
-				}
-				if(count_wait == 1){ //เช็คกำลังดำเนินการ
-					$('#status_action_2').prop('checked', true);
-					$('#status_action_1').attr('disabled','');
-				}
-				if(count_success==4){ //เช็คเสร็จสิ้น
-					$('#status_action_3').prop('checked', true);
-				}
-			// } //End if else
+			if(arr_score[i] == ""){
+				count_not++;
+			}else{
+				count_success++;
+			}
+			if(count_not==4){//เช็คยังไม่ดำเนินการ
+				 count_wait = 0;
+				$('#status_action_1').prop('checked', true);
+				$('#status_action_1').removeAttr('disabled');
+			}
+			if(count_wait == 1){ //เช็คกำลังดำเนินการ
+				$('#status_action_2').prop('checked', true);
+				$('#status_action_1').attr('disabled','');
+			}
+			if(count_success==4){ //เช็คเสร็จสิ้น
+				$('#status_action_3').prop('checked', true);
+			}
 		} //End for
-		
-	}
+	} //End fn change_action
 </script>
 <div class="row">
     <div class="col-xs-12">
         <div class="box box-solid box-primary">
             <div class="box-header with-border">
                 <i class="fa fa-edit"></i>
-                <h2 class="box-title">บันทึกผลงานตัวชี้วัดตัวชี้วัด</h2>
+                <h2 class="box-title">บันทึกผลงานตัวชี้วัด</h2>
             </div>
             
             <div class="box-body">
@@ -244,7 +215,6 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">ยกเลิก</button>
                 <input type="button" class="btn btn-success" onclick="save_result()" value="บันทึก">
-                <!-- <button type="submit" class="btn btn-success" onclick="save_indicator()" >บันทึก</button> -->
             </div><!--modal-footer-->
         </div>
     </div> <!-- /.modal-content -->
@@ -265,7 +235,6 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">ยกเลิก</button>
                 <input type="button" class="btn btn-success" onclick="save_assessment()" value="บันทึก">
-                <!-- <button type="submit" class="btn btn-success" onclick="save_indicator()" >บันทึก</button> -->
             </div><!--modal-footer-->
         </div>
     </div> <!-- /.modal-content -->

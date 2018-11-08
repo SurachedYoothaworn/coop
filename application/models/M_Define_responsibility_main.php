@@ -16,7 +16,7 @@ class M_Define_responsibility_main extends Da_Define_responsibility_main {
 		$sql = "SELECT * FROM kpi_responsibility_main";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_all
 	
 	function get_by_id($dfine_id){ 
 		$sql = "SELECT * FROM kpi_responsibility_main
@@ -24,7 +24,7 @@ class M_Define_responsibility_main extends Da_Define_responsibility_main {
 				ORDER BY resm_dept";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_by_id
 	
 	function get_resm_by_id($resm_id){ 
 		$sql = "SELECT * FROM kpi_responsibility_main
@@ -32,7 +32,7 @@ class M_Define_responsibility_main extends Da_Define_responsibility_main {
 				ORDER BY resm_dept";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_resm_by_id
 	
 	function get_name_by_id($resm_ps_id){
 		$sql = "SELECT * FROM kpi_responsibility_main
@@ -40,7 +40,6 @@ class M_Define_responsibility_main extends Da_Define_responsibility_main {
 				ORDER BY resm_dept";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
-   
-}
+	} //End fn get_name_by_id
+}  //End class 
 ?>

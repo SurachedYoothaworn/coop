@@ -9,10 +9,9 @@ class Manage_indicator_group extends kpims_Controller {
         $this->load->model('M_kpi_indicator_group','indgp');
     }
 
-	public function index()
-	{
+	public function index(){
 		$this->output('v_indicator_group');
-    }
+    } //End fn index
     
     public function save_indicator_group(){
         $indgp_name = $this->input->post('indgp_name');
@@ -23,14 +22,14 @@ class Manage_indicator_group extends kpims_Controller {
 		if($indgp_name != NULL || $indgp_name != ""){
 			echo json_encode(true);
 		}
-    }
+    } //End fn save_indicator_group
 
     public function edit_indicator_group(){
         $indgp_id = $this->input->post('indgp_id');
         $data = $this->indgp->get_by_id($indgp_id)->row_array();
         echo json_encode($data);
         // echo $ind_id; die;
-    }
+    } //End fn edit_indicator_group
 
     public function update_indicator_group(){
         $indgp_id = $this->input->post('indgp_id');
@@ -40,13 +39,13 @@ class Manage_indicator_group extends kpims_Controller {
 		if($indgp_name != NULL || $indgp_name != ""){
 			echo json_encode(true);
 		}
-    }
+    } //End fn update_indicator_group
 
     public function update_status_indicator_group(){
         $indgp_id = $this->input->post('indgp_id');
         $this->indgp->update_status($indgp_id);
         echo json_encode(true);
-    }
+    } //End fn update_status_indicator_group
 	
 	function get_data(){ 
         $rs_indgp_data = $this->indgp->get_all();
@@ -75,4 +74,4 @@ class Manage_indicator_group extends kpims_Controller {
         } //End if
         echo json_encode($data);
     }//End fn get_data
-}
+} //End class

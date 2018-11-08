@@ -17,7 +17,6 @@
                     var return_data = new Array();
                     $(data).each(function(seq, data) {
                         return_data.push({
-                            // "ind_seq": data.ind_seq,
                             "seq_queue_show": '<center>'+i+'</center>',
                             "side_id": data.side_id ,
                             "side_name": data.side_name,
@@ -41,8 +40,6 @@
             }
         });//end DataTable
         $('.dataTables_filter input').attr('placeholder', 'ค้นหา');
-        // var table = $("#example").dataTable();
-	    // new $.fn.dataTable.FixedHeader(table);
     } //End fn get_data
 	
 	function open_modal(){
@@ -63,7 +60,6 @@
 				data: {'side_name': side_name, 'side_code': side_code},
 				dataType : "json",
 				success : function(data){
-					// alert(data);
 					if(data == true){
 						$('#modal_add_side').modal('toggle');
 						notify_save("หน่วยงาน");
@@ -75,7 +71,6 @@
     } //End fn save_side 
 	
     function edit_side(side_id){
-        // alert(side_id);
         var side_id = side_id;
 	 	$.ajax({
 	 		type: "POST",
@@ -83,7 +78,6 @@
 	 		data: {'side_id': side_id},
 	 		dataType : "json",
 	 		success : function(data){
-                // alert(data.side_name);
 	 			$("#side_edit").val(data.side_name);
                 $("#side_code_edit").val(data.side_code);
                 $("#hid_side_id").val(side_id);
@@ -202,7 +196,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">ยกเลิก</button>
-                <!-- <input type="button" class="btn btn-success" onclick="save()" value="บันทึก"> -->
                 <a id="btn-add-tab" name="btn-add-tab" class="<?php echo $this->config->item('btn_success');?> pull-right" onclick="save_side()">บันทึก</a>
             </div><!--modal-footer-->
         </div><!-- /.modal-content -->
@@ -243,7 +236,6 @@
 				<button type="button" class="btn btn-default pull-left" data-dismiss="modal">ยกเลิก</button>
 				<a id="btn-edit-tab" name="btn-edit-tab" class="<?php echo $this->config->item('btn_success');?> pull-right" onclick="save_edit_side()">บันทึก</a>
             </div><!--modal-footer-->
-            
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>

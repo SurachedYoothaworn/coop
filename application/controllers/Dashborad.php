@@ -6,8 +6,6 @@ class Dashborad extends kpims_Controller {
 
 	public function __construct(){
         parent::__construct();
-		// $this->load->model('M_Define_responsibility_main','dfine_res');
-		// $this->load->model('M_Define_responsibility_sub','dfine_ress');
 		$this->load->model('M_kpi_define_indicator','dfine');
 		$this->load->model('M_kpi_result_indicator','rsind');
 		$this->load->model('M_kpi_budget_year','bgy');
@@ -16,19 +14,12 @@ class Dashborad extends kpims_Controller {
 		$this->load->model('M_kpi_dashborad','dsh');
 		$this->load->model('M_kpi_strategy','str');
 		$this->load->model('M_kpi_indicator_group','indgp');
-		$this->load->model('M_kpi_indicator','ind');
-		
+		$this->load->model('M_kpi_indicator','ind');	
     }
 	
 	public function index(){
-		// $arr1 = [1,2,3];
-		// $arr2 = [2,3,4,5];
-		// $data['rs1'] = $arr1;
-		// $data['rs2'] = $arr2;
-		// pre($arr1);
-		// pre($arr2);
 		$day = date("d"); 
-		$month = date("d"); 
+		$month = date("m"); 
 		$year = date("Y")+543;
 		if($day >= "1" && $month >= "10"){
 			$sum = $year+1;
@@ -49,33 +40,36 @@ class Dashborad extends kpims_Controller {
 		}else {
 			$data["bgy_chk"] = 1;
 		}
-		
 		$data["rs_bgy"] = $this->dfine->get_budget_year();
 		$this->output('v_dashborad',$data);
-	}
+	} //End fn index
 	
 	public function get_data_search(){
 		$bgy_id = $this->input->post('bgy_id');
-		// $indgp_id = $this->input->post('indgp_id');
-		// $resm_id = $this->input->post('resm_id');
-		
 		$rs_search = $this->rpind->get_search_by_id($bgy_id,0,0);
-		// pre($rs_search->result());
 		$arr_score = array();
-		$data = array(); 	
+		$data = array(); 
+
+		$rs_chk_follow = $this->dfine->get_chk_follow($bgy_id)->row_array();
+		if($rs_chk_follow['sum'] == 0){
+			$chk_all = '<input id="chk_all_follow_ind" name="chk_all_follow_ind" type="checkbox" value="1" onclick="checkAll()" checked>ติดตาม';
+		}else{
+			$chk_all = '<input id="chk_all_follow_ind" name="chk_all_follow_ind" type="checkbox" value="1" onclick="checkAll()" >ติดตาม';
+		}
+		
 		foreach($rs_search->result() as $search){
 			$result_score = $this->rsind->get_result_by_id($search->dfine_id);
 			foreach($result_score->result() as $score){
 				array_push($arr_score,$score->indrs_score);
 			}
+			
 			if($search->dfine_status_assessment == 1){
 				$chk_assessment = '<span class="label label-danger">ไม่ผ่าน</span>';
 			}else if($search->dfine_status_assessment == 2){
 				$chk_assessment = '<span class="label label-success">ผ่าน</span>';
 			}else if($search->dfine_status_assessment == 0){
-				$chk_assessment = '<span class="label label-warning">ยังไม่ประเมินผล</span>';
+				$chk_assessment = '<span class="label label-warning">ไม่ได้ประเมินผล</span>';
 			}
-			
 			
 			if($search->dfine_follow_status == 0){
 				$btn_chk_follow = '<center><input class="follow_ind" id="follow_ind" name="follow_ind" type="checkbox" value="'.$search->dfine_id.'" onclick="select_following_indicator('.$search->dfine_id.')" ></center>';
@@ -94,6 +88,7 @@ class Dashborad extends kpims_Controller {
 				"dfine_status_assessment"	=> 	$chk_assessment,
 				"btn_chk_follow"		=>	$btn_chk_follow,
 				"rs_score"			=>	$arr_score,	
+				"chk_all"			=>	$chk_all,
 			);
 			array_push($data, $dfine_data);
 			$arr_score = array();
@@ -103,13 +98,10 @@ class Dashborad extends kpims_Controller {
 	
 	function get_summary_indicator(){
 		$bgy_id = $this->input->post('bgy_id');
-		
 		$ind_faile = $this->rpind->get_indicator_faile($bgy_id,0,0)->row_array();
 		$ind_pass = $this->rpind->get_indicator_pass($bgy_id,0,0)->row_array();
 		$ind_not = $this->rpind->get_indicator_notprocessed($bgy_id,0,0)->row_array();
 		$bgy_name = $this->bgy->get_name($bgy_id)->row_array();
-		// $resm_name = $this->resm->get_name_by_id($resm_id)->row_array();
-		
 		
 		$data = array(); 
 		$rs_data = array(
@@ -118,19 +110,16 @@ class Dashborad extends kpims_Controller {
 			"ind_faile" 	=>	$ind_faile['dfine_status_assessment'],
 			"bgy_id" 		=>	$bgy_id,
 			"bgy_name" 		=>	$bgy_name['bgy_name'],
-			// "resm_name"		=>	$resm_name['resm_name']
 		);
 		array_push($data, $rs_data);
 		echo json_encode($data);
-	}
+	} //End fn get_summary_indicator
 	
 	function get_chart_by_bgy(){
 		$bgy_id = $this->input->post('bgy_id');
 		$rs_bgy = $this->bgy->get_by_id($bgy_id)->row_array();;
 		$rs_str = $this->str->get_all();
-		// pre($bgy_id);
 		$data = array(); 
-		// $resm_name = $this->resm->get_name_by_id($resm_id)->row_array();
 		foreach($rs_str->result() as $str){
 			$ind_faile = $this->dsh->get_indicator_faile(1,$bgy_id,$str->str_id)->row_array();
 			$ind_pass = $this->dsh->get_indicator_pass(1,$bgy_id,$str->str_id)->row_array();
@@ -141,13 +130,10 @@ class Dashborad extends kpims_Controller {
 				"ind_faile" 	=>	$ind_faile['dfine_status_assessment'],
 				"str_id"		=>	$str->str_id,
 				"str_name"		=>	$str->str_name,
-				// "bgy_id" 		=>	$bgy->bgy_id,
 				"bgy_name" 		=>	$rs_bgy['bgy_name'], 
-				// "resm_name"		=>	$resm_name['resm_name']
 			);
 			array_push($data, $ra_data);
 		}
-		// pre($data);
 		echo json_encode($data);
 	}//End fn get_chart_by_bgy
 	
@@ -156,7 +142,6 @@ class Dashborad extends kpims_Controller {
 		$rs_bgy = $this->bgy->get_by_id($bgy_id)->row_array();
 		$rs_indgp = $this->indgp->get_all();
 		$data = array(); 
-		// $resm_name = $this->resm->get_name_by_id($resm_id)->row_array();
 		foreach($rs_indgp->result() as $indgp){
 			$ind_faile = $this->dsh->get_indicator_faile(2,$bgy_id,$indgp->indgp_id)->row_array();
 			$ind_pass = $this->dsh->get_indicator_pass(2,$bgy_id,$indgp->indgp_id)->row_array();
@@ -168,7 +153,6 @@ class Dashborad extends kpims_Controller {
 				"indgp_id"		=>	$indgp->indgp_id,
 				"indgp_name"		=>	$indgp->indgp_name,
 				"bgy_name" 		=>	$rs_bgy['bgy_name'], 
-				// "resm_name"		=>	$resm_name['resm_name']
 			);
 			array_push($data, $ra_data);
 		}
@@ -209,7 +193,6 @@ class Dashborad extends kpims_Controller {
 			$row .='</tbody>';
 		}else{
 			$data = $this->rpind->get_name_indicator_by_status_assessment($bgy_id,$status_ind);
-			// pre($data->result());
 			$row  ='<thead>';
 			$row .=		'<tr>';
 			$row .=			'<th style="width: 5%; text-align: center;">ลำดับ</th>';
@@ -251,10 +234,6 @@ class Dashborad extends kpims_Controller {
 		$dfine_id = $this->input->post('dfine_id');
 		$rs_ind = $this->rpind->get_report_indicator_by_id($dfine_id);
 		$rs_ind_result = $this->rpind->get_ind_result_by_id($dfine_id);
-		
-		// pre($rs_ind->result());
-		// pre($rs_ind_result->result());
-		
 		$rs_score = array(); 
 		foreach($rs_ind_result->result() as $indrs){
 			$arr_score = array(
@@ -263,7 +242,6 @@ class Dashborad extends kpims_Controller {
 			);
 			array_push($rs_score, $arr_score);
 		}
-		// pre($rs_score);
 		
 		foreach($rs_ind->result() as $ind){
 			if($ind->dfine_status_assessment == 1){
@@ -271,7 +249,7 @@ class Dashborad extends kpims_Controller {
 			}else if($ind->dfine_status_assessment == 2){
 				$chk_assessment = '<span class="label label-success">ผ่าน</span>';
 			}else if($ind->dfine_status_assessment == 0){
-				$chk_assessment = '<span class="label label-warning">ยังไม่ประเมินผล</span>';
+				$chk_assessment = '<span class="label label-warning">ไม่ได้ประเมินผล</span>';
 			}
 			$data = array(); 
 			$rs_data = array(
@@ -289,12 +267,10 @@ class Dashborad extends kpims_Controller {
 			);
 			array_push($data, $rs_data);
 		}
-		// pre($data);
 		echo json_encode($data);
 	}//End fn get_chart_follow_indicator
 	
 	function get_following_indicator(){
-		// $dfine_id = $this->input->post('follow_ind_checked');
 		$dfine_id = $this->input->post('dfine_id');
 		$bgy_id = $this->input->post('bgy_id');
 		$rs_follow_status = $this->dfine->get_follow_status_by_dfine_id($dfine_id)->row_array();
@@ -305,7 +281,19 @@ class Dashborad extends kpims_Controller {
 			$this->dfine->update_follow_status($dfine_id,0);
 		}
 		echo json_encode(true);
-	} //End fn get_follow_indicator
+	} //End fn get_following_indicator
+	
+	function following_all_indicator(){
+		$chk_all = $this->input->post('chk_all');
+		$bgy_id = $this->input->post('bgy_id');
+		if($chk_all == "true"){
+			$status_follow = 1;
+		}else if($chk_all == "false"){
+			$status_follow = 0;
+		}
+		$this->dfine->update_all_follow_status($bgy_id,$status_follow);
+		echo json_encode(true);
+	} //End fn following_all_indicator
 	
 	function get_chart_following_indicator(){
 		$bgy_id = $this->input->post('bgy_id');
@@ -365,11 +353,10 @@ class Dashborad extends kpims_Controller {
 				);
 				array_push($data, $rs_data);
 			}
-			// pre($data);
 			echo json_encode($data);
 		}else{
 			echo json_encode(0);
 		}
-	}
-}
+	}//End fn get_gauge_following
+} //End class
 ?>

@@ -1,8 +1,4 @@
 <?php include(dirname(__FILE__)."/v_kpims_main.php") ?>
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
 <script>
 	$(document).ready( function () {
 		get_table_indicator();
@@ -19,37 +15,9 @@
 		$("#select2_bgy").val(bgy_chk).trigger('change');
 		$("#select2_table_by_bgy").val(bgy_chk).trigger('change');
 		
-		
 		get_chart_following_indicator(); //เรียก chart ที่ติดตามตัวชี้วัด
 		get_following_gauge(); //เรียก cockpit ที่ติดตาม
-		
-		
-		// $('#select_all_existent').change(function(){
-			// var cells = table.cells( ).nodes();
-			// $( cells ).find(':checkbox').prop('checked', $(this).is(':checked'));
-    });
-	
-	// function checkAll(){
-		// var checkboxes = $(".follow_ind");
-		// if($("#chk_all_follow_ind").is(':checked')){ //Start if
-			// for(var i = 0; i < checkboxes.length; i++){ //Start for
-				// console.log(i)
-				// if (checkboxes[i].type == 'checkbox'){ //Start if
-					// checkboxes[i].checked = true;
-				// } //End if
-			// } //End for
-			
-		// }else{
-			// for(var i = 0; i < checkboxes.length; i++){ //Start for
-				// console.log(i)
-				// if(checkboxes[i].type == 'checkbox'){ //Start if
-					// checkboxes[i].checked = false;
-				// } //End if
-			// } //End for
-		// } //End if else
-			
-		
-	// } //End fn checkAll_person
+	});
 	
 	function get_table_indicator(){
 		var bgy_id = $("#select2_table_by_bgy").val();
@@ -60,7 +28,10 @@
                 type: "POST",
                 url: "<?php echo site_url('/Dashborad/get_data_search');?>",
                 data: {'bgy_id': bgy_id},
-                dataSrc: function (data) {
+                dataSrc: function (data){
+					$(data).each(function(seq, data ) {
+						$('#th_follow').html(data.chk_all);
+					});
                     var i = $(data).length; //check result row
                     var return_data = new Array();
 					var score = 0;
@@ -82,11 +53,11 @@
 							"bgy_name" 					:	'<center>'+data.bgy_name+'</center>',
 							"indgp_name" 				:	'<center>'+data.indgp_name+'</center>',
 							"btn_chk_follow"			:	data.btn_chk_follow,
+							"chk_all"					:	data.chk_all,
 						});
                         i--;
                     });//end project for
                     return return_data;
-					
                 }//end dataSrc
             }, //end ajax
             "columns"    : [
@@ -101,12 +72,10 @@
         });//end DataTable
 		$('.dataTables_filter input').attr('placeholder', 'ค้นหา');
 		$("#toggle-event").attr("data-toggle","toggle");
-		
-	}
+	} //End fn get_table_indicator
 	
 	function get_summary_indicator(){
 		var val_type = $('#select2_by_type').val();
-		// alert("get_summary_indicator => "+val_type);
 		var bgy_id = $('#select2_bgy').val();
 		if(val_type == 1){
 			get_chart_by_bgy(bgy_id);
@@ -120,7 +89,6 @@
 			data: {'bgy_id': bgy_id},
 			dataType : "json",
 			success : function(data){
-				// console.log(data);
 				var sum_ind = 0;
 				$(data).each(function(seq, value) {
 					sum_ind =  Number(value.ind_faile) +  Number(value.ind_not) +  Number(value.ind_pass);
@@ -139,11 +107,11 @@
 				});
 			}//End success
 		});
-	}
+	} //End fn get_summary_indicator
 	
 	function change_type(bgy_id){
 		get_summary_indicator();
-	}	
+	} //End fn change_type
 		
 	function get_chart_by_bgy(bgy_id){
 		$.ajax({
@@ -160,23 +128,14 @@
 				var bgy_id= [];
 				var bgy_name;
 				var resm_name;
-				
 				var str_name = [];
-				// var count = $(data).length; //check result row
-				// console.log(data);
-				
 				$(data).each(function(seq, value) {
 					ind_not.push(Number(value.ind_not));
 					ind_pass.push(Number(value.ind_pass));
 					ind_faile.push(Number(value.ind_faile));
-					// bgy_id.push(value.bgy_id);
 					bgy_name = value.bgy_name;
-					// resm_name = value.resm_name;
 					str_name.push(value.str_name);
 				});
-				
-				// console.log("bgy_name - "+bgy_name);
-				
 				
 				Highcharts.chart('chart', {
 					chart: {
@@ -258,7 +217,7 @@
 				});
 			}//End success
 		});
-	}
+	} //End fn get_chart_by_bgy
 	
 	function get_chart_by_indgp(bgy_id){
 		$.ajax({
@@ -277,21 +236,13 @@
 				var resm_name;
 				
 				var indgp_name = [];
-				// var count = $(data).length; //check result row
-				// console.log(data);
-				
 				$(data).each(function(seq, value) {
 					ind_not.push(Number(value.ind_not));
 					ind_pass.push(Number(value.ind_pass));
 					ind_faile.push(Number(value.ind_faile));
-					// bgy_id.push(value.bgy_id);
 					bgy_name = value.bgy_name;
-					// resm_name = value.resm_name;
 					indgp_name.push(value.indgp_name);
 				});
-				
-				// console.log("bgy_name - "+bgy_name);
-				
 				
 				Highcharts.chart('chart', {
 					chart: {
@@ -373,34 +324,24 @@
 				});
 			}//End success
 		});
-	}
+	} //End fn get_chart_by_indgp
 	
 	function get_ind_info(status_ind){
 		var bgy_id = $('#select2_bgy').val();
-		// alert(bgy_id);
-		// alert(status_ind);
 		//3 คือ ตัวชี้วัดทั้งหมด
 		//2 คือ ตัวชี้วัดที่ผ่าน
 		//1 คือ ตัวชี้วัดที่ไม่ผ่าน
 		//0 คือ ตัวชี้วัดที่ไม่ได้ดำเนินการ
-		
 		$.ajax({
 			type: "POST",
 			url: "<?php echo site_url('/Dashborad/get_ind_info');?>",
 			data: {'status_ind': status_ind,'bgy_id': bgy_id},
 			dataType : "json",
 			success : function(data){
-				console.log(data);
 				$('#tb_ind_all').html(data);
-				// $(data).each(function(seq, value) {
-					// sum_ind =  Number(value.ind_faile) +  Number(value.ind_not) +  Number(value.ind_pass);
-					// ตัวชี้วัดทั้งหมด
-					// $('#head_sum_ind').html(sum_ind);
-					// $('#body_sum_ind').html("ตัวชี้วัดทั้งหมด ของปีงบประมาณ "+value.bgy_name);
-				// });
 			}//End success
 		});
-	}
+	} //End fn get_ind_info
 	
 	function select_chart_follow_indicator(dfine_id){
 		$.ajax({
@@ -415,10 +356,9 @@
 				get_gauge_with_indicator(data);
 			}//End success
 		});
-	}
+	} //End fn select_chart_follow_indicator
 	
 	function get_chart_with_indicator(data){
-		console.log(data);
 		var dfine_id = [];
 		var ind_name = [];
 		var arr_dfine_goal = [];
@@ -687,20 +627,32 @@
 		});
 	} //End fn get_gauge_with_indicator
 	
+	function checkAll(){
+		var bgy_id = $("#select2_table_by_bgy").val();
+		var chk_all = $("#chk_all_follow_ind").is(':checked');
+		$.ajax({
+			type: "POST",
+			url: "<?php echo site_url('/Dashborad/following_all_indicator');?>",
+			data: {'chk_all': chk_all,'bgy_id': bgy_id},
+			dataType : "json",
+			success : function(data){
+				get_chart_following_indicator();
+				get_following_gauge();
+				notify_follow();
+				get_table_indicator();
+			}//End success
+		});
+	} //End fn checkAll
+	
 	function select_following_indicator(dfine_id){
 		var bgy_id = $("#select2_table_by_bgy").val();
-		// var follow_ind_checked = [];
-		// $("input:checkbox[name=follow_ind]:checked").each(function() {
-			// follow_ind_checked.push($(this).attr('value'));
-		// });
-		// alert(follow_ind_checked);
-		
 		$.ajax({
 			type: "POST",
 			url: "<?php echo site_url('/Dashborad/get_following_indicator');?>",
 			data: {'dfine_id': dfine_id,'bgy_id': bgy_id},
 			dataType : "json",
 			success : function(data){
+				$("#chk_all_follow_ind").prop("checked", false);
 				notify_follow();
 				get_chart_following_indicator();
 			}//End success
@@ -712,11 +664,10 @@
 			data: {'dfine_id': dfine_id,'bgy_id': bgy_id},
 			dataType : "json",
 			success : function(data){
+				// get_table_indicator();
 				get_following_gauge();
 			}//End success
 		});
-		
-		
 	} //End fn select_following_indicator
 	
 	function get_chart_following_indicator(){
@@ -742,9 +693,6 @@
 					resm_name = value.resm_name;
 					dfine_id.push(value.dfine_id);
 					ind_name.push(value.ind_name);
-					// dfine_status_assessment.push(value.dfine_status_assessment);
-					// indgp_name.push(value.indgp_name);
-					// str_name.push(value.str_name);
 					score.push(value.sum_score);
 					dfine_goal.push(Number(value.dfine_goal));
 				});
@@ -819,10 +767,9 @@
 				
 			}//End success
 		});
-	}
+	} //End fn get_chart_following_indicator
 	
 	function get_following_gauge(){
-		$("#box_gauge").remove(); 
 		var bgy_id = $("#select2_table_by_bgy").val();
 		$.ajax({
 			type: "POST",
@@ -830,7 +777,6 @@
 			data: {"bgy_id": bgy_id},
 			dataType : "json",
 			success : function(data){
-				// console.log(data.length);
 				var dfine_id = [];
 				var ind_name = [];
 				var dfine_goal = [];
@@ -848,36 +794,36 @@
 					resm_name = value.resm_name;
 					dfine_id.push(value.dfine_id);
 					ind_name.push(value.ind_name);
-					// dfine_status_assessment.push(value.dfine_status_assessment);
-					// indgp_name.push(value.indgp_name);
-					// str_name.push(value.str_name);
 					score.push(value.sum_score);
 					dfine_goal.push(Number(value.dfine_goal));
 					
 					arr_gauge.push(dfine_goal);
 				});
 				
+				//จัดเรียงแถว gauge
 				if(data != 0){
+					$("#row_following_gauge").remove(); 
+					$('#body_following_gauge').append('<div id="row_following_gauge"></div>');
 					var row="";
 					var count_row=0;
 					$(data).each(function(seq, value) {
 						count_row = seq+1;
-						if(count_row%5 == 0 || count_row == 1){
-								row +='<div class="row">';
-								row +='<div class="col-md-3" id="box_gauge">';
-								row += 	'<div class="box" style="border-color: #2b6688;">';
-								row += 		'<div class="box-header">';
-								row +=			'<h4 class="">'+value.ind_name+'</h4>';
-								row +=		'</div>';
-								row +=		'<div class="box-body" >';
-								row +=			'<div class="col-md-12" id="container_gauge_following_ind_'+value.dfine_id+'" >';
-								row +=				'<div id="following_gauge_'+value.dfine_id+'" style="color: red; text-align: center;">'
-											
-								row +=				'</div>';
-								row +=			'</div>';
-								row +=		'</div>';
-								row +=	'</div>';
-								row +='</div>';
+						if(count_row%4 == 0 || count_row == 1){
+							row +='<div class="row">';
+							row +='<div class="col-md-3" id="box_gauge">';
+							row += 	'<div class="box" style="border-color: #2b6688;">';
+							row += 		'<div class="box-header">';
+							row +=			'<h4 class="">'+value.ind_name+'</h4>';
+							row +=		'</div>';
+							row +=		'<div class="box-body" >';
+							row +=			'<div class="col-md-12" id="container_gauge_following_ind_'+value.dfine_id+'" >';
+							row +=				'<div id="following_gauge_'+value.dfine_id+'" style="color: red; text-align: center;">'
+										
+							row +=				'</div>';
+							row +=			'</div>';
+							row +=		'</div>';
+							row +=	'</div>';
+							row +='</div>';
 						}else{
 							row +='<div class="col-md-3" id="box_gauge">';
 							row += 	'<div class="box" style="border-color: #2b6688;">';
@@ -892,9 +838,9 @@
 							row +=		'</div>';
 							row +=	'</div>';
 							row +='</div>';
-							if(count_row%4 == 0 ){
-								row +='</div>';
-							}
+						}
+						if(count_row%4 == 0 ){
+							row +='</div>';
 						}
 					});
 					$('#row_following_gauge').html(row);
@@ -985,7 +931,6 @@
 									color: '#55BF3B' // green
 								}]
 							},
-
 							series: [{
 								name: 'ร้อยละ',
 								data: [percent_score],
@@ -998,36 +943,14 @@
 					
 					});
 				}else {
-					$('#box_gauge').remove(); 
+					$("#row_following_gauge").remove(); 
+					$('#body_following_gauge').append('<div id="row_following_gauge"></div>');
 					$('#row_following_gauge').append('<div id="box_gauge" style="color: red; text-align: center;">ไม่มีตัวชี้วัดที่ติดตาม</div>');
 				}
-				
 			}//End success
 		});
-			
-	} //End fn
-	
-	function sum_income(){
-		// var num1 = $(".income").val();
-		// var num2 = $(".income").val();
-		// alert(num1);
-		// alert(num2);
-		var sum=0;
-		$(".income").each(function() {
-			sum += Number(this.value);
-		});
-		$('#sum').html(sum);
-		
-	}
-
+	} //End fn get_following_gauge
 </script>
-
-<!--
-<input type="number" class="income">
-<input type="number" class="income">
-<input type="button" onclick="sum_income()" value="sum">
-<div id="sum"></div>
--->
 
 <div class="row">
 	<div class="col-md-12">
@@ -1137,12 +1060,6 @@
 	</div>
 </div>
 
-
-
-
-
-
-
 <div class="row">
 	<div class="col-md-12">
 		<div class="box" id="border_main_head">
@@ -1175,7 +1092,7 @@
 									<tr>
 										<th style=" vertical-align: middle">ลำดับ</th>
 										<th style="width: 60%; vertical-align: middle">ตัวชี้วัด</th>
-										<th style=" vertical-align: middle"><input id="chk_all_follow_ind" name="chk_all_follow_ind" type="checkbox" value="1" onclick="" >ติดตาม</th>
+										<th style=" vertical-align: middle; width: 25%;" id="th_follow"></th>
 									</tr>
 								</thead>
 								<tbody></tbody>
@@ -1301,7 +1218,7 @@
 													<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus" style="color: #ffffff"></i></button>
 												</div>
 											</div>
-											<div class="box-body" id="">		
+											<div class="box-body" id="body_following_gauge">		
 												<div id="row_following_gauge" >
 													
 													
@@ -1336,8 +1253,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-right" data-dismiss="modal">ปิด</button>
-                <!-- <input type="button" class="btn btn-success" onclick="save()" value="บันทึก"> -->
-                <!-- <button type="submit" class="btn btn-success" onclick="save_indicator()" >บันทึก</button> -->
             </div><!--modal-footer-->
         </div>
     </div> <!-- /.modal-content -->
@@ -1386,12 +1301,7 @@
 		border-color: #2b6688;
 	}
 	
-	
-	
 	.box-title{
 		color: #ffffff;
 	}
 </style>
-
-
-

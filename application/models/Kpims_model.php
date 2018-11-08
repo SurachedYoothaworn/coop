@@ -11,6 +11,6 @@ class Kpims_model extends CI_Model {
 		$this->db_kpims = $this->config->item("kpims_dbname");
 		
 	}
-}//end class Kpims_model
+}//end class  
 
 ?>

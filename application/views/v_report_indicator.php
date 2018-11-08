@@ -7,61 +7,7 @@
 		$("#select2_graph_bgy").select2();
 		search_data();
     });
-	
-	// function search_all_data(){
-		// var bgy_id = $("#select2_bgy").val();
-		// var indgp_id = $("#select2_indicator_group").val();
-		// var resm_id = $("#select2_ps").val();
-		
-		// $("#example").DataTable({
-            // bDestroy: true,
-            // processing: true,
-            // ajax: {
-                // type: "POST",
-                // url: "<?php echo site_url('/Report_indicator/get_all_data_search');?>",
-                // data: {},
-                // dataSrc: function (data) {
-                    // var i = $(data).length; //check result row
-                    // var return_data = new Array();
-                    // $(data).each(function(seq, data ) {
-                        // return_data.push({
-							// "seq_queue_show"			:	'<center>'+i+'</center>',
-							// "dfine_id" 					:	data.dfine_id,
-							// "ind_name" 					:	data.ind_name,
-							// "bgy_name" 					:	'<center>'+data.bgy_name+'</center>',
-							// "indgp_name" 				:	'<center>'+data.indgp_name+'</center>',
-							// "dfine_goal"				: 	'<center>'+data.opt_symbol+' '+data.dfine_goal+' '+data.unt_name+'</center>',
-							// "dfine_status_assessment"	: 	data.dfine_status_assessment,
-							// "rs_score0"					:	'<center>'+data.rs_score[0]+'</center>',
-							// "rs_score1"					:	'<center>'+data.rs_score[1]+'</center>',
-							// "rs_score2"					:	'<center>'+data.rs_score[2]+'</center>',
-							// "rs_score3"					:	'<center>'+data.rs_score[3]+'</center>',
-                        // });
-                        // i--;
-                    // });//end project for
-                    // return return_data;
-                // }//end dataSrc
-            // }, //end ajax
-            // "columns"    : [
-                // {"data": "seq_queue_show"},
-                // {"data": "bgy_name"},
-                // {"data": "ind_name"},
-                // {"data": "indgp_name"},
-				// {"data": "dfine_goal"},
-				// {"data": "dfine_status_assessment"},
-				// {"data": "rs_score0"},
-				// {"data": "rs_score1"},
-				// {"data": "rs_score2"},
-				// {"data": "rs_score3"},
-            // ],
-            // "order": [[ 0, "asc" ]], //เรียงลำดับการแสดงผล
-            // "fnRowCallback": function(nRow, aData, iDisplayIndex) {
-                // nRow.setAttribute("id","tr_"+aData.dfine_id);
-            // }
-        // });//end DataTable
-        // $('.dataTables_filter input').remove();
-	// } //End fn search_all_data
-	
+
 	function search_data(){
 		var bgy_id = $("#select2_bgy").val();
 		var indgp_id = $("#select2_indicator_group").val();
@@ -120,8 +66,6 @@
             }
         });//end DataTable
         $('.dataTables_filter input').remove();
-        // var table = $("#example").dataTable();
-	    // new $.fn.dataTable.FixedHeader(table);
 	}
 	
 	function clear_data(){
@@ -132,8 +76,6 @@
 	} //End fn clear_data
 	
 	function get_data_select(bgy_id,indgp_id,resm_id){
-		// var bgy_id = $("#select2_graph_bgy").val();
-		// alert(indgp_id);
 		if(bgy_id == 0){
 			$.ajax({
 				type: "POST",
@@ -151,7 +93,6 @@
 				data: {'bgy_id': bgy_id,'indgp_id': indgp_id,'resm_id': resm_id},
 				dataType : "json",
 				success : function(data){
-					// get_chart(data);
 					get_doughnut_chart(data);
 				}//End success
 			});
@@ -168,13 +109,6 @@
 		var bgy_name= [];
 		var resm_name;
 		var count = $(data).length; //check result row
-		
-		// for(var i in data) {
-			// ind_pass.push(data[i].ind_pass);
-			// ind_faile.push(data[i].ind_faile);
-			// bgy_id.push(data[i].bgy_id);
-			// bgy_name.push(data[i].bgy_name);
-		// }
 		
         $(data).each(function(seq, value) {
 			ind_not.push(Number(value.ind_not));
@@ -300,65 +234,9 @@
 					color: '#50B432',
 				}]
 			});
-			
-			
-			
-			// var ctx = document.getElementById('chart');
-			// var myChart = new Chart(ctx, {
-				// type: 'bar',
-				// data: {
-					// labels: bgy_name,
-					// datasets: [
-						// {
-							// label: 'ไม่ผ่าน',
-							// data: ind_faile,
-							// backgroundColor: '#ff8080'
-						// },
-						// {
-							// label: 'ผ่าน',
-							// data: ind_pass,
-							// backgroundColor: '#99ff99'
-						// },
-						// {
-							// label: 'ไม่ได้ประเมินผล',
-							// data: ind_not,
-							// backgroundColor: '#ffc266'
-						// },
-					// ]},
-				// options: {
-					// scales: {
-						// yAxes: [{ 
-							// stacked: true,
-							// scaleLabel: {
-								// display: true,
-								// labelString: 'จำนวนตัวชี้วัด',
-								// fontSize: 16
-							// }
-						// }],
-						// xAxes: [{ 
-							// stacked: true,
-							// scaleLabel: {
-								// display: true,
-								// labelString: 'ปีงบประมาณ',
-								// fontSize: 16
-							// },
-							// barPercentage: 0.2
-						// }]
-					// },
-					// title: {
-						// display: true,
-						// text: 'รายงานสรุปผลการประเมินตัวชี้วัด',
-						// fontSize: 20
-					// },
-					// hover: {
-						// mode: 'nearest',
-					// },
-				// }//End option
-			// });
 		}else{
 			$('#graph_container').hide();
 			$('#no_data').show();
-			// $('#footer_sum').hide();
 		}
 	} //End fn get_chart
 	
@@ -384,7 +262,6 @@
 			ind_faile.push(value.ind_faile);
 			bgy_id.push(value.bgy_id);
 			bgy_name.push(value.bgy_name);
-			// result.push('ไม่ได้ประเมินผล',Number(value.ind_not), 'ผ่าน',Number(value.ind_pass), 'ไม่ผ่าน',Number(value.ind_faile));
 			arr_pass.push('ผ่าน',Number(value.ind_pass));
 			arr_faile.push( 'ไม่ผ่าน',Number(value.ind_faile));
 			arr_not.push('ไม่ได้ดำเนินการ',Number(value.ind_not));
@@ -460,67 +337,16 @@
 					]
 				}]
 			});
-			
-			
-			// var ctx = document.getElementById('chart');
-			// var myChart = new Chart(ctx, {
-				// type: 'doughnut',
-				// data: {
-					// labels: ['ไม่ได้ประเมินผล','ผ่าน','ไม่ผ่าน'],
-					// datasets: [
-						// {
-						  // label: "",
-						  // backgroundColor: ["#ffc266", "#99ff99","#ff8080"],
-						  // data: result
-						// }
-					// ]},
-				// options: {
-				  // title: {
-					// display: true,
-					// text: 'รายงานสรุปผลการประเมินตัวชี้วัดปีงบประมาณ '+bgy_name,
-					// fontSize: 20
-				  // }
-				// }
-			// });
 		}else{
 			$('#graph_container').hide();
 			$('#no_data').show();
 		}
 	} //End fn get_doughnut_chart
 	
-	// function export_excel(){
-		// var bgy_id = $("#select2_bgy").val();
-		// var indgp_id = $("#select2_indicator_group").val();
-		// var resm_id = $("#select2_ps").val();
-		// console.log(bgy_id);
-		// console.log(indgp_id);
-		// console.log(resm_id);
-		// var url = '<?php echo site_url('/Report_indicator/export_excel/');?>'+bgy_id+'/'+indgp_id+'/'+resm_id+'';
-		
-		// $.ajax({
-			// type: "POST",
-			// url: "<?php echo site_url('/Report_indicator/export_excel');?>",
-			// data: {'bgy_id':bgy_id,'indgp_id':indgp_id,'resm_id':resm_id},
-			// dataType : "json",
-			// success : function(data){
-				// alert("export");
-				// window.open(url, '_blank');
-				// window.location.href = '<?php echo site_url('/Report_indicator/export_excel');?>';
-			// }//End success
-		// });
-		
-		// var url = '<?php echo site_url('/Report_indicator/export_excel2');?>';
-		// $.post(url,{"bgy_id" : bgy_id, "indgp_id" : indgp_id, "resm_id" : resm_id},function(data){
-			// window.location.href = '<?php echo site_url('/Report_indicator/export_excel');?>';
-			// window.open(url, '_blank');
-			// alert("post");
-		// });
-	// } //End fn export_excel
-	
-	function print(){
+	// function print(){
 		// window.print();
 		// setTimeout(function(){ history.back() }, 100);
-	}
+	// }
 </script>
 
 
@@ -539,9 +365,6 @@
 							<div class="box-header">
 								<i class="glyphicon glyphicon-search"></i>
 								<h2 class="box-title">ค้นหา</h2>
-								<!--<div class="box-tools pull-right">
-									<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
-								</div>-->
 							</div>
 							<div class="box-body" >
 								<div class="col-md-12"><!-- Start  col-md-12 -->
@@ -594,7 +417,6 @@
 					</div>
 				</div>
 				<div class="col-md-3"></div>
-
 				<div class="row">
 					<div class="col-md-12">
 						<div class="box box-solid box-primary">
@@ -606,17 +428,6 @@
 								</div>
 							</div>
 							<div class="box-body" >
-								<!--<div class = "col-md-12" id="div_ind">
-									<label class="col-md-10 control-label" style="padding: 8px; text-align: right;">ปีงบประมาณ</label>
-									<div class="col-md-2 select2-container-active">
-										<select class="select2" id="select2_graph_bgy" name="select2_graph_bgy" style="width: 100%;" tabindex="-1" onchange="get_data_select();">
-											<option id="graph_bgy" class="select2_wb" value="0" >ทั้งหมด</option>
-											<?php //foreach($rs_bgy->result() as $bgy){?>
-												<option id="graph_bgy" class="select2_wb" value="<?php //echo $bgy->bgy_id;?>" ><?php //echo $bgy->bgy_name;?></option>
-											<?php //} ?>
-										</select>
-									</div>
-								</div>-->
 								<div class="col-md-12"><!-- Start  col-md-12 -->
 									<div class="box box-solid" id="body_graph">
 										<div class="col-md-12" id="graph_container" >
@@ -672,7 +483,6 @@
 					</div>
 				</div>
 
-
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="box box-primary color">
@@ -688,15 +498,11 @@
 									</form>
 								</div>
 								<div class="pull-right">
-									<!--<form action="" method="POST" target="_blank">-->
-										<a onclick="print();" type="button" class="margin <?php echo $this->config->item('btn_success');?>"><i class="fa fa-fw fa-print" style="color:white"></i>&nbsp;Print</a>
-									<!--</form>-->
-									<!--<a href="#"><i class="fa fa-fw fa-print" style="color:black">&nbsp;&nbsp;&nbsp;Print</i></a>-->
+									<a onclick="print();" type="button" class="margin <?php echo $this->config->item('btn_success');?>"><i class="fa fa-fw fa-print" style="color:white"></i>&nbsp;Print</a>
 								</div>
 							</div>
 						   
 							<div class="box-body">
-								
 								<br>
 								<div class="col-md-12"><!-- Start  col-md-12 -->
 									<div class="box box-solid">
@@ -741,22 +547,4 @@
 .box.box-primary.color{
 	border: 1px solid #2b6688;
 }
-// table, th, td{
-	// font-family: "TH SarabunPSK";
-	// font-size: 24px;
-	// border: 1px solid black;
-// }	
-
-// .btn-outline-success {
-    // color: #28a745;
-    // background-color: transparent;
-    // background-image: none;
-    // border-color: #28a745;
-// }
-
-// .btn-outline-success:hover{
-    // color: #ffffff;
-    // background-color: #28a745;
-// }
-
 </style>

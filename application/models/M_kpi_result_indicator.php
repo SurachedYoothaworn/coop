@@ -26,7 +26,7 @@ class M_kpi_result_indicator extends Da_kpi_result_indicator {
 				WHERE dfine.dfine_status != 0 ORDER BY bgy.bgy_id  , dfine.dfine_ind_id DESC";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
+    } //End fn get_all
 	
 	function get_by_id($dfine_id){
 		$sql = "SELECT dfine.dfine_id,ind.ind_name,ind.ind_description,bgy.bgy_name,str.str_name,indgp.indgp_name,opt.opt_name,opt.opt_symbol,dfine.dfine_goal,unt.unt_name,side.side_name ,ind.ind_id,bgy.bgy_id,str.str_id,indgp.indgp_id,opt.opt_id,unt.unt_id,side.side_id,dfine.dfine_status_action,dfine.dfine_status_assessment, resm.resm_id, resm.resm_ps_id,resm.resm_name,resm.resm_pt_name
@@ -42,7 +42,7 @@ class M_kpi_result_indicator extends Da_kpi_result_indicator {
 				WHERE dfine_id = '$dfine_id' AND dfine.dfine_status != 0 ORDER BY bgy.bgy_id  , dfine.dfine_ind_id DESC";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-    }
+    } //End fn get_by_id
 	
 	function get_by_ps_id($ps_id){
 		$sql = "SELECT dfine.dfine_id,ind.ind_name,ind.ind_description,bgy.bgy_name,str.str_name,indgp.indgp_name,opt.opt_name,opt.opt_symbol,dfine.dfine_goal,unt.unt_name,side.side_name ,ind.ind_id,bgy.bgy_id,str.str_id,indgp.indgp_id,opt.opt_id,unt.unt_id,side.side_id,dfine.dfine_status_action,dfine.dfine_status_assessment, resm.resm_id, resm.resm_ps_id,resm.resm_name
@@ -58,17 +58,13 @@ class M_kpi_result_indicator extends Da_kpi_result_indicator {
 				WHERE resm.resm_ps_id = '$ps_id' AND dfine.dfine_status != 0 ORDER BY bgy.bgy_id  , dfine.dfine_ind_id DESC";
         $query = $this->db_KPIMS->query($sql);
         return $query;
-	}
+	} //End fn get_by_ps_id
 	
 	function get_result_by_id($dfind_id){
 		$sql = "SELECT * FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."indicator_result
 				WHERE indrs_dfind_id = '$dfind_id'";
 		$query = $this->db_KPIMS->query($sql);
         return $query;
-	}
-	
-	
-
-   
-}
+	} //End fn  
+} //End class
 ?>

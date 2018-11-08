@@ -17,19 +17,11 @@ class Define_responsibility_main extends kpims_Controller {
 		$data['rs_dfine'] = $this->dfine->get_by_id($dfine_id)->result();
 		//เช็คปุ่มลบทั้งหมด
 		$data['rs_resm'] = $this->dfine_res->get_by_id($dfine_id)->result();
-		// pre($rs_resm);
-		// $arr_resm = [];
-		// foreach($rs_resm as $resm){
-			// array_push($arr_resm,$resm->resm_id);
-		// }
-		// $data['arr_resm'] = $arr_resm;
-	
 		$this->output('v_define_responsibility_main', $data);
     } //End fn detail
 	
 	function get_data(){
 		$dfine_id = $this->input->post('dfine_id');
-		// print_r($dfine_id);
 		$json = file_get_contents('http://med.buu.ac.th/scan-med/scanningPersonnel/API/api_getPerson.php');
 		$rs_person = json_decode($json, TRUE);
 		$rs_resm = $this->dfine_res->get_by_id($dfine_id);
@@ -39,7 +31,6 @@ class Define_responsibility_main extends kpims_Controller {
 			$resm_dept = "";
 			foreach($rs_resm->result() as $rs_m){
 				$rs_ress = $this->dfine_ress->get_by_id($rs_m->resm_id);
-				// pre($rs_ress->result());
 				if($resm_dept != $rs_m->resm_dept){
 					$resm_dept = $rs_m->resm_dept;
 					$row .='<tr>';
@@ -66,9 +57,6 @@ class Define_responsibility_main extends kpims_Controller {
 				
 				$row .=			'<a id="btn-add-tab" name="btn-add-tab" class="'.$this->config->item('btn_primary').'" data-tooltip="เพิ่มผู้รับผิดชอบร่วม" href="#" onclick="get_resm(1,'.$rs_m->resm_id.')">';
 				$row .=			'<i class="glyphicon glyphicon-plus" style="color:white"></i><i class="glyphicon glyphicon-user" style="color:white" ></i></a></center>';
-				// $row .= 		'<a id="btn_add_ress" name="btn_add_ress" class="'.$this->config->item('btn_warning').'" data-tooltip="กำหนดผู้รับผิดชอบร่วม"  onclick="get_resm(1,'.$rs_m->resm_id.')" >';
-				// $row .= 		'<i class="glyphicon glyphicon-cog" style="color:white"></i>';
-				// $row .= 		'</a></center>';
 				$row .= 	'</td>';
 				$row .=		'<td>';
 				$row .= 		'<center><button id="btn_del" name="btn_del" class="'.$this->config->item('btn_danger').'" data-tooltip="ลบผู้รับผิดชอบตัวชี้วัด" onclick="del_resm('.$rs_m->resm_id.','.$dfine_id.')">';
@@ -84,20 +72,13 @@ class Define_responsibility_main extends kpims_Controller {
 			$row .='</tr>';
 		}
 		echo json_encode($row);
-	}
+	} //End fn get_data
 	
 	function get_resm(){
 		$json = file_get_contents('http://med.buu.ac.th/scan-med/scanningPersonnel/API/api_getPerson.php');
 		$rs_person = json_decode($json, TRUE);
 		$dfine_id = $this->input->post('dfine_id');
 		$rs_resm = $this->dfine_res->get_by_id($dfine_id);
-		// $data = [];
-		// foreach($rs_person['data_result'] as $rs_ps){
-			// array_push($data, $rs_ps['dm_title_th']);
-		// }
-		// $dpt = array_unique($data);
-		// pre(sort($dpt));
-		// $row = "";
 		$dpt = "";
 		
 		$row  ='<thead>';
@@ -132,7 +113,6 @@ class Define_responsibility_main extends kpims_Controller {
 			}
 		} //End foreach
 		$row .='</tbody>';
-		
 		echo json_encode($row);
 	} //End fn get_resm
 	
@@ -142,12 +122,7 @@ class Define_responsibility_main extends kpims_Controller {
 		$resm_id = $this->input->post('resm_id');
 		$dfine_id = $this->input->post('dfine_id');
 		$rs_resm = $this->dfine_res->get_all();
-		// $rs_resm_by_id = $this->dfine_res->get_resm_by_id($resm_id);
-		// pre($rs_resm->result());
 		$rs_ress = $this->dfine_ress->get_by_id($resm_id);
-		// pre($rs_ress->result());
-		
-		// $row = "";
 		$dpt = "";
 		
 		$row  ='<thead>';
@@ -190,12 +165,11 @@ class Define_responsibility_main extends kpims_Controller {
 		} //End foreach
 		$row .='</tbody>';
 		echo json_encode($row);
-	}
+	} //End fn get_ress
 	
 	function save_resm(){
 		$dfine_id = $this->input->post('dfine_id');
 		$ps_checked = $this->input->post('ps_id');
-		// pre($ps_checked);die;
 		$json = file_get_contents('http://med.buu.ac.th/scan-med/scanningPersonnel/API/api_getPerson.php');
 		$rs_person = json_decode($json, TRUE);
 		
@@ -223,9 +197,6 @@ class Define_responsibility_main extends kpims_Controller {
 		foreach($rs_person['data_result'] as $rs_ps){
 			foreach($ps_checked as $ps_chk){
 				if($rs_ps['ps_id'] == $ps_chk){
-					// echo "<pre>";
-					// print_r($rs_ps['ps_fname_th']);
-					// echo "</pre>";
 					$this->dfine_ress->ress_name = $rs_ps["pf_title_th"].''.$rs_ps["ps_fname_th"].' '.$rs_ps["ps_lname_th"];
 					$this->dfine_ress->ress_pt_name = $rs_ps["pt_title_th"];
 					$this->dfine_ress->ress_dept = $rs_ps["dm_title_th"];
@@ -235,9 +206,8 @@ class Define_responsibility_main extends kpims_Controller {
 				}
 			}
 		}
-		// print_r($ps_checked);
 		echo json_encode(true);
-	} //End fn save_resm
+	} //End fn save_ress
 	
 	function del_resm(){
 		$resm_id = $this->input->post('resm_id');
@@ -245,48 +215,32 @@ class Define_responsibility_main extends kpims_Controller {
 		$this->dfine_ress->delete_ress_by_resm_id($resm_id);//ลบผู้รับผิดชอบร่วม
 		$this->dfine_res->delete_resm($resm_id);//ลบผู้รับผิดชอบหลัก
 		$this->rsind->update_resm('', $dfine_id);
-		
-		//เช็คปุ่มลบทั้งหมด
-		// $rs_resm = $this->dfine_res->get_by_id($dfine_id)->result();
 		echo json_encode(true);
-	}
+	} //End fn del_resm
 	
 	function del_ress(){
 		$ress_id = $this->input->post('ress_id');
 		$resm_id = $this->input->post('resm_id');
 		$this->dfine_ress->delete_ress($ress_id);
 		$rs_ress = $this->dfine_ress->get_by_id($resm_id);
-		// pre($rs_ress->result());
 		if($rs_ress->num_rows() > 0){
 			echo json_encode(1);
 		}else{
 			return 0;
 			echo json_encode(0);
 		}	
-	}
-	
-	// function del_all_resm(){
-		// $dfine_id = $this->input->post('dfine_id');
-		// $rs_resm = $this->dfine_res->get_by_id($dfine_id);
-		// foreach($rs_resm->result() as $resm){
-			// $this->dfine_ress->delete_ress_by_resm_id($resm->resm_id);
-		// }
-		// $this->dfine_res->delete_all_resm($dfine_id);
-		// echo json_encode(true);
-	// }
+	} //End fn del_ress
 	
 	function del_all_ress(){
 		$resm_id = $this->input->post('resm_id');
 		$this->dfine_ress->delete_ress_by_resm_id($resm_id);
-		// echo json_encode(true);
-	}
+	} //End fn del_all_ress
 	
 	function get_info_ress(){
 		$resm_id = $this->input->post('resm_id');
 		$rs_ress = $this->dfine_ress->get_by_id($resm_id);
 		$seq=1;
 		$ress_dept = "";
-		// $row="";
 		
 		$row  ='<thead>';
         $row .=		'<tr>';
@@ -294,7 +248,6 @@ class Define_responsibility_main extends kpims_Controller {
         $row .=			'<th style="width: 30%; text-align: center;">ชื่อ - สกุล</th>';
         $row .=			'<th style="width: 30%; text-align: center;">ตำแหน่ง</th>';
 		$row .=			'<th style="width: 15%; text-align: center;">ดำเนินการ';
-		//$row .=				'<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_danger').'" onclick="del_all_ress('.$resm_id.')">ลบทั้งหมด</a>';
 		$row .=			'</th>';
         $row .=		'</tr>';
         $row .='</thead>';
@@ -324,9 +277,8 @@ class Define_responsibility_main extends kpims_Controller {
 			$row .='</tr>'; 
 		}		
 		$row .='</tbody>';
-		
 		echo json_encode($row); 
-	}//End fn get_info_resm
+	}//End fn get_info_ress
 }
 ?>	
    

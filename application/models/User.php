@@ -11,13 +11,11 @@ class User extends Main_Model {
     }
 	
 	public function get_userLogin($username,$password){
-		$sql = "select *
-				from user
-				where us_username = ? and us_password = ? and us_active = 'Y' 
+		$sql = "SELECT *
+				FROM user
+				WHERE us_username = ? and us_password = ? and us_active = 'Y' 
 			   ";
-		$result = $this->db->query($sql,array($username,$password));
-		// echo $this->db->last_query();
+		$result = $this->db->query($sql,array($username,$password)); 
 		return $result;
-	}
-	
-}
+	} //End fn get_userLogin
+} //End fn class

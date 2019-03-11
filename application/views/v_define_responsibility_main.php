@@ -7,10 +7,30 @@
 <script>
 	$(document).ready( function () {
 		get_data();
-		$('#search').keyup(function() {
+		$('#search_res').keyup(function() {
 			var data = this.value.split(" ");
 			var rows = $('#tb_modal_add_resm').find('tr');
             var rows2 = $('#tb_modal_add_resm').find('tr.department');
+			if (this.value == "") {
+				rows.show();
+				return;
+			}
+			rows.hide().filter(function() {
+				var $t = $(this);
+				for (var d = 0; d < data.length; ++d) {
+					if ($t.is(":contains('" + data[d] + "')")) {
+						return true;
+					}
+				}
+				return false;
+			}).show();
+            rows2.hide();
+		});
+		
+		$('#search_res').keyup(function() {
+			var data = this.value.split(" ");
+			var rows = $('#tb_modal_add_resm_buh').find('tr');
+            var rows2 = $('#tb_modal_add_resm_buh').find('tr.department');
 			if (this.value == "") {
 				rows.show();
 				return;
@@ -50,20 +70,54 @@
 		});
 	}
 	
-	function get_resm(chk_modal,resm_id){
+	function get_resm(chk_modal,resm_id,resm_dm_id){
 		var dfine_id = '<?php echo $dfine_id; ?>';
 		$('#modal_add_resm').modal({show:true});
-		$("#modal_add_resm").animate({ scrollTop: 0 }, 'fast');
-		$('#search').val("");
-		
-		$('#div_search').hide();
-		$('#tb_data').hide();
-		$('#md_add_footer').hide();
-		$('#row_loading_out').show();
-		
+			$("#modal_add_resm").animate({ scrollTop: 0 }, 'fast');
+			$('#search').val("");
+			$('#div_search').hide();
+			$('#tb_data').hide();
+			$('#md_add_footer').hide();
+			$('#row_loading_out').show();
 		if(chk_modal == 0){
 			$("#head_madal_addres").text("เพิ่มผู้รับผิดชอบตัวชี้วัด");
 			$("#hid_btn_chk").val(0);
+			var row  = '<div class="col-md-12">';
+				row += '<div class="nav-tabs-custom">';
+				row += '<ul class="nav nav-tabs">';
+				row += '  <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">คณะแพทยศาสตร์</a></li>';
+				row += '  <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">โรงพยาบาล</a></li>';
+				// row += ' <div class="form-group">';
+				// row += '	<div class="row">';
+				// row += '			<div class="col-md-3 pull-right" id="div_search">	';
+				// row += '				<div class="input-group">';
+				// row += '					<input type="text" id="search_res" class="form-control" placeholder="ค้นหา">';
+				// row += '					<span class="input-group-addon">';
+				// row += '						<i class="glyphicon glyphicon-search"></i>';
+				// row += '					</span>';
+				// row += '				</div>';
+				// row += '			</div>';
+				// row += '		</div>';
+				// row += '</div>';
+				row += '</ul>';
+				row += '<div class="tab-content">';
+				row += '	<div class="tab-pane active" id="tab_1">';
+				row += '  		<div class="form-group" id="tb_data" style="display:block;">';
+				row += '			<table id="tb_modal_res" class="table table-bordered">';
+				row += '			</table>';
+				row += '		</div>';
+				row += '  	</div>';
+				row += '	<div class="tab-pane" id="tab_2">';
+				row += '  		<div class="form-group" id="tb_data" style="display:block;">';
+				row += '			<table id="tb_modal_res_dept" class="table table-bordered">';
+				row += '			</table>';
+				row += '		</div>';
+				row += ' 	</div>';
+				row += '</div>';
+				row += '</div>';
+				row += '</div>';
+				$('#type_button').html(row);
+			
 			$.ajax({
 				type: "POST",
 				url: "<?php echo site_url('/Define_responsibility_main/get_resm');?>",
@@ -75,15 +129,58 @@
 					$('#md_add_footer').show();
 					$('#row_loading_out').hide();
 					$('#tb_modal_res').html(data);
+					// var row  ='<div class="row">';
+						// row +=	'<div class="col-md-4"></div>';
+						// row +=	'<div class="col-md-4" align="center">';
+						// row +=		'<button type="button" class="btn btn-default">หัวหน้าฝ่ายงาน</button>';
+						// row +=		'<button type="button" class="btn btn-default">ฝ่ายงาน</button>';
+						// row +=	'</div>';
+						// row +=	'<div class="col-md-4"></div>';
+						// row +='</div>';
+					// $('#type_button').html(row);
+				}//End success
+			});
+			
+			$.ajax({
+				type: "POST",
+				url: "<?php echo site_url('/Define_responsibility_main/get_resm_dept');?>",
+				data: {'dfine_id': dfine_id},
+				dataType : "json",
+				success : function(data){
+					
+					// $('#div_search').show();
+					// $('#tb_data').show();
+					// $('#md_add_footer').show();
+					// $('#row_loading_out').hide();
+					$('#tb_modal_res_dept').html(data);
 				}//End success
 			});
 		}else if(chk_modal == 1){
 			$("#head_madal_addres").text("เพิ่มผู้รับผิดชอบร่วม");
 			$("#hid_btn_chk").val(1);
+			$('#btn_search').show();
+			
+			// var row  = '<div class="form-group">';
+				// row += '	<div class="row">';
+				// row += '			<div class="col-md-3 pull-right" id="div_search">	';
+				// row += '				<div class="input-group">';
+				// row += '					<input type="text" id="search_res" class="form-control" placeholder="ค้นหา">';
+				// row += '					<span class="input-group-addon">';
+				// row += '						<i class="glyphicon glyphicon-search"></i>';
+				// row += '					</span>';
+				// row += '				</div>';
+				// row += '			</div>';
+				// row += '		</div>';
+				// row += '</div>';
+			var row = '<div class="form-group" id="tb_data" style="display:block;">';
+				row += '	<table id="tb_modal_res" class="table table-bordered">';		 
+				row += '	</table>';
+				row += '</div>';
+			$('#type_button').html(row);
 			$.ajax({
 				type: "POST",
 				url: "<?php echo site_url('/Define_responsibility_main/get_ress');?>",
-				data: {'dfine_id': dfine_id, 'resm_id': resm_id},
+				data: {'dfine_id': dfine_id, 'resm_id': resm_id, 'resm_dm_id': resm_dm_id},
 				dataType : "json",
 				success : function(data){
 					$('#div_search').show();
@@ -94,8 +191,7 @@
 				}//End success
 			});
 		}
-		
-	}
+	} //End fn get_resm
 	
 	function save_resm(){
 		var dfine_id = '<?php echo $dfine_id; ?>';
@@ -274,6 +370,8 @@
         });
 	}
 	
+	// function get_resm_
+	
 </script>
 
 
@@ -358,24 +456,22 @@
             </div>
             <div class="modal-body">
 				<form id="frm_modal_add"> <!-- Start form -->
-					<div class="form-group">
-						<div class="col-md-3 pull-right" id="div_search">	
-							<div class="input-group">
-								<input type="text" id="search" class="form-control" placeholder="ค้นหา">
-								<span class="input-group-addon">
-									<i class="glyphicon glyphicon-search"></i>
-								</span>
+					<div id="btn_search" class="form-group" >
+						<div class="row">
+							<div class="col-md-3 pull-right" id="div_search">	
+								<div class="input-group">
+									<input type="text" id="search_res" class="form-control" placeholder="ค้นหา">
+									<span class="input-group-addon">
+										<i class="glyphicon glyphicon-search"></i>
+									</span>
+								</div>
 							</div>
 						</div>
-					</div><br><br><br>
-				
-					<div class="form-group" id="tb_data" style="display:block;"> <!-- Start form-group -->
-						<table id="tb_modal_res" class="table table-bordered">
-							 
-						</table>
-					</div> <!-- End form-group -->
+					</div>
+					<div id="type_button">
+					
+					</div>
 				</form>
-				
 				<div class="" id="row_loading_out" style="display:none;">
 					<div class="col-md-12">
 						<center>

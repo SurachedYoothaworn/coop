@@ -69,9 +69,16 @@
 	}
 	
 	function clear_data(){
-		$("#select2_bgy").val(0).trigger('change');
-		$("#select2_indicator_group").val(0).trigger('change');
-		$("#select2_ps").val(0).trigger('change');
+		var ps_id = '<?php echo $this->session->userdata('us_ps_id');?>';
+		if(<?php echo $this->session->userdata('us_permission');?> == <?php echo $this->config->item("ref_ug_admin");?>){
+			$("#select2_bgy").val(0).trigger('change');
+			$("#select2_indicator_group").val(0).trigger('change');
+			$("#select2_ps").val(0).trigger('change');
+		}else if(<?php echo $this->session->userdata('us_permission');?> == <?php echo $this->config->item("ref_ug_main_side");?>){
+			$("#select2_bgy").val(0).trigger('change');
+			$("#select2_indicator_group").val(0).trigger('change');
+			$("#select2_ps").val(ps_id).trigger('change');
+		}
 		search_data();	
 	} //End fn clear_data
 	
@@ -394,19 +401,36 @@
 												</div>
 											</div>
 										</div>
-										<div class="form-group"> <!-- Start form-group -->
-											<div class = "col-md-12" id="div_ind">
-												<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">ผู้รับผิดชอบ</label>
-												<div class="col-md-10 select2-container-active">
-													<select class="select2" id="select2_ps" name="select2_ps" style="width: 100%;" tabindex="-1" validate>
-														<option id="rs_ps" class="select2_wb" value="0" >ทั้งหมด</option>
-														<?php foreach($rs_person['data_result'] as $rs_ps){?>
-															<option id="rs_ps" class="select2_wb" value="<?php echo $rs_ps['ps_id'];?>" ><?php echo $rs_ps['pf_title_th'];?><?php echo $rs_ps['ps_fname_th'];?> <?php echo $rs_ps['ps_lname_th'];?></option>
-														<?php } ?>
-													</select>
+										
+										<?php if($this->session->userdata('us_permission') == $this->config->item("ref_ug_admin")){?>
+											<div class="form-group"> <!-- Start form-group -->
+												<div class = "col-md-12" id="div_ind">
+													<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">ผู้รับผิดชอบ</label>
+													<div class="col-md-10 select2-container-active">
+														<select class="select2" id="select2_ps" name="select2_ps" style="width: 100%;" tabindex="-1" validate>
+															<option id="rs_ps" class="select2_wb" value="0" >ทั้งหมด</option>
+															<?php foreach($rs_person as $rs_ps){?>
+																<option id="rs_ps" class="select2_wb" value="<?php echo $rs_ps['ps_id'];?>" ><?php echo $rs_ps['pf_title_th'];?><?php echo $rs_ps['ps_fname_th'];?> <?php echo $rs_ps['ps_lname_th'];?></option>
+															<?php } ?>
+														</select>
+													</div>
+													
 												</div>
 											</div>
-										</div>
+										<?php }else if($this->session->userdata('us_permission') == $this->config->item("ref_ug_main_side")){ ?>
+											<div class="form-group"> <!-- Start form-group -->
+												<div class = "col-md-12" id="div_ind">
+													<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">ผู้รับผิดชอบ</label>
+													<div class="col-md-10 select2-container-active">
+														<select class="select2" id="select2_ps" name="select2_ps" style="width: 100%;" tabindex="-1" validate>
+															<?php foreach($rs_person as $rs_ps){?>
+																<option id="rs_ps" class="select2_wb" value="<?php echo $rs_ps['ps_id'];?>" ><?php echo $rs_ps['pf_title_th'];?><?php echo $rs_ps['ps_fname_th'];?> <?php echo $rs_ps['ps_lname_th'];?></option>
+															<?php } ?>
+														</select>
+													</div>
+												</div>
+											</div>
+										<?php } ?>
 								</div><!-- End  col-md-12 -->
 							</div>
 							<div class="box-footer clearfix">

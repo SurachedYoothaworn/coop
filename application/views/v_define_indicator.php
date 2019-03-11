@@ -19,6 +19,13 @@
 		$("#select2_indicator_group").select2();
 		$("#select2_operator").select2();
 		$("#select2_unit").select2();
+		
+		$('#datepicker').datepicker({
+		  autoclose: true
+		});
+		$('#datepicker2').datepicker({
+		  autoclose: true
+		});
     });
 	
 	function get_data(){
@@ -103,6 +110,8 @@
 			$("#header").removeClass("modal_header_warning");
 			$("#header").addClass("modal_header_success");
 			$("#modal_add_title").html("เพิ่มข้อมูลรายการตัวชี้วัด");
+			$('#datepicker').val("");
+			$('#datepicker2').val("");
 		}else{
 			$.ajax({
 	 		type: "POST",
@@ -258,8 +267,13 @@
             </div>
             <div class="box-body">
                 <div class="col-md-3">	
-                    <a id="btn-add-tab" name="btn-add-tab" class="<?php echo $this->config->item('btn_primary');?> pull-left" href="#" onclick="open_modal('0')">
-                    <i class="glyphicon glyphicon-plus" style="color:white"></i> เพิ่มข้อมูลรายการตัวชี้วัด</a>
+					<?php if($this->session->userdata('us_permission') == 1){?>
+						<a id="btn-add-tab" name="btn-add-tab" class="<?php echo $this->config->item('btn_primary');?> pull-left" href="#" onclick="open_modal('0')">
+						<i class="glyphicon glyphicon-plus" style="color:white"></i> เพิ่มข้อมูลรายการตัวชี้วัด</a>
+					<?php }else if($this->session->userdata('us_permission') == 3){?>
+						<a id="btn-add-tab" name="btn-add-tab" class="<?php echo $this->config->item('btn_primary');?> pull-left" href="#" onclick="" disabled>
+						<i class="glyphicon glyphicon-plus" style="color:white"></i> เพิ่มข้อมูลรายการตัวชี้วัด</a>
+					<?php } ?>
                 </div><br><br><br>
                 <div class="col-md-12"><!-- Start  col-md-12 -->
                     <div class="box box-solid">
@@ -391,6 +405,37 @@
 							</div>
 						</div>
 					</div>
+					
+					<div class="form-group"> <!-- Start form-group -->
+						<div class = "col-md-12">
+							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">วันที่บันทึกผล<span class="text-danger">*</span></label>
+							<div class="col-md-10">
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right" id="datepicker" validate>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="form-group"> <!-- Start form-group -->
+						<div class = "col-md-12">
+							<label class="col-md-2 control-label" style="padding: 8px; text-align: right;">วันที่ประเมินผล<span class="text-danger">*</span></label>
+							<div class="col-md-10">
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right" id="datepicker2" validate>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+					
 					<input type="hidden" id="hid_dfine_id" value="">
 					<input type="hidden" id="hid_btn_save" value="">
 				</form>

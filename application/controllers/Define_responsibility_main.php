@@ -21,6 +21,7 @@ class Define_responsibility_main extends kpims_Controller {
     } //End fn detail
 	
 	function get_data(){
+		$permission_us = $this->session->userdata('us_permission');
 		$dfine_id = $this->input->post('dfine_id');
 		$json = file_get_contents('http://med.buu.ac.th/scan-med/scanningPersonnel/API/api_getPerson.php');
 		$rs_person = json_decode($json, TRUE);
@@ -55,11 +56,15 @@ class Define_responsibility_main extends kpims_Controller {
 					$row .= 		'</button>&nbsp';
 				}
 				
-				$row .=			'<a id="btn-add-tab" name="btn-add-tab" class="'.$this->config->item('btn_primary').'" data-tooltip="เพิ่มผู้รับผิดชอบร่วม" href="#" onclick="get_resm(1,'.$rs_m->resm_id.')">';
+				$row .=			'<a id="btn-add-tab" name="btn-add-tab" class="'.$this->config->item('btn_primary').'" data-tooltip="เพิ่มผู้รับผิดชอบร่วม" href="#" onclick="get_resm(1,'.$rs_m->resm_id.','.$rs_m->resm_dm_id.')">';
 				$row .=			'<i class="glyphicon glyphicon-plus" style="color:white"></i><i class="glyphicon glyphicon-user" style="color:white" ></i></a></center>';
 				$row .= 	'</td>';
 				$row .=		'<td>';
-				$row .= 		'<center><button id="btn_del" name="btn_del" class="'.$this->config->item('btn_danger').'" data-tooltip="ลบผู้รับผิดชอบตัวชี้วัด" onclick="del_resm('.$rs_m->resm_id.','.$dfine_id.')">';
+				if($permission_us == $this->config->item("ref_ug_main_side")){ //หัวหน้าฝ่ายงาน
+					$row .= 		'<center><button id="btn_del" name="btn_del" class="'.$this->config->item('btn_danger').'" data-tooltip="ไม่สามารถลบตนเองได้" onclick="" disabled>';
+				}else{
+					$row .= 		'<center><button id="btn_del" name="btn_del" class="'.$this->config->item('btn_danger').'" data-tooltip="ลบผู้รับผิดชอบตัวชี้วัด" onclick="del_resm('.$rs_m->resm_id.','.$dfine_id.')">';	
+				}
 				$row .= 		'<i class="glyphicon glyphicon-trash" style="color:white"></i>';
 				$row .= 		'</button></center>';
 				$row .=		'</td>';
@@ -79,13 +84,13 @@ class Define_responsibility_main extends kpims_Controller {
 		$rs_person = json_decode($json, TRUE);
 		$dfine_id = $this->input->post('dfine_id');
 		$rs_resm = $this->dfine_res->get_by_id($dfine_id);
-		$dpt = "";
-		
+		$dpt = 0;
+		$count=0;
 		$row  ='<thead>';
 		$row .=		'<tr>';
-		$row .=			'<th style="width: 15%; text-align: center;"> เลือกผู้รับผิดชอบ</th>';
-        $row .=			'<th style="width: 30%; text-align: center;">ชื่อ - สกุล</th>';
-        $row .=	        '<th style="width: 25%; text-align: center;">ตำแหน่ง</th>';
+		$row .=			'<th style="width: 17%; text-align: center;"> เลือกผู้รับผิดชอบ</th>';
+        $row .=			'<th style="width: 25%; text-align: center;">ชื่อ - สกุล</th>';
+        $row .=	        '<th style="width: 30%; text-align: center;">ตำแหน่ง</th>';
 		$row .=			'<th style="width: 30%; text-align: center;">แผนก</th>';
         $row .=	    '</tr>';
 		$row .='</thead>';
@@ -96,38 +101,110 @@ class Define_responsibility_main extends kpims_Controller {
 				if($rs_ps['ps_id'] == $resm->resm_ps_id){
 					$count++;
 				}
-			} //End foreach
-			if($count == 0){
-				if($dpt != $rs_ps['dm_title_th']){
-					$dpt = $rs_ps['dm_title_th'];
-					$row .='<tr>';
-					$row .= 	'<td colspan="4" style="background: #eeeeee;"><b>ฝ่ายงาน :</b> '.$rs_ps['dm_title_th'].'</td>';
-					$row .='</tr>';
+			} //End foreach.
+			$count_main = 0;
+			if($rs_ps['dm_main_dept'] == 1){
+				if($count == 0){
+					$count_main++;
+					if($dpt != $rs_ps['dm_id']){
+						$dpt = $rs_ps['dm_id'];
+						if($rs_ps['ptm_id'] == 1){
+							$row .='<tr>';
+							$row .= 	'<td colspan="4" style="background: #eeeeee;"><b>ฝ่ายงาน1 :</b> '.$rs_ps['dm_title_th'].'</td>';
+							$row .='</tr>';
+							$row .='<tr>';
+							$row .= 	'<td style="text-align: center;" ><input class="flat-red" type="radio" id="chk_ps_add" name="chk_ps_add" value="'.$rs_ps["ps_id"].'" class="chk_preson_add"></td>';
+							$row .= 	'<td>'.$rs_ps["pf_title_th"].''.$rs_ps["ps_fname_th"].' '.$rs_ps["ps_lname_th"].'</td>';
+							$row .= 	'<td>'.$rs_ps["pt_title_th"].'</td>';
+							$row .= 	'<td>'.$rs_ps["dm_title_th"].'</td>';
+							$row .='</tr>';
+							
+						}else{
+							$row .='<tr>';
+							$row .= 	'<td colspan="4" style="background: #eeeeee;"><b>ฝ่ายงาน2 :</b> '.$rs_ps['dm_title_th'].'</td>';
+							$row .='</tr>';
+							$row .='<tr>';
+							$row .= 	'<td colspan="4" style="text-align:center; color:red;" >ยังไม่กำหนดหัวหน้าฝ่ายงาน</td>';
+							$row .='</tr>';
+						}
+					}
 				}
-				$row .='<tr>';
-				$row .= 	'<td style="text-align: center;" ><input class="flat-red" type="radio" id="chk_ps_add" name="chk_ps_add" value="'.$rs_ps["ps_id"].'" class="chk_preson_add"></td>';
-				$row .= 	'<td>'.$rs_ps["pf_title_th"].''.$rs_ps["ps_fname_th"].' '.$rs_ps["ps_lname_th"].'</td>';
-				$row .= 	'<td>'.$rs_ps["pt_title_th"].'</td>';
-				$row .= 	'<td>'.$rs_ps["dm_title_th"].'</td>';
-				$row .='</tr>';
 			}
 		} //End foreach
 		$row .='</tbody>';
 		echo json_encode($row);
 	} //End fn get_resm
 	
+	function get_resm_dept(){
+		$json = file_get_contents('http://med.buu.ac.th/scan-med/scanningPersonnel/API/api_getPerson.php');
+		$rs_person = json_decode($json, TRUE);
+		$dfine_id = $this->input->post('dfine_id');
+		$rs_resm = $this->dfine_res->get_by_id($dfine_id);
+		$dpt = "";
+		$row  ='<thead>';
+		$row .=		'<tr>';
+		$row .=			'<th style="width: 17%; text-align: center;"> เลือกผู้รับผิดชอบ</th>';
+        $row .=			'<th style="width: 30%; text-align: center;">ชื่อ - สกุล</th>';
+        $row .=	        '<th style="width: 25%; text-align: center;">ตำแหน่ง</th>';
+		$row .=			'<th style="width: 30%; text-align: center;">แผนก</th>';
+        $row .=	    '</tr>';
+		$row .='</thead>';
+		$row .='<tbody id="tb_modal_add_resm_buh">';
+		foreach($rs_person['data_result'] as $rs_ps){ //คนทั้งหมด
+			$count=0;
+			foreach($rs_resm->result() as $resm){ //คนที่ถูกใช้
+				if($rs_ps['ps_id'] == $resm->resm_ps_id){
+					$count++;
+				}
+			} //End foreach.
+			$count_main = 0;
+			if($rs_ps['dm_main_dept'] == 2){
+				if($count == 0){
+					$count_main++;
+					if($dpt != $rs_ps['dm_id']){
+						$dpt = $rs_ps['dm_id'];
+						if($rs_ps['ptm_id'] == 1){
+							$row .='<tr>';
+							$row .= 	'<td colspan="4" style="background: #eeeeee;"><b>ฝ่ายงาน1 :</b> '.$rs_ps['dm_title_th'].'</td>';
+							$row .='</tr>';
+							$row .='<tr>';
+							$row .= 	'<td style="text-align: center;" ><input class="flat-red" type="radio" id="chk_ps_add" name="chk_ps_add" value="'.$rs_ps["ps_id"].'" class="chk_preson_add"></td>';
+							$row .= 	'<td>'.$rs_ps["pf_title_th"].''.$rs_ps["ps_fname_th"].' '.$rs_ps["ps_lname_th"].'</td>';
+							$row .= 	'<td>'.$rs_ps["pt_title_th"].'</td>';
+							$row .= 	'<td>'.$rs_ps["dm_title_th"].'</td>';
+							$row .='</tr>';
+							
+						}else{
+							$row .='<tr>';
+							$row .= 	'<td colspan="4" style="background: #eeeeee;"><b>ฝ่ายงาน2 :</b> '.$rs_ps['dm_title_th'].'</td>';
+							$row .='</tr>';
+							$row .='<tr>';
+							$row .= 	'<td colspan="4" style="text-align:center; color:red;" >ยังไม่กำหนดหัวหน้าฝ่ายงาน</td>';
+							$row .='</tr>';
+						}
+						
+					}
+				}
+			}
+		} //End foreach
+		$row .='</tbody>';
+		echo json_encode($row);
+	} //End fn get_resm_dept
+	
 	function get_ress(){
 		$json = file_get_contents('http://med.buu.ac.th/scan-med/scanningPersonnel/API/api_getPerson.php');
 		$rs_person = json_decode($json, TRUE);
 		$resm_id = $this->input->post('resm_id');
 		$dfine_id = $this->input->post('dfine_id');
-		$rs_resm = $this->dfine_res->get_all();
+		// $resm_dm_id = $this->input->post('resm_dm_id');
+	
+		// $rs_resm = $this->dfine_res->get_all();
+		$rs_resm = $this->dfine_res->get_resm_by_id($resm_id);
 		$rs_ress = $this->dfine_ress->get_by_id($resm_id);
 		$dpt = "";
-		
 		$row  ='<thead>';
 		$row .=		'<tr>';
-		$row .=			'<th style="width: 15%; text-align: center;"><input type="checkbox" name="checkAll_add" id="checkAll_add" onclick="checkAll_person_add()">&nbsp;เลือกทั้งหมด</th>';
+		$row .=			'<th style="width: 17%; text-align: center;"><input type="checkbox" name="checkAll_add" id="checkAll_add" onclick="checkAll_person_add()">&nbsp;เลือกทั้งหมด</th>';
         $row .=			'<th style="width: 30%; text-align: center;">ชื่อ - สกุล</th>';
         $row .=	        '<th style="width: 25%; text-align: center;">ตำแหน่ง</th>';
 		$row .=			'<th style="width: 30%; text-align: center;">แผนก</th>';
@@ -138,33 +215,47 @@ class Define_responsibility_main extends kpims_Controller {
 			$count_main=0;
 			foreach($rs_resm->result() as $resm){ //คนที่ถูกใช้ ของผู้รับผิดชอบหลัก
 				if($rs_ps['ps_id'] == $resm->resm_ps_id ){
+					if($resm->resm_dfine_id == $dfine_id){
 					$count_main++;	
+					}
 				}
 				$count_sub=0;
 				foreach($rs_ress->result() as $ress ){
 					if($rs_ps['ps_id'] == $ress->ress_ps_id){
-						$count_sub++;
+						if($resm->resm_dfine_id == $dfine_id){
+							$count_sub++;
+						}else{
+							$count_sub--;
+						}
 					}
 				}
 			} //End foreach
 			if($count_main == 0 && $count_sub == 0){
-				if($dpt != $rs_ps['dm_title_th']){
-					$dpt = $rs_ps['dm_title_th'];
+				// pre($resm->resm_dm_id); die;
+				if($resm->resm_dm_id == $rs_ps["dm_id"]){
+					if($dpt != $rs_ps['dm_title_th']){
+						$dpt = $rs_ps['dm_title_th'];
+						$row .='<tr>';
+						$row .= 	'<td colspan="4" style="background: #eeeeee;"><b>ฝ่ายงาน :</b> '.$rs_ps['dm_title_th'].'</td>';
+						$row .='</tr>';
+					}
 					$row .='<tr>';
-					$row .= 	'<td colspan="4" style="background: #eeeeee;"><b>ฝ่ายงาน :</b> '.$rs_ps['dm_title_th'].'</td>';
+					$row .= 	'<td style="text-align: center;" ><input type="checkbox" id="chk_ps_add" name="chk_ps_add" value="'.$rs_ps["ps_id"].'" class="chk_preson_add"></td>';
+					$row .= 	'<td>'.$rs_ps["pf_title_th"].''.$rs_ps["ps_fname_th"].' '.$rs_ps["ps_lname_th"].'</td>';
+					$row .= 	'<td>'.$rs_ps["pt_title_th"].'</td>';
+					$row .= 	'<td>'.$rs_ps["dm_title_th"].'</td>';
 					$row .='</tr>';
+					$row .='<input type="hidden" id="hid_resm_id" value="'.$resm_id.'" >';
 				}
-				$row .='<tr>';
-				$row .= 	'<td style="text-align: center;" ><input type="checkbox" id="chk_ps_add" name="chk_ps_add" value="'.$rs_ps["ps_id"].'" class="chk_preson_add"></td>';
-				$row .= 	'<td>'.$rs_ps["pf_title_th"].''.$rs_ps["ps_fname_th"].' '.$rs_ps["ps_lname_th"].'</td>';
-				$row .= 	'<td>'.$rs_ps["pt_title_th"].'</td>';
-				$row .= 	'<td>'.$rs_ps["dm_title_th"].'</td>';
-				$row .='</tr>';
-				$row .='<input type="hidden" id="hid_resm_id" value="'.$resm_id.'" >';
 			}
 		} //End foreach
 		$row .='</tbody>';
 		echo json_encode($row);
+		
+		
+		
+		
+		
 	} //End fn get_ress
 	
 	function save_resm(){
@@ -177,6 +268,7 @@ class Define_responsibility_main extends kpims_Controller {
 			if($rs_ps['ps_id'] == $ps_checked){
 				$this->dfine_res->resm_name = $rs_ps["pf_title_th"].''.$rs_ps["ps_fname_th"].' '.$rs_ps["ps_lname_th"];
 				$this->dfine_res->resm_pt_name = $rs_ps["pt_title_th"];
+				$this->dfine_res->resm_dm_id = $rs_ps["dm_id"];
 				$this->dfine_res->resm_dept = $rs_ps["dm_title_th"];
 				$this->dfine_res->resm_ps_id = $rs_ps["ps_id"];
 				$this->dfine_res->resm_dfine_id = $dfine_id;
@@ -270,6 +362,7 @@ class Define_responsibility_main extends kpims_Controller {
 				$row .=				'</a></center>';
 				$row .=			'</td>';
 				$row .= '</tr>';
+				
 			}   
 		}else{
 			$row .='<tr>';

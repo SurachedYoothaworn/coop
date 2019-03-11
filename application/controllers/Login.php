@@ -64,6 +64,7 @@ class Login extends kpims_Controller {
 				if($rs_services->data_result->us_ref_ps_id == $row['ps_id']){
 					$ps_name = $row['pf_title_th'].''.$row['ps_fname_th'].' '.$row['ps_lname_th'];
 					$this->session->set_userdata('us_ps_name',$ps_name);
+					$this->session->set_userdata('pt_title_th',$row['pt_title_th']);
 				}
 			}
             $this->session->set_userdata('logged_in',TRUE);

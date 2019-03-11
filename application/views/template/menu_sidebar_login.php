@@ -3,7 +3,7 @@
     <!-- sidebar -->
     <section class="sidebar">
       <!-- Sidebar Menu -->
-	<?php if($this->session->userdata('us_permission') == 1){ ?>
+	<?php if($this->session->userdata('us_permission') == $this->config->item("ref_ug_admin")){ ?>
 		<ul class="sidebar-menu">
 			<li class="header">เมนู</li>
 			<li <?php if($this->session->userdata('menu_active') == 1){?>class = "active"<?php } ?> ><a href="<?php echo site_url('Routes_menu/link_page');?>/1"><i class="fa fa-fw fa-dashboard"></i> <span>Dashborad</span></a></li>
@@ -26,10 +26,19 @@
 			<li <?php if($this->session->userdata('menu_active') == 8){?>class = "active"<?php } ?> ><a href="<?php echo site_url('Routes_menu/link_page');?>/8"><i class="glyphicon glyphicon-edit"></i> <span>กำหนดรายการตัวชี้วัด</span></a></li>
 			<li <?php if($this->session->userdata('menu_active') == 9){?>class = "active"<?php } ?> ><a href="<?php echo site_url('Routes_menu/link_page');?>/9"><i class="glyphicon glyphicon-floppy-save"></i> <span>บันทึกผลตัวชี้วัด</span></a></li>
 			<li <?php if($this->session->userdata('menu_active') == 10){?>class = "active"<?php } ?>><a href="<?php echo site_url('Routes_menu/link_page');?>/10"><i class="glyphicon glyphicon-list-alt"></i> <span>ประมวลข้อมูลตัวชี้วัด</span></a></li>
+			<li <?php if($this->session->userdata('menu_active') == 11){?>class = "active"<?php } ?>><a href="<?php echo site_url('Routes_menu/link_page');?>/11"><i class="glyphicon glyphicon-book"></i> <span>คู่มือการใช้งานระบบ</span></a></li>
 		</ul>
-	<?php }else{ ?>
+	<?php }else if($this->session->userdata('us_permission') == $this->config->item("ref_ug_main_side")){ ?>
 		<ul class="sidebar-menu">
 			<li class="header">เมนู</li>
+			<li <?php if($this->session->userdata('menu_active') == 8){?>class = "active"<?php } ?> ><a href="<?php echo site_url('Routes_menu/link_page');?>/8"><i class="glyphicon glyphicon-edit"></i> <span>กำหนดรายการตัวชี้วัด</span></a></li>
+			<li <?php if($this->session->userdata('menu_active') == 9){?>class = "active"<?php } ?> ><a href="<?php echo site_url('Routes_menu/link_page');?>/9"><i class="glyphicon glyphicon-floppy-save"></i> <span>บันทึกผลตัวชี้วัด</span></a></li>
+			<li <?php if($this->session->userdata('menu_active') == 10){?>class = "active"<?php } ?>><a href="<?php echo site_url('Routes_menu/link_page');?>/10"><i class="glyphicon glyphicon-list-alt"></i> <span>ประมวลข้อมูลตัวชี้วัด</span></a></li>
+		</ul>
+	<?php }else if($this->session->userdata('us_permission') == $this->config->item("ref_ug_lab")){ ?>
+		<ul class="sidebar-menu">
+			<li class="header">เมนู</li>
+			<li <?php if($this->session->userdata('menu_active') == 12){?>class = "active"<?php } ?> ><a href="<?php echo site_url('Routes_menu/link_page');?>/12"><i class="glyphicon glyphicon-stats"></i> <span>ติดตามผลงานตัวชี้วัด</span></a></li>
 			<li <?php if($this->session->userdata('menu_active') == 9){?>class = "active"<?php } ?> ><a href="<?php echo site_url('Routes_menu/link_page');?>/9"><i class="glyphicon glyphicon-floppy-save"></i> <span>บันทึกผลตัวชี้วัด</span></a></li>
 		</ul>
 	<?php } ?>

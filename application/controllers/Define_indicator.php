@@ -26,67 +26,138 @@ class Define_indicator extends kpims_Controller {
 	public function get_data(){
 		$rs_dfine_data = $this->dfine->get_all();
         $data = array(); 
-        if($rs_dfine_data->num_rows() > 0){
-            // $seq = 1;
-			foreach($rs_dfine_data->result() as $dfine){
-				//ปุ่มเพิ่มผู้รับผิดชอบ
-				$btn_rm  = '<center>';
-				$rs_resm = $this->dfine_res->get_by_id($dfine->dfine_id);
-				if($rs_resm->num_rows() != 0){
-					$btn_rm .= '<button id="btn_edit" name="btn_edit" class="'.$this->config->item('btn_success').'"data-toggle="modal" data-tooltip="ผู้รับผิดชอบ" href="#modal_edit_indicator" onclick="get_info_resm('.$dfine->dfine_id.')">';
-					$btn_rm .= '<i class="glyphicon glyphicon-user" style="color:white" ></i>';
-					$btn_rm .= '<i class="glyphicon glyphicon-ok" style="color:white" ></i>';
-					$btn_rm .= '</button>&nbsp';
-				}else{
-					$btn_rm .= '<button id="btn_edit" name="btn_edit" class="'.$this->config->item('btn_danger').'"data-toggle="modal" href="" onclick="" disabled >';
-					$btn_rm .= '<i class="glyphicon glyphicon-user" style="color:white" ></i>';
-					$btn_rm .= '<i class="glyphicon glyphicon-remove" style="color:white" ></i>';
-					$btn_rm .= '</button>&nbsp';
-				}
-                $btn_rm .= '<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_warning').'" data-tooltip="กำหนดผู้รับผิดชอบ"  href="'.site_url('/Define_responsibility_main/detail/'.$dfine->dfine_id.'').'" >';
-                $btn_rm .= '<i class="glyphicon glyphicon-cog" style="color:white"></i>';
-                $btn_rm .= '</a></center>';
-				//ปุ่มดำเนินการ
-				$btn_opt  = '<center><button id="btn_edit" name="btn_edit" class="'.$this->config->item('btn_primary').'" data-toggle="modal" data-tooltip="รายละเอียดรายการตัวชี้วัด" href="#modal_info" onclick="get_data_info('.$dfine->dfine_id.')">';
-                $btn_opt .= '<i class="glyphicon glyphicon-info-sign" style="color:white" ></i>';
-                $btn_opt .= '</button>&nbsp';
-                $btn_opt .= '<button id="btn_del" name="btn_del" class="'.$this->config->item('btn_warning').'" data-tooltip="แก้ไขข้อมูลรายการตัวชี้วัด"  onclick="open_modal('.$dfine->dfine_id.')">';
-                $btn_opt .= '<i class="glyphicon glyphicon-pencil" style="color:white"></i>';
-                $btn_opt .= '</button>&nbsp';
-				$btn_opt .= '<button id="btn_del" name="btn_del" class="'.$this->config->item('btn_danger').'" data-tooltip="ลบข้อมูลรายการตัวชี้วัด" onclick="update_status_define_indicator('.$dfine->dfine_id.')">';
-                $btn_opt .= '<i class="glyphicon glyphicon-trash" style="color:white"></i>';
-                $btn_opt .= '</button></center>&nbsp';
+		
+		if($this->session->userdata('us_permission') == $this->config->item('ref_ug_admin')){
+			if($rs_dfine_data->num_rows() > 0){
+				// $seq = 1;
+				foreach($rs_dfine_data->result() as $dfine){
+					//ปุ่มเพิ่มผู้รับผิดชอบ
+					$btn_rm  = '<center>';
+					$rs_resm = $this->dfine_res->get_by_id($dfine->dfine_id);
+					// pre($rs_resm->result());
+					if($rs_resm->num_rows() != 0){
+						$btn_rm .= '<button id="btn_edit" name="btn_edit" class="'.$this->config->item('btn_success').'"data-toggle="modal" data-tooltip="ผู้รับผิดชอบ" href="#modal_edit_indicator" onclick="get_info_resm('.$dfine->dfine_id.')">';
+						$btn_rm .= '<i class="glyphicon glyphicon-user" style="color:white" ></i>';
+						$btn_rm .= '<i class="glyphicon glyphicon-ok" style="color:white" ></i>';
+						$btn_rm .= '</button>&nbsp';
+					}else{
+						$btn_rm .= '<button id="btn_edit" name="btn_edit" class="'.$this->config->item('btn_danger').'"data-toggle="modal" href="" onclick="" disabled >';
+						$btn_rm .= '<i class="glyphicon glyphicon-user" style="color:white" ></i>';
+						$btn_rm .= '<i class="glyphicon glyphicon-remove" style="color:white" ></i>';
+						$btn_rm .= '</button>&nbsp';
+					}
+					$btn_rm .= '<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_warning').'" data-tooltip="กำหนดผู้รับผิดชอบ"  href="'.site_url('/Define_responsibility_main/detail/'.$dfine->dfine_id.'').'" >';
+					$btn_rm .= '<i class="glyphicon glyphicon-cog" style="color:white"></i>';
+					$btn_rm .= '</a></center>';
+					//ปุ่มดำเนินการ
+					$btn_opt  = '<center><button id="btn_edit" name="btn_edit" class="'.$this->config->item('btn_primary').'" data-toggle="modal" data-tooltip="รายละเอียดรายการตัวชี้วัด" href="#modal_info" onclick="get_data_info('.$dfine->dfine_id.')">';
+					$btn_opt .= '<i class="glyphicon glyphicon-info-sign" style="color:white" ></i>';
+					$btn_opt .= '</button>&nbsp';
+					$btn_opt .= '<button id="btn_del" name="btn_del" class="'.$this->config->item('btn_warning').'" data-tooltip="แก้ไขข้อมูลรายการตัวชี้วัด"  onclick="open_modal('.$dfine->dfine_id.')">';
+					$btn_opt .= '<i class="glyphicon glyphicon-pencil" style="color:white"></i>';
+					$btn_opt .= '</button>&nbsp';
+					$btn_opt .= '<button id="btn_del" name="btn_del" class="'.$this->config->item('btn_danger').'" data-tooltip="ลบข้อมูลรายการตัวชี้วัด" onclick="update_status_define_indicator('.$dfine->dfine_id.')">';
+					$btn_opt .= '<i class="glyphicon glyphicon-trash" style="color:white"></i>';
+					$btn_opt .= '</button></center>&nbsp';
+					
 				
-			
-				$dfine_data = array(
-					// "ind_seq" => "<center>".$seq."</center>",
-					"dfine_id" 			=>	$dfine->dfine_id,
-					"ind_name" 			=>	$dfine->ind_name,
-					"ind_description" 	=>	$dfine->ind_description,
-					"bgy_name" 			=>	$dfine->bgy_name,
-					"str_name" 			=>	$dfine->str_name,
-					"indgp_name" 		=>	$dfine->indgp_name,
-					"opt_name"			=>	$dfine->opt_name,
-					"opt_symbol"		=>	$dfine->opt_symbol,
-					"dfine_goal" 		=>	$dfine->dfine_goal,
-					"unt_name"			=>	$dfine->unt_name,
-					"side_name" 		=>	$dfine->side_name,
-				//สว่นของ id
-					"ind_id" 			=> 	$dfine->ind_id,
-					"bgy_id" 			=> 	$dfine->bgy_id,
-					"str_id" 			=> 	$dfine->str_id,
-					"indgp_id" 			=> 	$dfine->indgp_id,
-					"opt_id" 			=> 	$dfine->opt_id,
-					"unt_id" 			=> 	$dfine->unt_id,
-					"side_id" 			=> 	$dfine->side_id,
-					"dfine_status_action" 		=> 	$dfine->dfine_status_action,
-					"dfine_status_assessment"	=> 	$dfine->dfine_status_assessment,
-					"btn_rm"			=>	$btn_rm,
-					"btn_opt"			=>	$btn_opt,
-				);
-				array_push($data, $dfine_data);
-            } //End for
-        } //End if
+					$dfine_data = array(
+						// "ind_seq" => "<center>".$seq."</center>",
+						"dfine_id" 			=>	$dfine->dfine_id,
+						"ind_name" 			=>	$dfine->ind_name,
+						"ind_description" 	=>	$dfine->ind_description,
+						"bgy_name" 			=>	$dfine->bgy_name,
+						"str_name" 			=>	$dfine->str_name,
+						"indgp_name" 		=>	$dfine->indgp_name,
+						"opt_name"			=>	$dfine->opt_name,
+						"opt_symbol"		=>	$dfine->opt_symbol,
+						"dfine_goal" 		=>	$dfine->dfine_goal,
+						"unt_name"			=>	$dfine->unt_name,
+						"side_name" 		=>	$dfine->side_name,
+					//สว่นของ id
+						"ind_id" 			=> 	$dfine->ind_id,
+						"bgy_id" 			=> 	$dfine->bgy_id,
+						"str_id" 			=> 	$dfine->str_id,
+						"indgp_id" 			=> 	$dfine->indgp_id,
+						"opt_id" 			=> 	$dfine->opt_id,
+						"unt_id" 			=> 	$dfine->unt_id,
+						"side_id" 			=> 	$dfine->side_id,
+						"dfine_status_action" 		=> 	$dfine->dfine_status_action,
+						"dfine_status_assessment"	=> 	$dfine->dfine_status_assessment,
+						"btn_rm"			=>	$btn_rm,
+						"btn_opt"			=>	$btn_opt,
+					);
+					array_push($data, $dfine_data);
+				} //End for
+			} //End if
+		}else if($this->session->userdata('us_permission') == $this->config->item('ref_ug_main_side')){
+			if($rs_dfine_data->num_rows() > 0){
+				// $seq = 1;
+				foreach($rs_dfine_data->result() as $dfine){
+					//ปุ่มเพิ่มผู้รับผิดชอบ
+					$btn_rm  = '<center>';
+					$rs_resm = $this->dfine_res->get_by_id($dfine->dfine_id);
+					// $rs_resm = $this->dfine_res->get_id_resm_ress($dfine->dfine_id);
+					// pre($rs_resm->result());
+					foreach($rs_resm->result() as $resm){
+						if($resm->resm_ps_id == $this->session->userdata('us_ps_id')){
+							if($rs_resm->num_rows() != 0){
+								$btn_rm .= '<button id="btn_edit" name="btn_edit" class="'.$this->config->item('btn_success').'"data-toggle="modal" data-tooltip="ผู้รับผิดชอบ" href="#modal_edit_indicator" onclick="get_info_resm('.$dfine->dfine_id.')">';
+								$btn_rm .= '<i class="glyphicon glyphicon-user" style="color:white" ></i>';
+								$btn_rm .= '<i class="glyphicon glyphicon-ok" style="color:white" ></i>';
+								$btn_rm .= '</button>&nbsp';
+							}else{
+								$btn_rm .= '<button id="btn_edit" name="btn_edit" class="'.$this->config->item('btn_danger').'"data-toggle="modal" href="" onclick="" disabled >';
+								$btn_rm .= '<i class="glyphicon glyphicon-user" style="color:white" ></i>';
+								$btn_rm .= '<i class="glyphicon glyphicon-remove" style="color:white" ></i>';
+								$btn_rm .= '</button>&nbsp';
+							}
+							$btn_rm .= '<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_warning').'" data-tooltip="กำหนดผู้รับผิดชอบ"  href="'.site_url('/Define_responsibility_main/detail/'.$dfine->dfine_id.'').'" >';
+							$btn_rm .= '<i class="glyphicon glyphicon-cog" style="color:white"></i>';
+							$btn_rm .= '</a></center>';
+							//ปุ่มดำเนินการ
+							$btn_opt  = '<center><button id="btn_edit" name="btn_edit" class="'.$this->config->item('btn_primary').'" data-toggle="modal" data-tooltip="รายละเอียดรายการตัวชี้วัด" href="#modal_info" onclick="get_data_info('.$dfine->dfine_id.')">';
+							$btn_opt .= '<i class="glyphicon glyphicon-info-sign" style="color:white" ></i>';
+							$btn_opt .= '</button>&nbsp';
+							// $btn_opt .= '<button id="btn_del" name="btn_del" class="'.$this->config->item('btn_warning').'" data-tooltip="แก้ไขข้อมูลรายการตัวชี้วัด"  onclick="open_modal('.$dfine->dfine_id.')">';
+							// $btn_opt .= '<i class="glyphicon glyphicon-pencil" style="color:white"></i>';
+							// $btn_opt .= '</button>&nbsp';
+							// $btn_opt .= '<button id="btn_del" name="btn_del" class="'.$this->config->item('btn_danger').'" data-tooltip="ลบข้อมูลรายการตัวชี้วัด" onclick="update_status_define_indicator('.$dfine->dfine_id.')">';
+							// $btn_opt .= '<i class="glyphicon glyphicon-trash" style="color:white"></i>';
+							// $btn_opt .= '</button></center>&nbsp';
+						
+							$dfine_data = array(
+								// "ind_seq" => "<center>".$seq."</center>",
+								"dfine_id" 			=>	$dfine->dfine_id,
+								"ind_name" 			=>	$dfine->ind_name,
+								"ind_description" 	=>	$dfine->ind_description,
+								"bgy_name" 			=>	$dfine->bgy_name,
+								"str_name" 			=>	$dfine->str_name,
+								"indgp_name" 		=>	$dfine->indgp_name,
+								"opt_name"			=>	$dfine->opt_name,
+								"opt_symbol"		=>	$dfine->opt_symbol,
+								"dfine_goal" 		=>	$dfine->dfine_goal,
+								"unt_name"			=>	$dfine->unt_name,
+								"side_name" 		=>	$dfine->side_name,
+							//สว่นของ id
+								"ind_id" 			=> 	$dfine->ind_id,
+								"bgy_id" 			=> 	$dfine->bgy_id,
+								"str_id" 			=> 	$dfine->str_id,
+								"indgp_id" 			=> 	$dfine->indgp_id,
+								"opt_id" 			=> 	$dfine->opt_id,
+								"unt_id" 			=> 	$dfine->unt_id,
+								"side_id" 			=> 	$dfine->side_id,
+								"dfine_status_action" 		=> 	$dfine->dfine_status_action,
+								"dfine_status_assessment"	=> 	$dfine->dfine_status_assessment,
+								"btn_rm"			=>	$btn_rm,
+								"btn_opt"			=>	$btn_opt,
+							);
+							array_push($data, $dfine_data);
+						}
+					}
+				} //End for
+			} //End if
+		}
         echo json_encode($data);
 	} //End fn get_data
 	

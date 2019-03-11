@@ -45,7 +45,7 @@
 					var default_chk_ind = chk_dfine_id[count_dfine_id];
 					select_chart_follow_indicator(default_chk_ind);
 					
-                    $(data).each(function(seq, data ) {
+                    $(data).each(function(seq, data) {
                         return_data.push({
 							"seq_queue_show"			:	'<center>'+i+'</center>',
 							"dfine_id" 					:	data.dfine_id,
@@ -91,6 +91,10 @@
 			success : function(data){
 				var sum_ind = 0;
 				$(data).each(function(seq, value) {
+					
+					console.log("ind_faile : "+value.ind_faile);
+					console.log("ind_not : "+value.ind_not);
+					console.log("ind_pass : "+value.ind_pass);
 					sum_ind =  Number(value.ind_faile) +  Number(value.ind_not) +  Number(value.ind_pass);
 					//ตัวชี้วัดทั้งหมด
 					$('#head_sum_ind').html(sum_ind);
@@ -386,10 +390,14 @@
 			str_name.push(value.str_name);
 			$(value.rs_score).each(function(seq, value2) {
 				sum_score += Number(value2.indrs_score);
-				arr_dfine_goal.push(Number(value.dfine_goal));
 				score.push(Number(value2.indrs_score));
 				quarter.push('ไตรมาส  '+Number(value2.indrs_quarter));
 			});
+			quarter.push("คะแนนรวม");
+			score.push(sum_score); //รวมคะแนนก่อนใส่ลงกราฟ
+			for(var i=0;i<=4;i++){
+				arr_dfine_goal.push(Number(value.dfine_goal));
+			}//ทำให้เป้าหมายมีทั้งหมด 4 ไตรมาส + คะแนนรวม
 		});
 		$('#head_follow_ind').html('<i class="fa fa-bar-chart-o fw"></i>&nbsp;&nbsp;&nbsp;'+ind_name);
 		if(resm_name == null){
@@ -474,15 +482,19 @@
 				type: 'column',
 				name: 'คะแนน',
 				data: score,
-				color: '#944dff',
+				color: '#944dff', 
 			},{
 				type: 'spline',
 				name: 'เป้าหมาย',
 				data: arr_dfine_goal,
 				marker: {
 					lineWidth: 2,
-					lineColor: Highcharts.getOptions().colors[5],
+					lineColor: Highcharts.getOptions().colors[1],
 					fillColor: 'red'
+				},
+				tooltip: {
+					valuePrefix: opt_symbol+' ',
+					valueSuffix: ' '+unt_name
 				}
 			},	
 			]
@@ -533,6 +545,9 @@
 		var percent_goal=0;
 		percent_score = (sum_score/100)*100;
 		percent_goal = (dfine_goal/100)*100;
+		if(percent_score > 100){
+			percent_score = 100;
+		}
 		
 		$('#gauge_follow_chart').remove(); 
 		$('#graph_container_gauge_follow_ind').append('<div id="gauge_follow_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>');
@@ -615,15 +630,17 @@
 					color: '#55BF3B' // green
 				}]
 			},
-
 			series: [{
 				name: 'ร้อยละ',
 				data: [percent_score],
 				tooltip: {
 					valueSuffix: ' %'
-				}
+				},
+				dataLabels: {
+					enabled: true,
+					format: '{point.y:.2f}'
+				},
 			}]
-
 		});
 	} //End fn get_gauge_with_indicator
 	
@@ -688,8 +705,12 @@
 				var dfine_status_assessment = [];
 				var indgp_name = [];
 				var str_name = [];
+				var opt_symbol;
+				var unt_name;
 				$(data).each(function(seq, value) {
 					bgy_name = value.bgy_name;
+					opt_symbol = value.opt_symbol;
+					unt_name = value.unt_name;
 					resm_name = value.resm_name;
 					dfine_id.push(value.dfine_id);
 					ind_name.push(value.ind_name);
@@ -701,6 +722,9 @@
 					//Zone chart
 					$('#following_chart').remove(); 
 					$('#graph_container_following_ind').append('<div id="following_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>');
+					Highcharts.setOptions({
+						colors: ['#0066ff']
+					});
 					Highcharts.chart('following_chart', {
 						title: {
 							text: "ตัวชี้วัดที่ติดตามปีงบประมาณ "+bgy_name
@@ -756,6 +780,10 @@
 								lineWidth: 2,
 								lineColor: Highcharts.getOptions().colors[8],
 								fillColor: 'red'
+							},
+							tooltip: {
+								valuePrefix: opt_symbol+' ',
+								valueSuffix: ' '+unt_name
 							}
 						},	
 						]
@@ -764,7 +792,6 @@
 					$('#following_chart').remove(); 
 					$('#graph_container_following_ind').append('<div id="following_chart" style="color: red; text-align: center;">ไม่มีตัวชี้วัดที่ติดตาม</div>');
 				}
-				
 			}//End success
 		});
 	} //End fn get_chart_following_indicator
@@ -777,6 +804,7 @@
 			data: {"bgy_id": bgy_id},
 			dataType : "json",
 			success : function(data){
+				// console.log(data);
 				var dfine_id = [];
 				var ind_name = [];
 				var dfine_goal = [];
@@ -784,21 +812,59 @@
 				var bgy_name;
 				var score = [];
 				var quarter = [];
-				var dfine_status_assessment = [];
+				// var dfine_status_assessment = [];
 				var indgp_name = [];
 				var str_name = [];
+				var opt_symbol = [];
+				var unt_name = [];
+				var status_assessment = [];
 				
 				var arr_gauge = [];
 				$(data).each(function(seq, value) {
+					// console.log(value.opt_symbol);
 					bgy_name = value.bgy_name;
 					resm_name = value.resm_name;
 					dfine_id.push(value.dfine_id);
 					ind_name.push(value.ind_name);
 					score.push(value.sum_score);
 					dfine_goal.push(Number(value.dfine_goal));
-					
+					opt_symbol.push(Number(value.opt_symbol));
+					unt_name.push(Number(value.unt_name));
 					arr_gauge.push(dfine_goal);
+					status_assessment.push(value.status_assessment);
+					// status_assessment = value.status_assessment
+					
 				});
+				//Zone summary
+				//Remove Class
+				// $('#icon_result_assessment').removeClass("text-green");
+				// $('#icon_result_assessment').removeClass("text-red");
+				// $('#icon_result_assessment').removeClass("text-orange");
+				// if(value.dfine_status_assessment == 1){
+					// var icon_faile = '<i class="fa fa-fw fa-times-circle"></i>';
+					// $('#icon_result_assessment').html(icon_faile);
+					// $('#icon_result_assessment').addClass("text-red");
+					// $('#result_assessment').text("ไม่ผ่าน");
+					
+					// '<div style="display:inline;width:60px;height:60px;"><canvas width="75" height="75" style="width: 60px; height: 60px;"></canvas>';
+					// '<div class="description-block border-right" >';
+						// '<span class="description-percentage text-red" id="icon_result_assessment" style="font-size: 50px;"><i class="fa fa-fw fa-times-circle"></i></span>';
+						// '<h5 class="description-header" id="result_assessment">ไม่ผ่าน</h5>';
+					// '</div>';
+					// '</div>';
+				// }else if(value.dfine_status_assessment == 2){
+					// var icon_pass = '<i class="fa fa-fw fa-check-circle"></i>';
+					// $('#icon_result_assessment').html(icon_pass);
+					// $('#icon_result_assessment').addClass("text-green");
+					// $('#result_assessment').text("ผ่าน");
+				// }else if(value.dfine_status_assessment == 0){
+					// var icon_not = '<i class="fa fa-fw fa-ban"></i>';
+					// $('#icon_result_assessment').html(icon_not);
+					// $('#icon_result_assessment').addClass("text-orange");
+					// $('#result_assessment').text("ไม่ได้ประเมินผล");
+				// }
+				
+				
 				
 				//จัดเรียงแถว gauge
 				if(data != 0){
@@ -807,6 +873,7 @@
 					var row="";
 					var count_row=0;
 					$(data).each(function(seq, value) {
+						// console.log(value.status_assessment);
 						count_row = seq+1;
 						if(count_row%4 == 0 || count_row == 1){
 							row +='<div class="row">';
@@ -815,6 +882,51 @@
 							row += 		'<div class="box-header">';
 							row +=			'<h4 class="">'+value.ind_name+'</h4>';
 							row +=		'</div>';
+							
+							row +='<div class="box-footer no-border">';
+							row +=  '<div class="row">';
+							row +=		'<div class="col-xs-12 text-center" style="">';
+							row +=		  '<div style="display:inline;width:60px;height:60px;"><canvas width="75" height="75" style="width: 0px; height: 60px;"></canvas><input type="text" class="knob" data-readonly="true" value="'+value.opt_symbol+' '+value.dfine_goal+' '+value.unt_name+'" data-width="60" data-height="60" data-fgcolor="#39CCCC" readonly="readonly" style="width: 100px; height: 20px; position: absolute; vertical-align: middle; margin-top: 20px; margin-left: -47px; border: 0px; background: none; font: bold 12px Arial; text-align: center; color: rgb(57, 204, 204); padding: 0px; -webkit-appearance: none;"></div>';
+	
+							row +=		  '<div class="knob-label"><b>เป้าหมาย</b></div>';
+							row +=		'</div>';
+							row +=  '</div>';
+									
+							row +=  '<div class="row">';
+							row +=		'<div class="col-xs-6 text-center" style="border-right: 1px solid #f4f4f4">';
+							row +=		  '<div style="display:inline;width:60px;height:60px;"><canvas width="75" height="75" style="width: 60px; height: 60px;"></canvas><input type="text" class="knob" data-readonly="true" value="'+value.sum_score+'" data-width="60" data-height="60" data-fgcolor="#39CCCC" readonly="readonly" style="width: 34px; height: 20px; position: absolute; vertical-align: middle; margin-top: 20px; margin-left: -47px; border: 0px; background: none; font: bold 12px Arial; text-align: center; color: rgb(57, 204, 204); padding: 0px; -webkit-appearance: none;"></div>';
+	
+							row +=		  '<div class="knob-label"><b>คะแนนที่ได้</b></div>';
+							row +=		'</div>';
+							
+							row +=		'<div class="col-xs-6 text-center">';
+								if(value.status_assessment == 1){
+									row +='<div style="display:inline;width:60px;height:60px;">';
+									row +='<span class="description-percentage text-red" id="" style="font-size: 50px;">';
+									row +='<i class="fa fa-fw fa-times-circle"></i>';
+									row +='</span>';
+									row +=	'<h5 class="description-header" id=""><b>ไม่ผ่าน</b></h5>';
+									row +='</div>';
+								}else if(value.status_assessment == 2){
+									row +='<div style="display:inline;width:60px;height:60px;">';
+									row +='<span class="description-percentage text-green" id="icon_result_assessment" style="font-size: 50px;">';
+									row +='<i class="fa fa-fw fa-check-circle"></i>';
+									row +='</span>';
+									row +=	'<h5 class="description-header" id=""><b>ผ่าน</b></h5>';
+									row +='</div>';
+								}else if(value.status_assessment == 0){
+									row +='<div style="display:inline;width:60px;height:60px;">';
+									row +='<span class="description-percentage text-orange" id="icon_result_assessment" style="font-size: 50px;">';
+									row +='<i class="fa fa-fw fa-ban"></i>';
+									row +='</span>';
+									row +=	'<h5 class="description-header" id=""><b>ไม่ได้ประเมินผล</b></h5>';
+									row +='</div>';
+								}
+							row +=		'</div>';
+							row +=  '</div>';
+							row +='</div>';
+							
+							
 							row +=		'<div class="box-body" >';
 							row +=			'<div class="col-md-12" id="container_gauge_following_ind_'+value.dfine_id+'" >';
 							row +=				'<div id="following_gauge_'+value.dfine_id+'" style="color: red; text-align: center;">'
@@ -822,6 +934,8 @@
 							row +=				'</div>';
 							row +=			'</div>';
 							row +=		'</div>';
+							
+							
 							row +=	'</div>';
 							row +='</div>';
 						}else{
@@ -830,6 +944,51 @@
 							row += 		'<div class="box-header">';
 							row +=			'<h4 class="">'+value.ind_name+'</h4>';
 							row +=		'</div>';
+							
+							row +='<div class="box-footer no-border">';
+							row +=  '<div class="row">';
+							row +=		'<div class="col-xs-12 text-center" style="">';
+							row +=		  '<div style="display:inline;width:60px;height:60px;"><canvas width="75" height="75" style="width: 0px; height: 60px;"></canvas><input type="text" class="knob" data-readonly="true" value="'+value.opt_symbol+' '+value.dfine_goal+' '+value.unt_name+'" data-width="60" data-height="60" data-fgcolor="#39CCCC" readonly="readonly" style="width: 100px; height: 20px; position: absolute; vertical-align: middle; margin-top: 20px; margin-left: -47px; border: 0px; background: none; font: bold 12px Arial; text-align: center; color: rgb(57, 204, 204); padding: 0px; -webkit-appearance: none;"></div>';
+	
+							row +=		  '<div class="knob-label"><b>เป้าหมาย</b></div>';
+							row +=		'</div>';
+							row +=  '</div>';
+									
+							row +=  '<div class="row">';
+							row +=		'<div class="col-xs-6 text-center" style="border-right: 1px solid #f4f4f4">';
+							row +=		  '<div style="display:inline;width:60px;height:60px;"><canvas width="75" height="75" style="width: 60px; height: 60px;"></canvas><input type="text" class="knob" data-readonly="true" value="'+value.sum_score+'" data-width="60" data-height="60" data-fgcolor="#39CCCC" readonly="readonly" style="width: 34px; height: 20px; position: absolute; vertical-align: middle; margin-top: 20px; margin-left: -47px; border: 0px; background: none; font: bold 12px Arial; text-align: center; color: rgb(57, 204, 204); padding: 0px; -webkit-appearance: none;"></div>';
+	
+							row +=		  '<div class="knob-label"><b>คะแนนที่ได้</b></div>';
+							row +=		'</div>';
+							
+							row +=		'<div class="col-xs-6 text-center">';
+								if(value.status_assessment == 1){
+									row +='<div style="display:inline;width:60px;height:60px;">';
+									row +='<span class="description-percentage text-red" id="" style="font-size: 50px;">';
+									row +='<i class="fa fa-fw fa-times-circle"></i>';
+									row +='</span>';
+									row +=	'<h5 class="description-header" id=""><b>ไม่ผ่าน</b></h5>';
+									row +='</div>';
+								}else if(value.status_assessment == 2){
+									row +='<div style="display:inline;width:60px;height:60px;">';
+									row +='<span class="description-percentage text-green" id="icon_result_assessment" style="font-size: 50px;">';
+									row +='<i class="fa fa-fw fa-check-circle"></i>';
+									row +='</span>';
+									row +=	'<h5 class="description-header" id=""><b>ผ่าน</b></h5>';
+									row +='</div>';
+								}else if(value.status_assessment == 0){
+									row +='<div style="display:inline;width:60px;height:60px;">';
+									row +='<span class="description-percentage text-orange" id="icon_result_assessment" style="font-size: 50px;">';
+									row +='<i class="fa fa-fw fa-ban"></i>';
+									row +='</span>';
+									row +=	'<h5 class="description-header" id=""><b>ไม่ได้ประเมินผล</b></h5>';
+									row +='</div>';
+								}
+							row +=		'</div>';
+							row +=  '</div>';
+							row +='</div>';
+							
+							
 							row +=		'<div class="box-body" >';
 							row +=			'<div class="col-md-12" id="container_gauge_following_ind_'+value.dfine_id+'" >';
 							row +=				'<div id="following_gauge_'+value.dfine_id+'" style="color: red; text-align: center;">'		
@@ -851,6 +1010,9 @@
 						var percent_goal=0;
 						percent_score = (value.sum_score/100)*100;
 						percent_goal = (value.dfine_goal/100)*100;
+						if(percent_score > 100){
+							percent_score = 100;
+						}
 						//Zone chart
 						Highcharts.chart("following_gauge_"+value.dfine_id, {
 							chart: {
@@ -864,7 +1026,6 @@
 							title: {
 								text: ''
 							},
-
 							pane: {
 								startAngle: -150,
 								endAngle: 150,
@@ -935,12 +1096,14 @@
 								name: 'ร้อยละ',
 								data: [percent_score],
 								tooltip: {
-									valueSuffix: ' %'
-								}
+									valueSuffix: ' %',
+								},
+								dataLabels: {
+									enabled: true,
+									format: '{point.y:.2f}'
+								},
 							}]
-
 						});
-					
 					});
 				}else {
 					$("#row_following_gauge").remove(); 
@@ -951,7 +1114,11 @@
 		});
 	} //End fn get_following_gauge
 </script>
-
+<!--<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="#">Home</a></li>
+  <li class="breadcrumb-item"><a href="#">Library</a></li>
+  <li class="breadcrumb-item active">Data</li>
+</ol>-->
 <div class="row">
 	<div class="col-md-12">
 		<div class="row">
@@ -1035,7 +1202,7 @@
 									<div class="box-header with-border" id="sub_head_table">
 										<div class="col-md-3">
 											<i class="fa fa-bar-chart-o fw" style="color: #ffffff"></i>
-											<h2 class="box-title" style="margin-top:5px">รายงานสรุปจำแนกตามตัวชี้วัด</h2>
+											<h2 class="box-title" style="margin-top:5px">รายงานสรุปจำแนกตาม</h2>
 										</div>	
 										<div class="col-md-2 select2-container-active pull-left">
 											<select class="select2" id="select2_by_type" name="select2_by_type" style="width: 100%;" tabindex="-1" onchange="change_type()" >

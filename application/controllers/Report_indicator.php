@@ -15,19 +15,66 @@ class Report_indicator extends kpims_Controller {
     }
 
 	public function index(){
+		$permission_us = $this->session->userdata('us_permission');
+		$ps_id = $this->session->userdata('us_ps_id');
 		$data["rs_bgy"] = $this->dfine->get_budget_year();
 		$data['rs_indgp'] = $this->indgp->get_all();
 		$json = file_get_contents('http://med.buu.ac.th/scan-med/scanningPersonnel/API/api_getPerson.php');
-		$data['rs_person'] = json_decode($json, TRUE);
+		$person = json_decode($json, TRUE);
+		if($permission_us == $this->config->item("ref_ug_admin")){ //ผู้ใช้ที่เป็น Admin
+			$arr_person = array();
+			foreach($person['data_result'] as $rs_ps){ //คนทั้งหมด
+				$rs = array(
+					"ps_id" 		=>	$rs_ps['ps_id'],
+					"pf_title_th" 	=>	$rs_ps['pf_title_th'],
+					"ps_fname_th" 	=>	$rs_ps['ps_fname_th'],
+					"ps_lname_th" 	=>	$rs_ps['ps_lname_th'],
+					"ptm_id"		=> 	$rs_ps['ptm_id'],
+					"dm_id" 		=>	$rs_ps['dm_id'],
+					"dm_title_th" 	=>	$rs_ps['dm_title_th'],
+				);
+				array_push($arr_person, $rs);
+			}
+			$data['rs_person'] = $arr_person;
+		}else if($permission_us == $this->config->item("ref_ug_main_side")){ //หัวหน้าฝ่ายงาน
+			$rs_by_dm_id = array();
+			foreach($person['data_result'] as $rs_ps){ //คนทั้งหมด
+				if($rs_ps['ps_id'] == $ps_id){
+					foreach($person['data_result'] as $rs_ps_sub){
+						if($rs_ps['dm_id'] == $rs_ps_sub['dm_id']){
+							$rs = array(
+								"ps_id" 		=>	$rs_ps_sub['ps_id'],
+								"pf_title_th" 	=>	$rs_ps_sub['pf_title_th'],
+								"ps_fname_th" 	=>	$rs_ps_sub['ps_fname_th'],
+								"ps_lname_th" 	=>	$rs_ps_sub['ps_lname_th'],
+								"ptm_id"		=> 	$rs_ps_sub['ptm_id'],
+								"dm_id" 		=>	$rs_ps_sub['dm_id'],
+								"dm_title_th" 	=>	$rs_ps_sub['dm_title_th'],
+							);
+							array_push($rs_by_dm_id, $rs);
+						}
+					}
+				}
+			}
+			$data['rs_person'] = $rs_by_dm_id;
+		}
 		$this->output('v_report_indicator', $data);
     } //End fn index
 	
 	public function get_data_search(){
+		$ptm_id = 0;
 		$bgy_id = $this->input->post('bgy_id');
 		$indgp_id = $this->input->post('indgp_id');
 		$resm_id = $this->input->post('resm_id');
-		
-		$rs_search = $this->rpind->get_search_by_id($bgy_id,$indgp_id,$resm_id);
+		$json = file_get_contents('http://med.buu.ac.th/scan-med/scanningPersonnel/API/api_getPerson.php');
+		$person = json_decode($json, TRUE);
+		foreach($person['data_result'] as $rs_ps){ //คนทั้งหมด
+			if($resm_id == $rs_ps['ps_id']){
+				$ptm_id = $rs_ps['ptm_id'];
+			}
+		}
+		// $rs_search = $this->rpind->get_search_by_bgy_id($bgy_id);
+		$rs_search = $this->rpind->get_search_by_id($bgy_id,$indgp_id,$resm_id,$ptm_id);
 		$arr_score = array();
 		$data = array(); 	
 		foreach($rs_search->result() as $search){
@@ -61,60 +108,163 @@ class Report_indicator extends kpims_Controller {
     } //End fn get_data_search
 	
 	function get_graph(){
-		$bgy_id = $this->input->post('bgy_id');
-		$indgp_id = $this->input->post('indgp_id');
-		$resm_id = $this->input->post('resm_id');
-		
-		$ind_faile = $this->rpind->get_indicator_faile($bgy_id,$indgp_id,$resm_id)->row_array();
-		$ind_pass = $this->rpind->get_indicator_pass($bgy_id,$indgp_id,$resm_id)->row_array();
-		$ind_not = $this->rpind->get_indicator_notprocessed($bgy_id,$indgp_id,$resm_id)->row_array();
-		$bgy_name = $this->bgy->get_name($bgy_id)->row_array();
-		$resm_name = $this->resm->get_name_by_id($resm_id)->row_array();
-		
-		
-		$data = array(); 
-		$dfine_data = array(
-			"ind_not" 		=>	$ind_not['dfine_status_assessment'],
-			"ind_pass" 		=>	$ind_pass['dfine_status_assessment'],
-			"ind_faile" 	=>	$ind_faile['dfine_status_assessment'],
-			"bgy_id" 		=>	$bgy_id,
-			"bgy_name" 		=>	$bgy_name['bgy_name'],
-			"resm_name"		=>	$resm_name['resm_name']
-		);
-		array_push($data, $dfine_data);
-		echo json_encode($data);
-	} //End fn get_graph
-	
-	function get_all_graph(){
-		$bgy_id = $this->input->post('bgy_id');
-		$indgp_id = $this->input->post('indgp_id');
-		$resm_id = $this->input->post('resm_id');
-		$rs_bgy = $this->bgy->get_all();
-		
-		$data = array(); 
-		$resm_name = $this->resm->get_name_by_id($resm_id)->row_array();
-		foreach($rs_bgy->result() as $bgy){
-			$ind_faile = $this->rpind->get_indicator_faile($bgy->bgy_id,$indgp_id,$resm_id)->row_array();
-			$ind_pass = $this->rpind->get_indicator_pass($bgy->bgy_id,$indgp_id,$resm_id)->row_array();
-			$ind_not = $this->rpind->get_indicator_notprocessed($bgy->bgy_id,$indgp_id,$resm_id)->row_array();
-			$ra_data = array(
+		$ptm_id = 0;
+		$permission_us = $this->session->userdata('us_permission');
+		if($permission_us == $this->config->item("ref_ug_admin")){ //ผู้ใช้ที่เป็น Admin
+			$bgy_id = $this->input->post('bgy_id');
+			$indgp_id = $this->input->post('indgp_id');
+			$resm_id = $this->input->post('resm_id');
+			
+			$json = file_get_contents('http://med.buu.ac.th/scan-med/scanningPersonnel/API/api_getPerson.php');
+			$person = json_decode($json, TRUE);
+			foreach($person['data_result'] as $rs_ps){ //คนทั้งหมด
+				if($resm_id == $rs_ps['ps_id']){
+					$ptm_id = $rs_ps['ptm_id'];
+				}
+			}
+			$ind_faile = $this->rpind->get_indicator_faile($bgy_id,$indgp_id,$resm_id,$ptm_id)->row_array();
+			$ind_pass = $this->rpind->get_indicator_pass($bgy_id,$indgp_id,$resm_id,$ptm_id)->row_array();
+			$ind_not = $this->rpind->get_indicator_notprocessed($bgy_id,$indgp_id,$resm_id,$ptm_id)->row_array();
+			$bgy_name = $this->bgy->get_name($bgy_id)->row_array();
+			$resm_name = $this->resm->get_name_by_id($resm_id)->row_array();
+			
+			
+			$data = array(); 
+			$dfine_data = array(
 				"ind_not" 		=>	$ind_not['dfine_status_assessment'],
 				"ind_pass" 		=>	$ind_pass['dfine_status_assessment'],
 				"ind_faile" 	=>	$ind_faile['dfine_status_assessment'],
-				"bgy_id" 		=>	$bgy->bgy_id,
-				"bgy_name" 		=>	$bgy->bgy_name,
+				"bgy_id" 		=>	$bgy_id,
+				"bgy_name" 		=>	$bgy_name['bgy_name'],
 				"resm_name"		=>	$resm_name['resm_name']
 			);
-			array_push($data, $ra_data);
+			array_push($data, $dfine_data);
+			echo json_encode($data);
+		}else if($permission_us == $this->config->item("ref_ug_main_side")){ //หัวหน้าฝ่ายงาน
+			$ptm_id = 0;
+			$bgy_id = $this->input->post('bgy_id');
+			$indgp_id = $this->input->post('indgp_id');
+			$resm_id = $this->input->post('resm_id');
+			$json = file_get_contents('http://med.buu.ac.th/scan-med/scanningPersonnel/API/api_getPerson.php');
+			$person = json_decode($json, TRUE);
+			foreach($person['data_result'] as $rs_ps){ //คนทั้งหมด
+				if($resm_id == $rs_ps['ps_id']){
+					$ptm_id = $rs_ps['ptm_id'];
+				}
+			}
+			$ind_faile = $this->rpind->get_indicator_faile($bgy_id,$indgp_id,$resm_id,$ptm_id)->row_array();
+			$ind_pass = $this->rpind->get_indicator_pass($bgy_id,$indgp_id,$resm_id,$ptm_id)->row_array();
+			$ind_not = $this->rpind->get_indicator_notprocessed($bgy_id,$indgp_id,$resm_id,$ptm_id)->row_array();
+			$bgy_name = $this->bgy->get_name($bgy_id)->row_array();
+			$rs_resm_name = $this->resm->get_name_by_id_resm_and_ress($resm_id,$ptm_id)->row_array();
+			if($ptm_id == 1){
+				$resm_name = $rs_resm_name['resm_name'];
+			}else if($ptm_id == 2){
+				$resm_name = $rs_resm_name['ress_name'];
+			}
+			
+			$data = array(); 
+			$dfine_data = array(
+				"ind_not" 		=>	$ind_not['dfine_status_assessment'],
+				"ind_pass" 		=>	$ind_pass['dfine_status_assessment'],
+				"ind_faile" 	=>	$ind_faile['dfine_status_assessment'],
+				"bgy_id" 		=>	$bgy_id,
+				"bgy_name" 		=>	$bgy_name['bgy_name'],
+				"resm_name"		=>	$resm_name
+			);
+			array_push($data, $dfine_data);
+			echo json_encode($data);
 		}
-		echo json_encode($data);
+	} //End fn get_graph
+	
+	function get_all_graph(){
+		$ptm_id = 0;
+		$permission_us = $this->session->userdata('us_permission');
+		if($permission_us == $this->config->item("ref_ug_admin")){ //ผู้ใช้ที่เป็น Admin
+			$bgy_id = $this->input->post('bgy_id');
+			$indgp_id = $this->input->post('indgp_id');
+			$resm_id = $this->input->post('resm_id');
+			$rs_bgy = $this->bgy->get_all();
+			$json = file_get_contents('http://med.buu.ac.th/scan-med/scanningPersonnel/API/api_getPerson.php');
+			$person = json_decode($json, TRUE);
+			foreach($person['data_result'] as $rs_ps){ //คนทั้งหมด
+				if($resm_id == $rs_ps['ps_id']){
+					$ptm_id = $rs_ps['ptm_id'];
+				}
+			}
+			$data = array(); 
+			$resm_name = $this->resm->get_name_by_id($resm_id)->row_array();
+			foreach($rs_bgy->result() as $bgy){
+				$ind_faile = $this->rpind->get_indicator_faile($bgy->bgy_id,$indgp_id,$resm_id,$ptm_id)->row_array();
+				$ind_pass = $this->rpind->get_indicator_pass($bgy->bgy_id,$indgp_id,$resm_id,$ptm_id)->row_array();
+				$ind_not = $this->rpind->get_indicator_notprocessed($bgy->bgy_id,$indgp_id,$resm_id,$ptm_id)->row_array();
+				$ra_data = array(
+					"ind_not" 		=>	$ind_not['dfine_status_assessment'],
+					"ind_pass" 		=>	$ind_pass['dfine_status_assessment'],
+					"ind_faile" 	=>	$ind_faile['dfine_status_assessment'],
+					"bgy_id" 		=>	$bgy->bgy_id,
+					"bgy_name" 		=>	$bgy->bgy_name,
+					"resm_name"		=>	$resm_name['resm_name']
+				);
+				array_push($data, $ra_data);
+			}
+			echo json_encode($data);
+		}else if($permission_us == $this->config->item("ref_ug_main_side")){ //หัวหน้าฝ่ายงาน
+			$ptm_id = 0;
+			$resm_name = "";
+			$bgy_id = $this->input->post('bgy_id');
+			$indgp_id = $this->input->post('indgp_id');
+			$resm_id = $this->input->post('resm_id');
+			$rs_bgy = $this->bgy->get_all();
+			
+			$json = file_get_contents('http://med.buu.ac.th/scan-med/scanningPersonnel/API/api_getPerson.php');
+			$person = json_decode($json, TRUE);
+			foreach($person['data_result'] as $rs_ps){ //คนทั้งหมด
+				if($resm_id == $rs_ps['ps_id']){
+					$ptm_id = $rs_ps['ptm_id'];
+				}
+			}
+			$data = array(); 
+			$rs_resm_name = $this->resm->get_name_by_id_resm_and_ress($resm_id,$ptm_id)->row_array();
+			if($ptm_id == 1){
+				$resm_name = $rs_resm_name['resm_name'];
+			}else if($ptm_id == 2){
+				$resm_name = $rs_resm_name['ress_name'];
+			}
+			
+			foreach($rs_bgy->result() as $bgy){
+				
+				$ind_faile = $this->rpind->get_indicator_faile($bgy->bgy_id,$indgp_id,$resm_id,$ptm_id)->row_array();
+				$ind_pass = $this->rpind->get_indicator_pass($bgy->bgy_id,$indgp_id,$resm_id,$ptm_id)->row_array();
+				$ind_not = $this->rpind->get_indicator_notprocessed($bgy->bgy_id,$indgp_id,$resm_id,$ptm_id)->row_array();
+				$ra_data = array(
+					"ind_not" 		=>	$ind_not['dfine_status_assessment'],
+					"ind_pass" 		=>	$ind_pass['dfine_status_assessment'],
+					"ind_faile" 	=>	$ind_faile['dfine_status_assessment'],
+					"bgy_id" 		=>	$bgy->bgy_id,
+					"bgy_name" 		=>	$bgy->bgy_name,
+					"resm_name"		=>	$resm_name,
+				);
+				array_push($data, $ra_data);
+			}
+			// pre($data);
+			echo json_encode($data);
+		}
 	} //End fn get_all_graph
 	
 	function export_excel(){
+		$ptm_id = 0;
 		$bgy_id = $this->input->post('bgy_id_excel');
 		$indgp_id = $this->input->post('indgp_id_excel');
 		$resm_id = $this->input->post('resm_id_excel');
-		$rs_search = $this->rpind->get_search_export($bgy_id,$indgp_id,$resm_id);
+		$json = file_get_contents('http://med.buu.ac.th/scan-med/scanningPersonnel/API/api_getPerson.php');
+		$person = json_decode($json, TRUE);
+		foreach($person['data_result'] as $rs_ps){ //คนทั้งหมด
+			if($resm_id == $rs_ps['ps_id']){
+				$ptm_id = $rs_ps['ptm_id'];
+			}
+		}
+		$rs_search = $this->rpind->get_search_export($bgy_id,$indgp_id,$resm_id,$ptm_id);
 		$row  = '<table id="table" border="1" style="font-family: TH SarabunPSK; font-size: 26px;">';
 		$row .= '	<thead>';
 		$row .= '		<tr>';

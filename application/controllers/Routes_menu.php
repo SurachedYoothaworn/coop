@@ -56,6 +56,14 @@ class Routes_menu extends kpims_Controller {
 			$this->session->set_userdata('menu_active',10);
 			redirect('Report_indicator');
 		}
+		if($id == 11){
+			$this->session->set_userdata('menu_active',11);
+			redirect('Manual');
+		}
+		if($id == 12){
+			$this->session->set_userdata('menu_active',12);
+			redirect('Follow_result');
+		}
 	} //End fn link_page
 } //End class
 ?>    

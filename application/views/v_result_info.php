@@ -52,11 +52,15 @@
 												<td><?php echo $rs_dfine['side_name']; ?></td>
 											</tr>
 											<tr>
+												<th width="15%" style="background-color: #eeeeee;">ฝ่ายงาน</th>
+												<td><?php echo $rs_dfine['resm_dept']; ?></td>
+											</tr>
+											<tr>
 												<th width="15%" style="background-color: #eeeeee;">ผู้รับผิดชอบ</th>
 												<?php if($rs_dfine['resm_name'] == ""){?>
 													<td>-</td>
 												<?php }else{ ?>
-													<td><?php echo $rs_dfine['resm_name']; ?> (<?php echo $rs_dfine['resm_pt_name']; ?>)</td>
+													<td><?php echo $rs_dfine['resm_name']; ?> (<b>ตำแหน่ง :</b> <?php echo $rs_dfine['resm_pt_name']; ?>)</td>
 												<?php } ?>
 											</tr>
 											<tr>
@@ -64,7 +68,7 @@
 												<?php if($rs_ress->num_rows() > 0){?>
 													<td>
 														<?php foreach($rs_ress->result() as $ress){ ?>
-															<?php echo $ress->ress_name; ?> (<?php echo $ress->ress_pt_name; ?>)<br>
+															<?php echo $ress->ress_name; ?> (<b>ตำแหน่ง :</b> <?php echo $ress->ress_pt_name; ?>)<br>
 														<?php } ?>
 													</td>
 												<?php }else{?>

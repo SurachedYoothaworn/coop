@@ -14,7 +14,7 @@
                 <!-- All rights reserved. -->
             <!-- <center>
             <center> -->
-                <strong class="pull-right">CREATE & DESIGN BY <a>SURACHED YOOTHAWORN</a></strong>
+                <!--<strong class="pull-right">CREATE & DESIGN BY <a>SURACHED YOOTHAWORN</a></strong>-->
             <!-- <center> -->
         <!-- </div> -->
     </footer>

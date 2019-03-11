@@ -26,6 +26,10 @@
 
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/chartjs/Chart.min.js"></script>
 
+<!--datepicker-->
+<script src="<?php echo base_url().$this->config->item('template_path');?>plugins/datepicker/bootstrap-datepicker.js"></script>
+<link type="text/css" rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>/plugins/datepicker/bootstrap-datepicker.min.css">
+
 <!-- highcharts -->
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/highcharts/highcharts.js"></script>
 <script src="<?php echo base_url().$this->config->item('template_path');?>plugins/highcharts/exporting.js"></script>

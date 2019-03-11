@@ -17,7 +17,7 @@ class Result_indicator extends kpims_Controller {
 	
 	public function get_data(){
 		$permission_us = $this->session->userdata('us_permission');
-		if($permission_us == 1){ //ผู้ใช้ที่เป็น Admin
+		if($permission_us == $this->config->item("ref_ug_admin")){ //ผู้ใช้ที่เป็น Admin
 			$rs_dfine_data = $this->rsind->get_all();
 			$data = array(); 
 			if($rs_dfine_data->num_rows() > 0){
@@ -94,25 +94,25 @@ class Result_indicator extends kpims_Controller {
 				} //End for
 			} //End if
 			echo json_encode($data);
-		}else{ //ผู้ทั่วไป
+		}else if($permission_us == $this->config->item("ref_ug_main_side")){ //หัวหน้าฝ่ายงาน
 			$rs_dfine_data = $this->rsind->get_by_ps_id($this->session->userdata('us_ps_id'));
 			$data = array(); 
 			if($rs_dfine_data->num_rows() > 0){
 				// $seq = 1;
 				foreach($rs_dfine_data->result() as $rsind){
-					if($rsind->dfine_status_assessment != 0){
-						//ปุ่มบันทึกผลตัวชี้วัด
-						$btn_save_result  = '<center>';
-						$btn_save_result .= '<a id="btn_save_result" name="btn_save_result" class="'.$this->config->item('btn_success').'" data-toggle="modal" data-tooltip="ไม่สามารถบันทึกผลตัวชี้วัดได้"  disabled>';
-						$btn_save_result .= '<i class="glyphicon glyphicon-floppy-save" style="color:white"></i>';
-						$btn_save_result .= '</a></center>';
-					}else{
+					// if($rsind->dfine_status_assessment != 0){
+						// ปุ่มบันทึกผลตัวชี้วัด
+						// $btn_save_result  = '<center>';
+						// $btn_save_result .= '<a id="btn_save_result" name="btn_save_result" class="'.$this->config->item('btn_success').'" data-toggle="modal" data-tooltip="ไม่สามารถบันทึกผลตัวชี้วัดได้"  disabled>';
+						// $btn_save_result .= '<i class="glyphicon glyphicon-floppy-save" style="color:white"></i>';
+						// $btn_save_result .= '</a></center>';
+					// }else{
 						//ปุ่มบันทึกผลตัวชี้วัด
 						$btn_save_result  = '<center>';
 						$btn_save_result .= '<a id="btn_save_result" name="btn_save_result" class="'.$this->config->item('btn_success').'" data-toggle="modal" data-tooltip="บันทึกผลตัวชี้วัด"  href="#modal_save_result" onclick="get_data_save_result('.$rsind->dfine_id.')" >';
 						$btn_save_result .= '<i class="glyphicon glyphicon-floppy-save" style="color:white"></i>';
 						$btn_save_result .= '</a></center>';
-					}
+					// }
 					
 					if($rsind->dfine_status_action == 0){
 						//ปุ่มยืนยันผลตัวชี้วัด
@@ -133,11 +133,11 @@ class Result_indicator extends kpims_Controller {
 					$btn_opt .= '</a>&nbsp';
 						
 					if($rsind->dfine_status_action == 0){
-						$btn_action = '<center style="color: red;" >ยังไม่ดำเนินการ</center>';
+						$btn_action = '<center><span class="label label-danger">ยังไม่ดำเนินการ</span></center>';
 					}else if($rsind->dfine_status_action == 1){
-						$btn_action = '<center style="color: orange;" >กำลังดำเนินการ</center>';
+						$btn_action = '<center><span class="label label-warning">กำลังดำเนินการ</span></center></center>';
 					}else if($rsind->dfine_status_action == 2){
-						$btn_action = '<center style="color: green;" >เสร็จสิ้น</center>';
+						$btn_action = '<center><span class="label label-success">เสร็จสิ้น</span></center></center>';
 					}
 					
 					if($rsind->dfine_status_assessment == 0){
@@ -180,7 +180,96 @@ class Result_indicator extends kpims_Controller {
 			}else{
 				echo json_encode(0);
 			}
-		}//if check permission
+		}else if($permission_us == $this->config->item("ref_ug_lab")){ //เจ้าหน้าที่ระดับปฏิบัติการ
+		// echo "test"; die;
+			$rs_dfine_data = $this->rsind->get_ress_by_ps_id($this->session->userdata('us_ps_id'));
+			// pre($rs_dfine_data->result());die;
+			$data = array(); 
+			if($rs_dfine_data->num_rows() > 0){
+				// $seq = 1;
+				foreach($rs_dfine_data->result() as $rsind){
+					// if($rsind->dfine_status_assessment != 0){
+						//ปุ่มบันทึกผลตัวชี้วัด
+						// $btn_save_result  = '<center>';
+						// $btn_save_result .= '<a id="btn_save_result" name="btn_save_result" class="'.$this->config->item('btn_success').'" data-toggle="modal" data-tooltip="ไม่สามารถบันทึกผลตัวชี้วัดได้"  disabled>';
+						// $btn_save_result .= '<i class="glyphicon glyphicon-floppy-save" style="color:white"></i>';
+						// $btn_save_result .= '</a></center>';
+					// }else{
+						//ปุ่มบันทึกผลตัวชี้วัด
+						$btn_save_result  = '<center>';
+						$btn_save_result .= '<a id="btn_save_result" name="btn_save_result" class="'.$this->config->item('btn_success').'" data-toggle="modal" data-tooltip="บันทึกผลตัวชี้วัด"  href="#modal_save_result" onclick="get_data_save_result('.$rsind->dfine_id.')" >';
+						$btn_save_result .= '<i class="glyphicon glyphicon-floppy-save" style="color:white"></i>';
+						$btn_save_result .= '</a></center>';
+					// }
+					
+					if($rsind->dfine_status_action == 0){
+						//ปุ่มยืนยันผลตัวชี้วัด
+						$btn_confirm  = '<center>';
+						$btn_confirm .= '<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_primary').'" data-tooltip="กรุณาบันทึกผลตัวชี้วัด"   disabled>';
+						$btn_confirm .= '<i class="glyphicon glyphicon-floppy-saved" style="color:white"></i>';
+						$btn_confirm .= '</a></center>';				
+					}else{
+						//ปุ่มยืนยันผลตัวชี้วัด
+						$btn_confirm  = '<center>';
+						$btn_confirm .= '<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_primary').'" data-tooltip="ประเมินผล"  data-toggle="modal" href="#modal_assessment" onclick="get_data_assessment('.$rsind->dfine_id.')">';
+						// $btn_confirm .= '<a id="btn_del" name="btn_del" class="'.$this->config->item('btn_primary').'" data-tooltip="สำหรับหัวหน้าฝ่ายงาน"  href="#" onclick="" disabled>';
+						$btn_confirm .= '<i class="glyphicon glyphicon-floppy-saved" style="color:white"></i>';
+						$btn_confirm .= '</a></center>';		
+					}
+					//ปุ่มดำเนินการ
+					$btn_opt  = '<center><a id="btn_edit" name="btn_edit" class="'.$this->config->item('btn_primary').'" data-toggle="modal" data-tooltip="รายละเอียดผลตัวชี้วัด" href="'.site_url('/Result_info/Show_info/'.$rsind->dfine_id.'').'">';
+					$btn_opt .= '<i class="glyphicon glyphicon-info-sign" style="color:white" ></i>';
+					$btn_opt .= '</a>&nbsp';
+						
+					if($rsind->dfine_status_action == 0){
+						$btn_action = '<center><span class="label label-danger">ยังไม่ดำเนินการ</span></center>';
+					}else if($rsind->dfine_status_action == 1){
+						$btn_action = '<center><span class="label label-warning">กำลังดำเนินการ</span></center></center>';
+					}else if($rsind->dfine_status_action == 2){
+						$btn_action = '<center><span class="label label-success">เสร็จสิ้น</span></center></center>';
+					}
+					
+					if($rsind->dfine_status_assessment == 0){
+						$btn_assessment = '<center><span class="label label-warning">ไม่มีผลประเมิน</span></center>';
+					}else if($rsind->dfine_status_assessment == 1){
+						$btn_assessment = '<center><span class="label label-danger">ไม่ผ่าน</span></center>';
+					}else if($rsind->dfine_status_assessment == 2){
+						$btn_assessment = '<center><span class="label label-success">ผ่าน</span></center>';
+					}
+						
+					$rsind_data = array(
+						"dfine_id" 			=>	$rsind->dfine_id,
+						"ind_name" 			=>	$rsind->ind_name,
+						"ind_description" 	=>	$rsind->ind_description,
+						"bgy_name" 			=>	$rsind->bgy_name,
+						"str_name" 			=>	$rsind->str_name,
+						"indgp_name" 		=>	$rsind->indgp_name,
+						"opt_name"			=>	$rsind->opt_name,
+						"opt_symbol"		=>	$rsind->opt_symbol,
+						"dfine_goal" 		=>	$rsind->dfine_goal,
+						"unt_name"			=>	$rsind->unt_name,
+						"side_name" 		=>	$rsind->side_name,
+					//สว่นของ id
+						"ind_id" 			=> 	$rsind->ind_id,
+						"bgy_id" 			=> 	$rsind->bgy_id,
+						"str_id" 			=> 	$rsind->str_id,
+						"indgp_id" 			=> 	$rsind->indgp_id,
+						"opt_id" 			=> 	$rsind->opt_id,
+						"unt_id" 			=> 	$rsind->unt_id,
+						"side_id" 			=> 	$rsind->side_id,
+						"status_action"		=>	$btn_action,
+						"status_assessment"	=> 	$btn_assessment,
+						"btn_save_result"	=>	$btn_save_result,
+						"btn_confirm"		=>	$btn_confirm,
+						"btn_opt"			=>	$btn_opt,
+					);
+					array_push($data, $rsind_data);
+				} //End for
+				echo json_encode($data);
+			}else{
+				echo json_encode(0);
+			}
+		}//if check เจ้าหน้าที่ระดับปฏิบัติการ
 	} //End fn get_data
 	
 	function get_data_save_result(){
@@ -450,7 +539,7 @@ class Result_indicator extends kpims_Controller {
 			
 		}
 		
-		$row .=	'			<span class="text-danger">* หากประเมินผลแล้วจะไม่สามารถบันทึกผลตัวชี้วัดได้อีก</span></td>';
+		// $row .=	'			<span class="text-danger">* หากประเมินผลแล้วจะไม่สามารถบันทึกผลตัวชี้วัดได้อีก</span></td>';
 		$row .=	'		</tr>';
 		$row .=	'	</tbody>';
 		$row .=	'</table>';

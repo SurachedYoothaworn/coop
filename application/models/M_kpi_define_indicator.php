@@ -142,7 +142,7 @@ class M_kpi_define_indicator extends Da_kpi_define_indicator {
 	function get_chk_follow($bgy_id){
 		$sql = "SELECT SUM(CASE WHEN dfine_follow_status=0 THEN 1 ELSE 0 END) AS sum
 				FROM ".$this->db_kpims.".".$this->config->item("kpims_prefix")."define_indicator
-				WHERE dfine_bgy_id = '$bgy_id'";
+				WHERE dfine_bgy_id = '$bgy_id' AND dfine_status != 0";
         $query = $this->db_KPIMS->query($sql);
         return $query;
 	} //End fn get_chk_follow

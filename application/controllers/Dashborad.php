@@ -46,7 +46,8 @@ class Dashborad extends kpims_Controller {
 	
 	public function get_data_search(){
 		$bgy_id = $this->input->post('bgy_id');
-		$rs_search = $this->rpind->get_search_by_id($bgy_id,0,0);
+		$rs_search = $this->rpind->get_search_by_bgy_id($bgy_id);
+		// $rs_search = $this->rpind->get_search_by_id($bgy_id,0,0,0);
 		$arr_score = array();
 		$data = array(); 
 
@@ -98,9 +99,11 @@ class Dashborad extends kpims_Controller {
 	
 	function get_summary_indicator(){
 		$bgy_id = $this->input->post('bgy_id');
-		$ind_faile = $this->rpind->get_indicator_faile($bgy_id,0,0)->row_array();
-		$ind_pass = $this->rpind->get_indicator_pass($bgy_id,0,0)->row_array();
-		$ind_not = $this->rpind->get_indicator_notprocessed($bgy_id,0,0)->row_array();
+		$ind_faile = $this->rpind->get_indicator_faile($bgy_id,0,0,0)->row_array();
+		$ind_pass = $this->rpind->get_indicator_pass($bgy_id,0,0,0)->row_array();
+		
+		// pre($ind_pass);
+		$ind_not = $this->rpind->get_indicator_notprocessed($bgy_id,0,0,0)->row_array();
 		$bgy_name = $this->bgy->get_name($bgy_id)->row_array();
 		
 		$data = array(); 
@@ -121,9 +124,9 @@ class Dashborad extends kpims_Controller {
 		$rs_str = $this->str->get_all();
 		$data = array(); 
 		foreach($rs_str->result() as $str){
-			$ind_faile = $this->dsh->get_indicator_faile(1,$bgy_id,$str->str_id)->row_array();
-			$ind_pass = $this->dsh->get_indicator_pass(1,$bgy_id,$str->str_id)->row_array();
-			$ind_not = $this->dsh->get_indicator_notprocessed(1,$bgy_id,$str->str_id)->row_array();
+			$ind_faile = $this->dsh->get_indicator_faile(1,$bgy_id,$str->str_id,0)->row_array();
+			$ind_pass = $this->dsh->get_indicator_pass(1,$bgy_id,$str->str_id,0)->row_array();
+			$ind_not = $this->dsh->get_indicator_notprocessed(1,$bgy_id,$str->str_id,0)->row_array();
 			$ra_data = array(
 				"ind_not" 		=>	$ind_not['dfine_status_assessment'],
 				"ind_pass" 		=>	$ind_pass['dfine_status_assessment'],
@@ -143,9 +146,9 @@ class Dashborad extends kpims_Controller {
 		$rs_indgp = $this->indgp->get_all();
 		$data = array(); 
 		foreach($rs_indgp->result() as $indgp){
-			$ind_faile = $this->dsh->get_indicator_faile(2,$bgy_id,$indgp->indgp_id)->row_array();
-			$ind_pass = $this->dsh->get_indicator_pass(2,$bgy_id,$indgp->indgp_id)->row_array();
-			$ind_not = $this->dsh->get_indicator_notprocessed(2,$bgy_id,$indgp->indgp_id)->row_array();
+			$ind_faile = $this->dsh->get_indicator_faile(2,$bgy_id,$indgp->indgp_id,0)->row_array();
+			$ind_pass = $this->dsh->get_indicator_pass(2,$bgy_id,$indgp->indgp_id,0)->row_array();
+			$ind_not = $this->dsh->get_indicator_notprocessed(2,$bgy_id,$indgp->indgp_id,0)->row_array();
 			$ra_data = array(
 				"ind_not" 		=>	$ind_not['dfine_status_assessment'],
 				"ind_pass" 		=>	$ind_pass['dfine_status_assessment'],
@@ -164,6 +167,7 @@ class Dashborad extends kpims_Controller {
 		$bgy_id = $this->input->post('bgy_id');
 		if($status_ind == 3){ //ตัวชี้วัดทั้งหมดของปีที่เลือก
 			$data = $this->rpind->get_name_indicator_by_status_assessment($bgy_id,$status_ind)->result();
+			// pre($data);
 			$row  ='<thead>';
 			$row .=		'<tr>';
 			$row .=			'<th style="width: 5%; text-align: center;">ลำดับ</th>';
@@ -317,7 +321,10 @@ class Dashborad extends kpims_Controller {
 					"indgp_name"	=>	$ind->indgp_name,
 					"str_name"		=>	$ind->str_name,
 					"bgy_name"		=>	$ind->bgy_name,
+					"opt_symbol"	=>	$ind->opt_symbol,
+					"unt_name"		=>	$ind->unt_name,
 					"sum_score"		=>	$sum_score,
+					"status_assessment"	=>	$ind->dfine_status_assessment,
 				);
 				array_push($data, $rs_data);
 			}

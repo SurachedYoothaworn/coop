@@ -17,6 +17,7 @@
 
   <link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>dist/css/skins/skin-blue.min.css">
   <link rel="stylesheet" href="<?php echo base_url().$this->config->item('template_path');?>dist/css/skins/skin-green.min.css">	
+  <link rel="shortcut icon" type="image/x-icon" href="<?php echo base_url();?>images/logo_med.ico">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>

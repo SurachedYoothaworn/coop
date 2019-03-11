@@ -23,5 +23,11 @@ $config["btn_warning"]	= "btn btn-warning";
 $config["btn_danger"]	= "btn btn-danger";
 $config["btn_success"]	= "btn btn-success";
 
+//สิทธิ์การเข้าถึง
+$config["ref_ug_admin"]	= 1; //ผู้พัฒนาระบบ
+$config["ref_ug_staff"]	= 2; // เจ้าหน้าที่ดูแลระบบ
+$config["ref_ug_main_side"]	= 3; //หัวหน้าฝ่ายงาน
+$config["ref_ug_lab"]	= 4; //เจ้าหน้าที่ระดับปฏิบัติการ
+
 
 ?>

@@ -111,7 +111,7 @@
 		<!-- /.content-wrapper -->
 		<footer class="main-footer">
 			<strong>Copyright &copy; 2018 <a href="https://deanoffice.medbuu.info/">สำนักงานคณบดี คณะแพทยศาสตร์</a></strong> 
-            <strong class="pull-right">CREATE & DESIGN BY <a>SURACHED YOOTHAWORN</a></strong>
+            <!--<strong class="pull-right">CREATE & DESIGN BY <a>SURACHED YOOTHAWORN</a></strong>-->
 		</footer>
 	</div>
 </body>
